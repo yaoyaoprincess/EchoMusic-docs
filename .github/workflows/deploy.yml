@@ -1,9 +1,8 @@
-# .github/workflows/deploy.yml
 name: Deploy VitePress site to Pages
 
 on:
   push:
-    branches: [main]   # 如果你的默认分支是main，请改为 [main]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -15,29 +14,32 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
         with:
-          fetch-depth: 0
-      - name: Setup Node
-        uses: actions/setup-node@v4
+          version: 10
+
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20.11.1
-          cache: npm
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - name: Install dependencies
-        run: npm ci
-      - name: Build with VitePress
-        run: npm run docs:build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+          node-version: 22
+
+      - uses: actions/configure-pages@v4
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run docs:build
+
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/.vitepress/dist
+          path: .vitepress/dist
 
   deploy:
     environment:
@@ -45,8 +47,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     runs-on: ubuntu-latest
-    name: Deploy
     steps:
-      - name: Deploy to GitHub Pages
+      - uses: actions/deploy-pages@v4
         id: deployment
-        uses: actions/deploy-pages@v4
