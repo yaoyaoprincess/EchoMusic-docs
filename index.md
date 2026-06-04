@@ -6,7 +6,7 @@ hero:
   text: 一款开源简洁高颜值的酷狗第三方客户端
   tagline: 聆听美好，不止旋律
   image:
-    src: /title_img/mai.png
+    src: /title_img/zhi.png
     alt: EchoMusic
   actions:
     - theme: brand
@@ -79,10 +79,10 @@ let particles = []
 onMounted(async () => {
   await nextTick()
   
-  // 加权随机选择：114514.png 概率为其他图片的 1/4
-  // 创建一个加权数组：其他图片各出现4次，隐藏款出现1次
+  // 加权随机选择：114514.png 概率为其他图片的 1/5
+  // 创建一个加权数组：其他图片各出现5次，隐藏款出现1次
   const weightedImages = [
-    ...normalImages.map(img => Array(4).fill(img)).flat(), // 每张普通图片出现5次
+    ...normalImages.map(img => Array(5).fill(img)).flat(), // 每张普通图片出现5次
     hiddenImage // 隐藏款出现1次
   ]
   

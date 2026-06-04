@@ -6,7 +6,7 @@ hero:
   text: An Open-Source, Clean, and Elegant Kugou Third-Party Client
   tagline: Listen to beauty, beyond the melody
   image:
-    src: /title_img/mai.png
+    src: /title_img/zhi.png
     alt: EchoMusic
   actions:
     - theme: brand
