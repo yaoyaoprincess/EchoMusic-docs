@@ -63,15 +63,16 @@ features:
 import { onMounted, onUnmounted, nextTick } from 'vue'
 
 // 普通封面图片列表
+const base = import.meta.env.BASE_URL
 const normalImages = [
-  '/title_img/zhi.png',
-  '/title_img/zhi2.png',
-  '/title_img/Qzhi.png',
-  '/title_img/QQzhi.png',
+  `${base}title_img/zhi.png`,
+  `${base}title_img/zhi2.png`,
+  `${base}title_img/Qzhi.png`,
+  `${base}title_img/QQzhi.png`,
 ]
 
 // 隐藏款图片（出现概率是其他图片的1/5）
-const hiddenImage = '/title_img/114514.png'
+const hiddenImage = `${base}title_img/114514.png`
 
 let animationFrameId = null
 let particles = []
