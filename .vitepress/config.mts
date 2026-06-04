@@ -209,7 +209,7 @@ export default defineConfig({
     }
   },
   head: [
-    ['link', { rel: 'icon', href: '/icon.ico' }]
+    ['link', { rel: 'icon', href: '/EchoMusic-docs/icon.ico' }]
   ],
   themeConfig: {
     search: {
