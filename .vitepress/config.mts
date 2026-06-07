@@ -5,7 +5,7 @@ import { InlineLinkPreviewElementTransform } from '@nolebase/vitepress-plugin-in
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: '/EchoMusic-docs/',
+  base: '/',
   title: "EchoMusic Docs",
   description: "EchoMusic Usage Guide",
   ignoreDeadLinks: 'localhostLinks',
@@ -209,7 +209,7 @@ export default defineConfig({
     }
   },
   head: [
-    ['link', { rel: 'icon', href: '/EchoMusic-docs/icon.ico' }]
+    ['link', { rel: 'icon', href: '/icon.ico' }]
   ],
   themeConfig: {
     search: {
