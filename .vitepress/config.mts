@@ -34,30 +34,18 @@ export default defineConfig({
             text: '使用指南',
             items: [
               { text: '快速开始', link: '/guide/getting-started' },
-              { text: '播放控制', link: '/guide/playback' },
-              { text: '发现音乐', link: '/guide/music-discovery' },
-              { text: '搜索', link: '/guide/search' },
-              { text: '歌词系统', link: '/guide/lyrics' },
-              { text: '音频设置', link: '/guide/audio' },
-              { text: '私人FM', link: '/guide/personal-fm' },
-              { text: '听歌识曲', link: '/guide/music-recognition' },
-              { text: '歌曲详情', link: '/guide/song-detail' },
-              { text: '个性化设置', link: '/guide/settings' },
-              { text: '常见问题', link: '/guide/faq' },
+              { text: '核心功能', link: '/guide/playback' },
+              { text: '体验定制', link: '/guide/lyrics' },
               { text: '插件系统', link: '/guide/plugins' },
+              { text: '常见问题', link: '/guide/faq' },
             ]
           },
           {
             text: '开发文档',
             items: [
-              { text: '开发概览', link: '/develop/' },
-              { text: '项目架构', link: '/develop/architecture' },
-              { text: '项目结构', link: '/develop/project-structure' },
-              { text: '本地开发', link: '/develop/local-dev' },
-              { text: '原生模块', link: '/develop/native-addons' },
-              { text: '编译构建', link: '/develop/build' },
-              { text: '贡献指南', link: '/develop/contributing' },
-              { text: 'API 参考', link: '/develop/api' },
+              { text: '概览', link: '/develop/' },
+              { text: '基础', link: '/develop/architecture' },
+              { text: '进阶', link: '/develop/native-addons' },
               { text: '插件开发', link: '/develop/plugin-dev/' },
             ]
           },
@@ -78,49 +66,72 @@ export default defineConfig({
               text: '📖 使用指南',
               collapsed: false,
               items: [
-                { text: '快速开始', link: '/guide/getting-started' },
-                { text: '播放控制', link: '/guide/playback' },
-                { text: '发现音乐', link: '/guide/music-discovery' },
-                { text: '搜索', link: '/guide/search' },
-                { text: '歌词系统', link: '/guide/lyrics' },
-                { text: '音频设置', link: '/guide/audio' },
-                { text: '私人 FM', link: '/guide/personal-fm' },
-                { text: '听歌识曲', link: '/guide/music-recognition' },
-                { text: '歌曲详情与评论', link: '/guide/song-detail' },
-                { text: '个性化设置', link: '/guide/settings' },
-                { text: '常见问题', link: '/guide/faq' },
-                { text: '插件系统', link: '/guide/plugins' },
+                { text: '🚀 快速开始', link: '/guide/getting-started' },
+                {
+                  text: '🎵 核心功能',
+                  collapsed: true,
+                  items: [
+                    { text: '播放控制', link: '/guide/playback' },
+                    { text: '发现音乐', link: '/guide/music-discovery' },
+                    { text: '搜索', link: '/guide/search' },
+                    { text: '私人 FM', link: '/guide/personal-fm' },
+                    { text: '听歌识曲', link: '/guide/music-recognition' },
+                  ]
+                },
+                {
+                  text: '🎨 体验定制',
+                  collapsed: true,
+                  items: [
+                    { text: '歌词系统', link: '/guide/lyrics' },
+                    { text: '音频设置', link: '/guide/audio' },
+                    { text: '歌曲详情', link: '/guide/song-detail' },
+                    { text: '个性化设置', link: '/guide/settings' },
+                  ]
+                },
+                { text: '🧩 插件系统', link: '/guide/plugins' },
+                { text: '❓ 常见问题', link: '/guide/faq' },
               ]
             },
           ],
           '/develop/': [
             {
-              text: '🛠️ 开发指南',
+              text: '🛠️ 开发文档',
               collapsed: false,
               items: [
-                { text: '开发概览', link: '/develop/' },
-                { text: '项目架构', link: '/develop/architecture' },
-                { text: '项目结构', link: '/develop/project-structure' },
-                { text: '本地开发环境', link: '/develop/local-dev' },
-                { text: '原生模块 (Rust NAPI)', link: '/develop/native-addons' },
-                { text: '编译与构建', link: '/develop/build' },
-                { text: '贡献指南', link: '/develop/contributing' },
-                { text: 'API 参考', link: '/develop/api' },
-                { text: '插件开发', link: '/develop/plugin-dev/' },
-              ]
-            },
-            {
-              text: '🔌 插件开发',
-              collapsed: false,
-              items: [
-                { text: '插件开发概览', link: '/develop/plugin-dev/' },
-                { text: '快速开始', link: '/develop/plugin-dev/getting-started' },
-                { text: 'Manifest 配置参考', link: '/develop/plugin-dev/manifest' },
-                { text: '上下文 API 参考', link: '/develop/plugin-dev/context-api' },
-                { text: 'UI 扩展指南', link: '/develop/plugin-dev/ui-extension' },
-                { text: '播放器与音频', link: '/develop/plugin-dev/player-audio' },
-                { text: '文件存储与事件', link: '/develop/plugin-dev/filesystem-events' },
-                { text: '发布与分发', link: '/develop/plugin-dev/publishing' },
+                { text: '📋 开发概览', link: '/develop/' },
+                {
+                  text: '📐 基础',
+                  collapsed: true,
+                  items: [
+                    { text: '项目架构', link: '/develop/architecture' },
+                    { text: '项目结构', link: '/develop/project-structure' },
+                    { text: '本地开发', link: '/develop/local-dev' },
+                  ]
+                },
+                {
+                  text: '⚙️ 进阶',
+                  collapsed: true,
+                  items: [
+                    { text: '原生模块', link: '/develop/native-addons' },
+                    { text: '编译构建', link: '/develop/build' },
+                    { text: '贡献指南', link: '/develop/contributing' },
+                    { text: 'API 参考', link: '/develop/api' },
+                  ]
+                },
+                {
+                  text: '🔌 插件开发',
+                  collapsed: true,
+                  items: [
+                    { text: '概览', link: '/develop/plugin-dev/' },
+                    { text: '快速开始', link: '/develop/plugin-dev/getting-started' },
+                    { text: 'Manifest 配置', link: '/develop/plugin-dev/manifest' },
+                    { text: '上下文 API', link: '/develop/plugin-dev/context-api' },
+                    { text: 'UI 扩展', link: '/develop/plugin-dev/ui-extension' },
+                    { text: '播放器与音频', link: '/develop/plugin-dev/player-audio' },
+                    { text: '文件存储与事件', link: '/develop/plugin-dev/filesystem-events' },
+                    { text: '发布', link: '/develop/plugin-dev/publishing' },
+                  ]
+                },
               ]
             },
           ],
@@ -152,30 +163,18 @@ export default defineConfig({
             text: 'User Guide',
             items: [
               { text: 'Getting Started', link: '/en/guide/getting-started' },
-              { text: 'Playback', link: '/en/guide/playback' },
-              { text: 'Music Discovery', link: '/en/guide/music-discovery' },
-              { text: 'Search', link: '/en/guide/search' },
-              { text: 'Lyrics', link: '/en/guide/lyrics' },
-              { text: 'Audio Settings', link: '/en/guide/audio' },
-              { text: 'Personal FM', link: '/en/guide/personal-fm' },
-              { text: 'Music Recognition', link: '/en/guide/music-recognition' },
-              { text: 'Song Details', link: '/en/guide/song-detail' },
-              { text: 'Preferences', link: '/en/guide/settings' },
-              { text: 'FAQ', link: '/en/guide/faq' },
+              { text: 'Core Features', link: '/en/guide/playback' },
+              { text: 'Customization', link: '/en/guide/lyrics' },
               { text: 'Plugin System', link: '/en/guide/plugins' },
+              { text: 'FAQ', link: '/en/guide/faq' },
             ]
           },
           {
             text: 'Development',
             items: [
               { text: 'Overview', link: '/en/develop/' },
-              { text: 'Architecture', link: '/en/develop/architecture' },
-              { text: 'Project Structure', link: '/en/develop/project-structure' },
-              { text: 'Local Dev', link: '/en/develop/local-dev' },
-              { text: 'Native Addons', link: '/en/develop/native-addons' },
-              { text: 'Build', link: '/en/develop/build' },
-              { text: 'Contributing', link: '/en/develop/contributing' },
-              { text: 'API Reference', link: '/en/develop/api' },
+              { text: 'Basics', link: '/en/develop/architecture' },
+              { text: 'Advanced', link: '/en/develop/native-addons' },
               { text: 'Plugin Dev', link: '/en/develop/plugin-dev/' },
             ]
           },
@@ -196,18 +195,30 @@ export default defineConfig({
               text: '📖 User Guide',
               collapsed: false,
               items: [
-                { text: 'Getting Started', link: '/en/guide/getting-started' },
-                { text: 'Playback', link: '/en/guide/playback' },
-                { text: 'Music Discovery', link: '/en/guide/music-discovery' },
-                { text: 'Search', link: '/en/guide/search' },
-                { text: 'Lyrics', link: '/en/guide/lyrics' },
-                { text: 'Audio Settings', link: '/en/guide/audio' },
-                { text: 'Personal FM', link: '/en/guide/personal-fm' },
-                { text: 'Music Recognition', link: '/en/guide/music-recognition' },
-                { text: 'Song Details & Comments', link: '/en/guide/song-detail' },
-                { text: 'Preferences', link: '/en/guide/settings' },
-                { text: 'FAQ', link: '/en/guide/faq' },
-                { text: 'Plugin System', link: '/en/guide/plugins' },
+                { text: '🚀 Getting Started', link: '/en/guide/getting-started' },
+                {
+                  text: '🎵 Core Features',
+                  collapsed: true,
+                  items: [
+                    { text: 'Playback', link: '/en/guide/playback' },
+                    { text: 'Music Discovery', link: '/en/guide/music-discovery' },
+                    { text: 'Search', link: '/en/guide/search' },
+                    { text: 'Personal FM', link: '/en/guide/personal-fm' },
+                    { text: 'Music Recognition', link: '/en/guide/music-recognition' },
+                  ]
+                },
+                {
+                  text: '🎨 Customization',
+                  collapsed: true,
+                  items: [
+                    { text: 'Lyrics', link: '/en/guide/lyrics' },
+                    { text: 'Audio Settings', link: '/en/guide/audio' },
+                    { text: 'Song Details', link: '/en/guide/song-detail' },
+                    { text: 'Preferences', link: '/en/guide/settings' },
+                  ]
+                },
+                { text: '🧩 Plugin System', link: '/en/guide/plugins' },
+                { text: '❓ FAQ', link: '/en/guide/faq' },
               ]
             },
           ],
@@ -216,29 +227,40 @@ export default defineConfig({
               text: '🛠️ Development',
               collapsed: false,
               items: [
-                { text: 'Overview', link: '/en/develop/' },
-                { text: 'Architecture', link: '/en/develop/architecture' },
-                { text: 'Project Structure', link: '/en/develop/project-structure' },
-                { text: 'Local Dev Setup', link: '/en/develop/local-dev' },
-                { text: 'Native Addons (Rust NAPI)', link: '/en/develop/native-addons' },
-                { text: 'Build & Package', link: '/en/develop/build' },
-                { text: 'Contributing', link: '/en/develop/contributing' },
-                { text: 'API Reference', link: '/en/develop/api' },
-                { text: 'Plugin Development', link: '/en/develop/plugin-dev/' },
-              ]
-            },
-            {
-              text: '🔌 Plugin Development',
-              collapsed: false,
-              items: [
-                { text: 'Overview', link: '/en/develop/plugin-dev/' },
-                { text: 'Getting Started', link: '/en/develop/plugin-dev/getting-started' },
-                { text: 'Manifest Reference', link: '/en/develop/plugin-dev/manifest' },
-                { text: 'Context API Reference', link: '/en/develop/plugin-dev/context-api' },
-                { text: 'UI Extension Guide', link: '/en/develop/plugin-dev/ui-extension' },
-                { text: 'Player & Audio', link: '/en/develop/plugin-dev/player-audio' },
-                { text: 'Filesystem & Events', link: '/en/develop/plugin-dev/filesystem-events' },
-                { text: 'Publishing', link: '/en/develop/plugin-dev/publishing' },
+                { text: '📋 Overview', link: '/en/develop/' },
+                {
+                  text: '📐 Basics',
+                  collapsed: true,
+                  items: [
+                    { text: 'Architecture', link: '/en/develop/architecture' },
+                    { text: 'Project Structure', link: '/en/develop/project-structure' },
+                    { text: 'Local Dev', link: '/en/develop/local-dev' },
+                  ]
+                },
+                {
+                  text: '⚙️ Advanced',
+                  collapsed: true,
+                  items: [
+                    { text: 'Native Addons', link: '/en/develop/native-addons' },
+                    { text: 'Build', link: '/en/develop/build' },
+                    { text: 'Contributing', link: '/en/develop/contributing' },
+                    { text: 'API Reference', link: '/en/develop/api' },
+                  ]
+                },
+                {
+                  text: '🔌 Plugin Dev',
+                  collapsed: true,
+                  items: [
+                    { text: 'Overview', link: '/en/develop/plugin-dev/' },
+                    { text: 'Getting Started', link: '/en/develop/plugin-dev/getting-started' },
+                    { text: 'Manifest', link: '/en/develop/plugin-dev/manifest' },
+                    { text: 'Context API', link: '/en/develop/plugin-dev/context-api' },
+                    { text: 'UI Extension', link: '/en/develop/plugin-dev/ui-extension' },
+                    { text: 'Player & Audio', link: '/en/develop/plugin-dev/player-audio' },
+                    { text: 'Filesystem & Events', link: '/en/develop/plugin-dev/filesystem-events' },
+                    { text: 'Publishing', link: '/en/develop/plugin-dev/publishing' },
+                  ]
+                },
               ]
             },
           ],
