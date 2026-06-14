@@ -27,9 +27,15 @@ title: 使用指南
 8. [听歌识曲](/guide/music-recognition) — 识别正在播放的歌曲
 9. [歌曲详情与评论](/guide/song-detail) — 查看歌曲档案与乐评
 
+10. [插件系统](/guide/plugins) — 扩展功能、安装与管理插件
+
 ### 个性化配置
 
 10. [个性化设置](/guide/settings) — 外观主题、快捷键、系统托盘
+
+### 扩展与插件
+
+11. [插件系统](/guide/plugins) — 扩展功能、安装与管理插件
 
 ### 遇到问题？
 
@@ -49,5 +55,6 @@ guide/
 ├── music-recognition.md       ← 听歌识曲
 ├── song-detail.md             ← 歌曲详情与评论
 ├── settings.md                ← 个性化设置
+├── plugins.md                 ← 插件系统
 └── faq.md                     ← 常见问题解答
 ```

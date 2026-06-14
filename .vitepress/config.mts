@@ -44,6 +44,7 @@ export default defineConfig({
               { text: '歌曲详情', link: '/guide/song-detail' },
               { text: '个性化设置', link: '/guide/settings' },
               { text: '常见问题', link: '/guide/faq' },
+              { text: '插件系统', link: '/guide/plugins' },
             ]
           },
           {
@@ -57,6 +58,7 @@ export default defineConfig({
               { text: '编译构建', link: '/develop/build' },
               { text: '贡献指南', link: '/develop/contributing' },
               { text: 'API 参考', link: '/develop/api' },
+              { text: '插件开发', link: '/develop/plugin-dev/' },
             ]
           },
           { text: '社区', link: '/community/' },
@@ -65,6 +67,7 @@ export default defineConfig({
             text: 'GitHub',
             items: [
               { text: 'EchoMusic', link: 'https://github.com/hoowhoami/EchoMusic' },
+              { text: 'EchoMusicPlugins', link: 'https://github.com/hoowhoami/EchoMusicPlugins' },
               { text: 'EchoMusic Docs', link: 'https://github.com/yaoyaoprincess/EchoMusic-docs' },
             ]
           },
@@ -86,6 +89,7 @@ export default defineConfig({
                 { text: '歌曲详情与评论', link: '/guide/song-detail' },
                 { text: '个性化设置', link: '/guide/settings' },
                 { text: '常见问题', link: '/guide/faq' },
+                { text: '插件系统', link: '/guide/plugins' },
               ]
             },
           ],
@@ -102,6 +106,21 @@ export default defineConfig({
                 { text: '编译与构建', link: '/develop/build' },
                 { text: '贡献指南', link: '/develop/contributing' },
                 { text: 'API 参考', link: '/develop/api' },
+                { text: '插件开发', link: '/develop/plugin-dev/' },
+              ]
+            },
+            {
+              text: '🔌 插件开发',
+              collapsed: false,
+              items: [
+                { text: '插件开发概览', link: '/develop/plugin-dev/' },
+                { text: '快速开始', link: '/develop/plugin-dev/getting-started' },
+                { text: 'Manifest 配置参考', link: '/develop/plugin-dev/manifest' },
+                { text: '上下文 API 参考', link: '/develop/plugin-dev/context-api' },
+                { text: 'UI 扩展指南', link: '/develop/plugin-dev/ui-extension' },
+                { text: '播放器与音频', link: '/develop/plugin-dev/player-audio' },
+                { text: '文件存储与事件', link: '/develop/plugin-dev/filesystem-events' },
+                { text: '发布与分发', link: '/develop/plugin-dev/publishing' },
               ]
             },
           ],
@@ -143,6 +162,7 @@ export default defineConfig({
               { text: 'Song Details', link: '/en/guide/song-detail' },
               { text: 'Preferences', link: '/en/guide/settings' },
               { text: 'FAQ', link: '/en/guide/faq' },
+              { text: 'Plugin System', link: '/en/guide/plugins' },
             ]
           },
           {
@@ -156,6 +176,7 @@ export default defineConfig({
               { text: 'Build', link: '/en/develop/build' },
               { text: 'Contributing', link: '/en/develop/contributing' },
               { text: 'API Reference', link: '/en/develop/api' },
+              { text: 'Plugin Dev', link: '/en/develop/plugin-dev/' },
             ]
           },
           { text: 'Community', link: '/en/community/' },
@@ -164,6 +185,7 @@ export default defineConfig({
             text: 'GitHub',
             items: [
               { text: 'EchoMusic', link: 'https://github.com/hoowhoami/EchoMusic' },
+              { text: 'EchoMusicPlugins', link: 'https://github.com/hoowhoami/EchoMusicPlugins' },
               { text: 'EchoMusic Docs', link: 'https://github.com/yaoyaoprincess/EchoMusic-docs' },
             ]
           },
@@ -185,6 +207,7 @@ export default defineConfig({
                 { text: 'Song Details & Comments', link: '/en/guide/song-detail' },
                 { text: 'Preferences', link: '/en/guide/settings' },
                 { text: 'FAQ', link: '/en/guide/faq' },
+                { text: 'Plugin System', link: '/en/guide/plugins' },
               ]
             },
           ],
@@ -201,6 +224,21 @@ export default defineConfig({
                 { text: 'Build & Package', link: '/en/develop/build' },
                 { text: 'Contributing', link: '/en/develop/contributing' },
                 { text: 'API Reference', link: '/en/develop/api' },
+                { text: 'Plugin Development', link: '/en/develop/plugin-dev/' },
+              ]
+            },
+            {
+              text: '🔌 Plugin Development',
+              collapsed: false,
+              items: [
+                { text: 'Overview', link: '/en/develop/plugin-dev/' },
+                { text: 'Getting Started', link: '/en/develop/plugin-dev/getting-started' },
+                { text: 'Manifest Reference', link: '/en/develop/plugin-dev/manifest' },
+                { text: 'Context API Reference', link: '/en/develop/plugin-dev/context-api' },
+                { text: 'UI Extension Guide', link: '/en/develop/plugin-dev/ui-extension' },
+                { text: 'Player & Audio', link: '/en/develop/plugin-dev/player-audio' },
+                { text: 'Filesystem & Events', link: '/en/develop/plugin-dev/filesystem-events' },
+                { text: 'Publishing', link: '/en/develop/plugin-dev/publishing' },
               ]
             },
           ],

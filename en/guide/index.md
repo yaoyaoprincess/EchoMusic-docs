@@ -49,5 +49,6 @@ en/guide/
 ├── music-recognition.md       ← Music recognition
 ├── song-detail.md             ← Song details & comments
 ├── settings.md                ← Personalization settings
+├── plugins.md                 ← Plugin system
 └── faq.md                     ← Frequently asked questions
 ```

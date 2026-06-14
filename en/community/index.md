@@ -26,6 +26,7 @@ EchoMusic is open source on GitHub — contributions and feedback are welcome:
 | Project | Link | Description |
 |------|------|------|
 | EchoMusic Main Repo | [hoowhoami/EchoMusic](https://github.com/hoowhoami/EchoMusic) | Core project code |
+| EchoMusic Plugin Repo | [hoowhoami/EchoMusicPlugins](https://github.com/hoowhoami/EchoMusicPlugins) | Plugin development docs & examples |
 
 ### Contributing
 

@@ -26,6 +26,7 @@ EchoMusic 项目在 GitHub 上开源，欢迎参与贡献和反馈：
 | 项目 | 链接 | 说明 |
 |------|------|------|
 | EchoMusic 主仓库 | [hoowhoami/EchoMusic](https://github.com/hoowhoami/EchoMusic) | 核心项目代码 |
+| EchoMusic 插件仓库 | [hoowhoami/EchoMusicPlugins](https://github.com/hoowhoami/EchoMusicPlugins) | 插件开发文档与示例 |
 
 ### 参与贡献
 
