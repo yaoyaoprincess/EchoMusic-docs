@@ -32,6 +32,9 @@ outline: [2, 4]
     "lyrics": true,
     "process": false
   },
+  "permissions": {
+    "http": ["https://api.my-service.com/*"]
+  },
   "requires": {
     "echoMusicVersion": ">=2.2.6-beta.9 <3"
   },
@@ -282,13 +285,13 @@ ctx.player.audioSource.register({
 |------|-----|
 | 授予 | `ctx.audio.spectrum` |
 
-读取或订阅**实时音频频谱数据**。适用于可视化频谱、均衡器、VU 表等插件。
+读取或订阅**实时音频频谱数据**。适用于可视化频谱、均衡器、VU 表等插件。详见 [音频频谱 →](./audio-spectrum)。
 
 ```js
 // 需要使用 audioSpectrum 能力
 ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
-  // data 为 Float32Array，包含频域数据
-  drawVisualizer(data);
+  // data.frequencyData 为 Float32Array，包含频域数据
+  drawVisualizer(data.frequencyData);
 });
 ```
 
@@ -306,7 +309,7 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 |------|-----|
 | 授予 | `ctx.fs` |
 
-扫描、读取文件系统中的音频文件，或在插件目录内写入数据。
+扫描、读取文件系统中的音频文件，或在插件目录内写入数据。详见 [文件存储与数据 →](./filesystem-storage)。
 
 #### lyricEffects
 
@@ -314,7 +317,7 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 |------|-----|
 | 授予 | `ctx.lyricEffects.register()` |
 
-注册**歌词视觉动效**，通过 CSS 注入或 overlay 装饰层实现。
+注册**歌词视觉动效**，通过 CSS 注入或 overlay 装饰层实现。详见 [播放器与音频引擎 →](./player-audio#歌词视觉效果)。
 
 #### lyrics
 
@@ -322,7 +325,7 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 |------|-----|
 | 授予 | `ctx.lyrics.registerResolver()` |
 
-为歌曲提供**自定义歌词解析器**。适用于接入第三方歌词源。
+为歌曲提供**自定义歌词解析器**。适用于接入第三方歌词源。详见 [播放器与音频引擎 →](./player-audio#注册歌词解析器)。
 
 #### process
 
@@ -330,9 +333,31 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 |------|-----|
 | 授予 | `ctx.process.launch()` |
 
-启动**插件目录内的本机程序**。适用于需要调用外部工具的场景。
+启动**插件目录内的本机程序**。适用于需要调用外部工具的场景。详见 [窗口与系统 →](./windows-system#进程管理)。
 
 > ⚠️ 此能力允许执行任意本地程序，只对可信插件开启。
+
+---
+
+## permissions（网络权限）
+
+> 从 v2.2.7 起支持
+
+声明插件需要的网络访问权限。EchoMusic 会在启用前展示给用户确认。
+
+```json
+"permissions": {
+  "http": ["https://api.example.com/*", "https://*.music-service.com/*"]
+}
+```
+
+| 字段 | 类型 | 必选 | 说明 |
+|------|------|:--:|------|
+| `http` | `string[]` | ❌ | 允许访问的 HTTP(S) URL 模式，支持通配符 `*` |
+
+- 每个条目是 URL [match pattern](https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns) 格式
+- 如果不声明这项，插件的 `fetch()` 请求不会被阻断，但规范上建议按最小权限声明
+- 如果插件需要进行身份认证跳转（如 OAuth），需要将认证服务的域名也加入列表
 
 ---
 
@@ -406,7 +431,7 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 | `width` | `number` | — | 默认宽度（px） |
 | `height` | `number` | — | 默认高度（px） |
 
-> 浮窗由 Electron 主进程创建，属于独立的 BrowserWindow。详细说明见 [发布与分发 →](./publishing) 和 [EchoMusicPlugins 浮窗文档](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md)。
+> 浮窗由 Electron 主进程创建，属于独立的 BrowserWindow。详见 [窗口与系统 →](./windows-system) 和 [EchoMusicPlugins 浮窗文档](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md)。
 
 ---
 
@@ -426,6 +451,6 @@ EchoMusic 在加载插件时会校验 manifest：
 
 ## 下一步
 
-- [上下文 API 参考 →](./context-api) — 了解 `ctx` 对象的所有可用 API
+- [API 总览 →](./context-api) — 了解 `ctx` 对象的所有可用 API
 - [UI 扩展指南 →](./ui-extension) — 学习如何添加界面元素
 - [快速开始 →](./getting-started) — 从零创建你的第一个插件

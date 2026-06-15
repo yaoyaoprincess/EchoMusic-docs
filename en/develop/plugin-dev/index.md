@@ -143,7 +143,7 @@ Plugin access to sensitive APIs uses an **explicit declaration** mechanism. Afte
 | [Context API Reference →](./context-api) | Everyone | Complete `ctx` API listing |
 | [UI Extension Guide →](./ui-extension) | Frontend Devs | Pages, settings panels, context menus, component injection |
 | [Player & Audio →](./player-audio) | Audio Devs | Playback control, audio spectrum, lyrics system |
-| [File Storage & Events →](./filesystem-events) | Advanced Devs | Local files, KV storage, event listeners, appearance |
+| [Filesystem & Storage →](./filesystem-storage) | Advanced Devs | Local files, KV storage, event listeners, appearance |
 | [Publishing & Distribution →](./publishing) | Plugin Authors | Plugin registry, versioning, packaging & release |
 
 ---

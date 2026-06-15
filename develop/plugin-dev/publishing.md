@@ -147,12 +147,118 @@ your-name/my-echo-plugins/       ← 插件源仓库
 }
 ```
 
-### 步骤三：用户在 EchoMusic 中添加插件源
+---
 
-1. 打开 EchoMusic → 设置 → 插件管理
-2. 点击"添加插件源"
-3. 输入插件源仓库的 URL：`https://github.com/your-name/my-echo-plugins`
-4. EchoMusic 会自动拉取 `echo-plugins.json` 并展示可用插件
+## 插件市场编程式 API
+
+除了 UI 上的"添加插件源"，插件还可以通过 `ctx.plugins.marketplace` 以编程方式管理插件源和安装插件。这对"插件管理器插件"等工具类插件非常有用。
+
+### 源管理
+
+| API | 说明 |
+|-----|------|
+| `ctx.plugins.marketplace.listSources()` | 列出所有已添加的插件源 |
+| `ctx.plugins.marketplace.addSource(input, options?)` | 添加一个插件源（input: `{ url, name? }`） |
+| `ctx.plugins.marketplace.patchSource(sourceId, patch)` | 修改插件源的配置 |
+| `ctx.plugins.marketplace.removeSource(sourceId)` | 移除一个插件源 |
+
+```js
+// 添加插件源
+await ctx.plugins.marketplace.addSource({
+  url: "https://github.com/hoowhoami/EchoMusicPlugins",
+  name: "EchoMusic 官方插件",
+});
+
+// 列出当前的插件源
+const sources = await ctx.plugins.marketplace.listSources();
+console.log(sources);
+
+// 修改插件源名称
+await ctx.plugins.marketplace.patchSource("source-id", {
+  name: "更新后的名称",
+});
+```
+
+### 浏览与安装
+
+| API | 说明 |
+|-----|------|
+| `ctx.plugins.marketplace.list(options?)` | 浏览所有已添加源中的可用插件 |
+| `ctx.plugins.marketplace.install(sourceId, pluginId, options?)` | 从指定源安装插件 |
+
+```js
+// 获取所有可用插件
+const result = await ctx.plugins.marketplace.list();
+// result.plugins 是 { sourceId, pluginId, manifest, ... } 列表
+
+// 在线安装插件
+const installResult = await ctx.plugins.marketplace.install(
+  "source-id",
+  "my-plugin",
+  { force: true }   // force: true 会覆盖本地已有版本
+);
+```
+
+---
+
+## 插件管理 API
+
+### 本地安装
+
+| API | 说明 |
+|-----|------|
+| `ctx.plugins.installLocal(paths, options?)` | 从本地路径（文件/文件夹）安装插件 |
+
+```js
+// 安装从文件管理器拖入的插件
+const paths = ctx.plugins.getDroppedFilePaths(event.dataTransfer.files);
+const result = await ctx.plugins.installLocal(paths);
+```
+
+### 卸载
+
+| API | 说明 |
+|-----|------|
+| `ctx.plugins.uninstall(pluginId)` | 卸载指定插件，删除插件目录并清除 KV 数据 |
+
+---
+
+## 安全模式与故障管理
+
+### 安全模式
+
+当插件出现未捕获异常时，EchoMusic 会触发安全保护机制。
+
+| API | 说明 |
+|-----|------|
+| `ctx.plugins.setSafeMode(enabled)` | 全局开关安全模式（true 时禁用所有插件） |
+| `ctx.plugins.setEnabled(pluginId, enabled)` | 启用/禁用指定插件 |
+
+### 故障上报
+
+插件可以主动上报运行故障，帮助 EchoMusic 判断是否需要建议用户禁用该插件。
+
+| API | 说明 |
+|-----|------|
+| `ctx.plugins.reportFailure(failure)` | 上报故障记录 |
+| `ctx.plugins.clearFailure(pluginId?)` | 清除故障记录（不传参数清除所有） |
+| `ctx.plugins.markStartup(pluginIds)` | 标记启动期间活动的插件 |
+| `ctx.plugins.setActiveSession(pluginIds)` | 标记当前会话的活动插件 |
+| `ctx.plugins.clearStartup()` | 清除启动标记 |
+
+```js
+// 上报故障
+ctx.plugins.reportFailure({
+  pluginId: ctx.manifest.id,
+  error: "插件初始化时网络请求失败",
+  safeMode: false,   // 是否建议进入安全模式
+});
+
+// 清除此插件的历史故障记录
+ctx.plugins.clearFailure(ctx.manifest.id);
+```
+
+> 如果某个启用了的插件在一个**启动会话**中多次崩溃，EchoMusic 会自动建议用户禁用该插件。
 
 ---
 
@@ -205,8 +311,10 @@ EchoMusic 会比较本地已安装插件的 `version` 与在线插件源的 `man
 # 初始化
 npm init -y
 npm install -D vite
+```
 
-# vite.config.js
+```js
+// vite.config.js
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
@@ -257,8 +365,9 @@ npm install -D esbuild
 
 - 浮窗由 **Electron 主进程** 创建，与插件 JS 运行在不同的进程中
 - 浮窗内的 HTML 可以使用 `<script>` 标签，但无法直接访问 `ctx`
-- 如需浮窗与主窗口通信，需要使用 `postMessage` 或 Electron IPC（通过宿主提供的桥接）
-- 详细文档见 [EchoMusicPlugins 浮窗文档](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md)
+- 如需浮窗与主窗口通信，需要通过宿主提供的 `window.electronAPI` 桥接
+- 浮窗内的 `ctx` 通过 window API 同步注入，浮窗也有自己的 `activate(ctx)` 调用
+- 详细文档见 [窗口与系统 →](./windows-system) 和 [EchoMusicPlugins 浮窗文档](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md)
 
 ---
 
@@ -270,8 +379,9 @@ npm install -D esbuild
 - [ ] `id` 唯一，无冲突
 - [ ] `version` 符合 semver 规范
 - [ ] `capabilities` 遵循最小权限原则
+- [ ] `permissions.http` 声明了网络访问范围（如适用）
 - [ ] 入口文件无 bare import（不直接 `import from 'vue'`）
-- [ ] `extends.echoMusicVersion` 版本范围合理
+- [ ] `requires.echoMusicVersion` 版本范围合理
 - [ ] 在 EchoMusic 中实测通过
 - [ ] `echo-plugins.json` 中不包含 version/description/author（属于 manifest.json）
 
@@ -279,6 +389,7 @@ npm install -D esbuild
 
 ## 下一步
 
+- [API 总览 →](./context-api) — 完整 ctx API 参考
+- [窗口与系统 →](./windows-system) — 浮窗、桌面歌词、Mini 播放器管理
 - [插件开发概览 →](./) — 返回总览
-- [上下文 API 参考 →](./context-api) — 完整 ctx API 参考
 - [EchoMusicPlugins 仓库 →](https://github.com/hoowhoami/EchoMusicPlugins) — 官方插件示例

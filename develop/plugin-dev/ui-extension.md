@@ -84,7 +84,7 @@ const SettingsPanel = ctx.vue.defineComponent({
     const fontSize = ref(14);
 
     // 恢复已保存的设置
-    ctx.storage.get("settings").then((saved) => {
+    ctx.storage.kvGet("settings").then((saved) => {
       if (saved) {
         autoScroll.value = saved.autoScroll !== false;
         fontSize.value = saved.fontSize || 14;
@@ -92,7 +92,7 @@ const SettingsPanel = ctx.vue.defineComponent({
     });
 
     const save = async () => {
-      await ctx.storage.set("settings", {
+      await ctx.storage.kvSet("settings", {
         autoScroll: autoScroll.value,
         fontSize: fontSize.value,
       });
@@ -142,7 +142,7 @@ ctx.ui.settings.define({
 
 ### 最佳实践
 
-- 使用 `ctx.storage` 持久化用户的设置
+- 使用 `ctx.storage.kvSet/kvGet` 持久化用户的设置
 - 在 `setup()` 中异步加载已有设置，避免阻塞 UI
 - 提供"保存"按钮，让用户明确提交更改
 - 避免在设置面板中放置过于复杂的逻辑——复杂的界面请注册独立页面
@@ -186,6 +186,36 @@ ctx.ui.addSongContextMenuItem({
 - `onSelect` 可以是 `async` 函数
 - 多个插件可以注册不同的右键菜单项，EchoMusic 会自动合并
 - 如果 `id` 与其他插件冲突，**后注册的会覆盖先注册的**
+
+---
+
+## 播放器按钮
+
+使用 `ctx.ui.addPlayerButton()` 在播放器控制栏中添加自定义按钮。
+
+```js
+ctx.ui.addPlayerButton({
+  id: "my-action",
+  icon: "❤️",
+  label: "收藏",
+  onClick() {
+    const track = ctx.player.currentTrack;
+    if (track) {
+      addToFavorites(track);
+      ctx.toast.success("已添加到收藏");
+    }
+  },
+  order: 50,
+});
+```
+
+| 参数 | 类型 | 必选 | 说明 |
+|------|------|:--:|------|
+| `id` | `string` | ✅ | 按钮唯一标识 |
+| `icon` | `string` | ✅ | 按钮图标（Emoji 或 SVG） |
+| `label` | `string` | ❌ | 悬停提示文本 |
+| `onClick` | `() => void` | ✅ | 点击回调 |
+| `order` | `number` | ❌ | 排序权重，越小越靠左 |
 
 ---
 
@@ -239,6 +269,46 @@ ctx.ui.teleport("#app-header", MyHeaderWidget);
 
 ---
 
+## CSS 注入
+
+使用 `ctx.css.inject()` 动态注入 CSS 样式。
+
+```js
+ctx.css.inject(`
+  .my-plugin-panel {
+    border-radius: 12px;
+    background: var(--color-bg-secondary);
+    padding: 16px;
+  }
+`);
+```
+
+- 注入的 CSS 在插件禁用/卸载时**自动移除**
+- 适合注入少量动态样式；大量样式推荐使用 manifest 的 `style` 字段
+
+---
+
+## DOM 监听
+
+使用 `ctx.dom.observe()` 监听 DOM 节点的插入/移除。
+
+```js
+ctx.dom.observe(".playlist-container", (element) => {
+  // element 是匹配选择器的 DOM 元素
+  console.log("播放列表已渲染", element);
+});
+```
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `selector` | `string` | CSS 选择器 |
+| `callback` | `(el: HTMLElement) => void` | 节点匹配时的回调 |
+
+- 当匹配选择器的元素**首次出现**时触发回调
+- 监听在插件禁用/卸载时**自动解除**
+
+---
+
 ## 自定义样式
 
 除了通过 `style` 字段注入 CSS 文件外，还可以在代码中动态添加样式：
@@ -261,7 +331,7 @@ ctx.dispose(() => {
 });
 ```
 
-> 推荐优先使用 manifest 的 `style` 字段。只在需要动态样式时才在代码中手动注入。
+> 推荐优先使用 `ctx.css.inject()` 或 manifest 的 `style` 字段。只在需要动态计算样式时才手动创建 `<style>` 标签。
 
 ---
 
@@ -269,6 +339,6 @@ ctx.dispose(() => {
 
 | 文档 | 内容 |
 |------|------|
-| [播放器与音频 →](./player-audio) | `ctx.player`、音频频谱、歌词系统 |
-| [上下文 API 参考 →](./context-api) | ctx 完整 API 列表 |
+| [播放器与音频引擎 →](./player-audio) | `ctx.player`、音频频谱、歌词系统 |
+| [API 总览 →](./context-api) | ctx 完整 API 列表 |
 | [发布与分发 →](./publishing) | 发布插件到在线插件源 |

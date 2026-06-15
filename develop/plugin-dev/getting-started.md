@@ -206,6 +206,10 @@ hello-echo/
 ## 下一步
 
 - [Manifest 配置参考 →](./manifest) — 了解 manifest 的所有字段
-- [上下文 API 参考 →](./context-api) — 浏览完整的 `ctx` API
+- [API 总览 →](./context-api) — 浏览全部 ~120 个 ctx API
 - [UI 扩展指南 →](./ui-extension) — 学习如何定制界面
-- [播放器与音频 →](./player-audio) — 播放控制和音频处理
+- [播放器与音频引擎 →](./player-audio) — 播放控制和音频处理
+- [文件存储与数据 →](./filesystem-storage) — 文件系统、KV 存储、事件监听
+- [音频频谱 →](./audio-spectrum) — 实时频谱数据订阅与可视化
+- [窗口与系统 →](./windows-system) — 浮窗、桌面歌词、Mini 播放器、快捷键
+- [发布与分发 →](./publishing) — 将插件发布到在线插件源

@@ -276,6 +276,6 @@ ctx.lyricEffects.register({
 
 | Document | Content |
 |----------|------|
-| [File Storage & Events →](./filesystem-events) | Local file I/O, KV storage, event listeners |
+| [Filesystem & Storage →](./filesystem-storage) | Local file I/O, KV storage, event listeners |
 | [UI Extension Guide →](./ui-extension) | Pages, settings panels, context menus |
 | [Publishing & Distribution →](./publishing) | Publish plugins to the online registry |

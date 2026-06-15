@@ -243,4 +243,4 @@ ctx.dispose(() => {
 |----------|------|
 | [UI Extension Guide →](./ui-extension) | Deep dive into UI customization |
 | [Player & Audio →](./player-audio) | `ctx.player`, audio spectrum, lyrics system |
-| [File Storage & Events →](./filesystem-events) | Local files, KV storage, event listeners |
+| [Filesystem & Storage →](./filesystem-storage) | Local files, KV storage, event listeners |
