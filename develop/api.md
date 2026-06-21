@@ -1,8 +1,8 @@
 ---
-title: API 参考
+title: 酷狗 API 参考
 ---
 
-# 🔌 API 参考
+# 🔌 酷狗 API 参考
 
 本文档提供 EchoMusic 使用到的酷狗音乐公开 API 接口参考。项目基于 [KuGouMusicApi](https://github.com/MakcRe/KuGouMusicApi) 进行 API 调用封装。
 

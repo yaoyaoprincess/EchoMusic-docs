@@ -65,4 +65,4 @@ EchoMusic uses Electron's classic dual-process architecture with Rust NAPI nativ
 - [Native Addons](/en/develop/native-addons) — Rust NAPI native extension development
 - [Build & Package](/en/develop/build) — Multi-platform build packaging
 - [Contributing](/en/develop/contributing) — How to contribute
-- [API Reference](/en/develop/api) — Kugou Music public API documentation
+- [Kugou API Reference](/en/develop/api) — Kugou Music public API documentation

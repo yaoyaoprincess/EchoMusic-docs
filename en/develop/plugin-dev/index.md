@@ -149,4 +149,4 @@ Plugin access to sensitive APIs uses an **explicit declaration** mechanism. Afte
 ---
 
 - [EchoMusicPlugins Repository →](https://github.com/hoowhoami/EchoMusicPlugins)
-- [User Guide: Plugin System →](/guide/plugins)
+- [User Guide: Plugin System →](/guide/plugins/)

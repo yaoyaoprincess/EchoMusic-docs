@@ -5,18 +5,20 @@ outline: [2, 4]
 
 # 🔧 API 总览
 
-`ctx` 对象是插件的核心入口。本文档按模块列出全部 ~120 个 API 的速查表，每个 API 标注了所属的详情文档以便深入了解。
+`ctx` 对象是插件的核心入口。本文档按模块列出所有插件可用的 API 速查表，每个 API 标注了所属的详情文档以便深入了解。
+
+> ℹ️ 本文档以 [EchoMusicPlugins 仓库](https://github.com/hoowhoami/EchoMusicPlugins) 官方文档为准。内部 API（mpv 引擎、桌面歌词、Mini 播放器等）不在插件范围内，详见 [内部 API 参考 →](../internal-api/)。
 
 ---
 
 ## 🏗️ 宿主运行时
 
-| API | 类型 | 说明 | 详见 |
-|-----|------|------|:--:|
-| `ctx.vue` | Vue 3 运行时 | `defineComponent` / `h` / `ref` / `computed` / `watch` / `onMounted` / `onUnmounted` / `defineAsyncComponent` | — |
-| `ctx.app` | App 实例 | 主应用 Vue App 实例 | — |
-| `ctx.router` | Router 实例 | Vue Router 实例 | — |
-| `ctx.pinia` | Pinia 实例 | Pinia 状态管理实例 | — |
+| API | 类型 | 说明 |
+|-----|------|------|
+| `ctx.vue` | Vue 3 运行时 | `defineComponent` / `h` / `ref` / `computed` / `watch` / `onMounted` / `onUnmounted` / `defineAsyncComponent` / `reactive` / `resolveComponent` |
+| `ctx.app` | App 实例 | 主应用 Vue App 实例 |
+| `ctx.router` | Router 实例 | Vue Router 实例 |
+| `ctx.pinia` | Pinia 实例 | Pinia 状态管理实例 |
 
 > ⚠️ 不能 `import { ref } from 'vue'`，必须通过 `ctx.vue.ref()` 访问。
 
@@ -38,16 +40,16 @@ outline: [2, 4]
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
-| `ctx.ui.addPage({id, title, icon?, component, order?})` | 注册侧边栏独立页面 | [UI 扩展](./ui-extension#注册独立页面) |
+| `ctx.ui.addPage({id, title, icon?, component, sidebar?})` | 注册侧边栏独立页面 | [UI 扩展](./ui-extension#注册独立页面) |
+| `ctx.ui.sidebar.addItem({id, title, icon?, pageId, section?, order?})` | 为已注册页面添加侧边栏项 | [UI 扩展](./ui-extension#侧边栏项) |
 | `ctx.ui.settings.define({title, component})` | 注册插件设置面板 | [UI 扩展](./ui-extension#设置面板) |
 | `ctx.ui.addSongContextMenuItem({id, label, onSelect})` | 歌曲右键菜单项 | [UI 扩展](./ui-extension#歌曲右键菜单) |
-| `ctx.ui.addPlayerButton({id, icon, label?, onClick, order?})` | 播放器控制栏按钮 | [UI 扩展](./ui-extension#播放器按钮) |
-| `ctx.ui.mount(el, component)` | 挂载 Vue 组件到 DOM | [UI 扩展](./ui-extension#组件挂载) |
-| `ctx.ui.teleport(selector, component)` | Teleport 组件 | [UI 扩展](./ui-extension#组件传送) |
-| `ctx.ui.components.Button` | 预置按钮组件 | [UI 扩展](./ui-extension#设置面板) |
-| `ctx.ui.components.Switch` | 预置开关组件 | [UI 扩展](./ui-extension#设置面板) |
-| `ctx.ui.components.Input` | 预置输入框组件 | [UI 扩展](./ui-extension#设置面板) |
-| `ctx.css.inject(css)` | 动态注入 CSS（卸载时自动移除） | [UI 扩展](./ui-extension#css-注入) |
+| `ctx.ui.cover.setFallback({id, resolveUrl})` | 封面无法加载时的回退图片 | [UI 扩展](./ui-extension#封面回退) |
+| `ctx.ui.mount(target, component, opts?)` | 挂载 Vue 组件到 DOM | [UI 扩展](./ui-extension#组件挂载) |
+| `ctx.ui.teleport(component, opts?)` | Teleport 组件到 body | [UI 扩展](./ui-extension#组件传送) |
+| `ctx.ui.components.Button` / `Switch` / `Input` / `Select` / `Slider` | 预置 UI 控件（`defineAsyncComponent` 加载） | [UI 扩展](./ui-extension#预置组件) |
+| `ctx.css.inject(css, {id?})` | 动态注入 CSS | [UI 扩展](./ui-extension#css-注入) |
+| `ctx.css.remove(id)` | 移除注入的 CSS | [UI 扩展](./ui-extension#css-注入) |
 | `ctx.dom.observe(selector, callback)` | 监听 DOM 节点出现 | [UI 扩展](./ui-extension#dom-监听) |
 
 ---
@@ -66,82 +68,64 @@ outline: [2, 4]
 | `ctx.player.stop()` | 停止 | [播放器](./player-audio#播放控制) |
 | `ctx.player.seek(time)` | 跳转（秒） | [播放器](./player-audio#播放控制) |
 | `ctx.player.setVolume(v)` | 设置音量（0-100） | [播放器](./player-audio#播放控制) |
-| `ctx.player.setSpeed(s)` | 倍速（0.5-3.0） | [播放器](./player-audio#播放控制) |
+| `ctx.player.setPlaybackRate(r)` | 倍速（0.5-3.0） | [播放器](./player-audio#播放控制) |
 | `ctx.player.setPlayMode(m)` | 播放模式 | [播放器](./player-audio#播放控制) |
 | `ctx.player.setAudioQuality(q)` | 音频品质 | [播放器](./player-audio#播放控制) |
 | `ctx.player.setAudioEffect(e)` | 设置音效 | [播放器](./player-audio#播放控制) |
-| `ctx.player.isPlaying` | Ref\<boolean\>（响应式） | [播放器](./player-audio#播放状态) |
-| `ctx.player.currentTime` | Ref\<number\>（响应式） | [播放器](./player-audio#播放状态) |
-| `ctx.player.duration` | Ref\<number\>（响应式） | [播放器](./player-audio#播放状态) |
-| `ctx.player.currentTrack` | Ref（响应式） | [播放器](./player-audio#播放状态) |
-| `ctx.player.playMode` | Ref（响应式） | [播放器](./player-audio#播放状态) |
-| `ctx.player.volume` | Ref（响应式） | [播放器](./player-audio#播放状态) |
+| `ctx.player.playTrack(track)` | 播放指定歌曲 | [播放器](./player-audio#播放控制) |
+| `ctx.player.playNext()` | 播放下一首（跳过队列） | [播放器](./player-audio#播放控制) |
+| `ctx.player.playLast()` | 播放上一首 | [播放器](./player-audio#播放控制) |
+| `ctx.player.replaceQueueAndPlay(items)` | 替换队列并播放 | [播放器](./player-audio#播放控制) |
+| `ctx.player.dislikePersonalFm()` | 私人 FM 不喜欢 | [播放器](./player-audio#播放控制) |
+| `ctx.player.toggleLyricView(open?)` | 切换歌词视图 | [播放器](./player-audio#播放控制) |
+
+### 播放状态（computed，只读响应式）
+
+| 属性 | 类型 | 说明 |
+|------|:--:|------|
+| `currentTrack` | `computed` | 当前歌曲对象 |
+| `currentTrackId` | `computed` | 当前歌曲 ID |
+| `currentTime` | `computed` | 播放进度（秒） |
+| `duration` | `computed` | 总时长（秒） |
+| `isPlaying` | `computed` | 是否播放中 |
+| `playbackRate` | `computed` | 播放速率 |
+| `volume` | `computed` | 音量（0-100） |
+| `playMode` | `computed` | 播放模式 |
 
 ### 播放队列
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
-| `ctx.player.playlist.getQueue()` | 获取当前队列 | [播放器](./player-audio#播放队列管理) |
-| `ctx.player.playlist.append(items)` | 追加歌曲 | [播放器](./player-audio#播放队列管理) |
-| `ctx.player.playlist.remove(songId)` | 移除歌曲 | [播放器](./player-audio#播放队列管理) |
-| `ctx.player.playlist.clear()` | 清空队列 | [播放器](./player-audio#播放队列管理) |
-| `ctx.player.playlist.replace(items)` | 替换整个队列 | [播放器](./player-audio#播放队列管理) |
-| `ctx.player.playlist.reorder(from, to)` | 重排 | [播放器](./player-audio#播放队列管理) |
-| `ctx.player.playlist.setCurrentTrack(songId)` | 切歌 | [播放器](./player-audio#播放队列管理) |
-
-### mpv 引擎高级控制
-
-| API | 说明 | 详见 |
-|-----|------|:--:|
-| `ctx.audio.setEqualizer(gains)` | 18段 EQ（-12~+12 dB） | [播放器](./player-audio#均衡器) |
-| `ctx.audio.setSpatialAudio({preset, dryWet})` | 空间音效 | [播放器](./player-audio#空间音效) |
-| `ctx.audio.setImpulseResponse(path\|{path,dryWet})` | IR 卷积 | [播放器](./player-audio#脉冲响应) |
-| `ctx.audio.setAudioDevice(name)` | 切换输出设备 | [播放器](./player-audio#音频设备控制) |
-| `ctx.audio.getAudioDevices()` | 获取设备列表 | [播放器](./player-audio#音频设备控制) |
-| `ctx.audio.setExclusive(bool)` | 独占模式 | [播放器](./player-audio#音频设备控制) |
-| `ctx.audio.getAudioFilter()` | 当前音效滤波器 | [播放器](./player-audio#音频设备控制) |
-| `ctx.audio.fade(from, to, ms)` | 音量渐变 | [播放器](./player-audio#音量渐变) |
-| `ctx.audio.cancelFade()` | 取消渐变 | [播放器](./player-audio#音量渐变) |
-| `ctx.audio.pauseWithFade(v, ms)` | 渐弱暂停 | [播放器](./player-audio#音量渐变) |
-| `ctx.audio.playWithFade(v, ms)` | 渐强恢复 | [播放器](./player-audio#音量渐变) |
-| `ctx.audio.setNormalizationGain(dB)` | 响度归一化 | [播放器](./player-audio#响度归一化) |
-| `ctx.audio.loadFile(url, track?)` | 加载文件/MKV | [播放器](./player-audio#文件和循环) |
-| `ctx.audio.getTrackList()` | MKV 轨道列表 | [播放器](./player-audio#文件和循环) |
-| `ctx.audio.setLoopFile(bool)` | 单曲循环 | [播放器](./player-audio#文件和循环) |
-| `ctx.audio.setMediaTitle(title)` | 设置媒体标题 | [播放器](./player-audio#文件和循环) |
-| `ctx.audio.available()` | 引擎是否可用 | [播放器](./player-audio#引擎控制) |
-| `ctx.audio.restart()` | 重启引擎 | [播放器](./player-audio#引擎控制) |
-| `ctx.audio.getState()` | 内部状态 | [播放器](./player-audio#引擎控制) |
-
-### 音频事件
-
-| API | 回调参数 | 详见 |
-|-----|----------|:--:|
-| `ctx.audio.onTimeUpdate(fn)` | `(time)` | [播放器](./player-audio#核心事件) |
-| `ctx.audio.onDurationChange(fn)` | `(duration)` | [播放器](./player-audio#核心事件) |
-| `ctx.audio.onStateChange(fn)` | `({playing?, paused?})` | [播放器](./player-audio#核心事件) |
-| `ctx.audio.onPlaybackEnd(fn)` | `(reason)` | [播放器](./player-audio#核心事件) |
-| `ctx.audio.onError(fn)` | `(msg)` | [播放器](./player-audio#核心事件) |
-| `ctx.audio.onAudioDeviceListChanged(fn)` | `(devices[])` | [播放器](./player-audio#设备事件) |
-| `ctx.audio.onImpulseResponseDisabled(fn)` | `({path?, reason?})` | [播放器](./player-audio#设备事件) |
+| `ctx.playlist.getQueue()` | 获取当前队列 | [播放器](./player-audio#播放队列管理) |
+| `ctx.playlist.replaceQueue(items)` | 替换整个队列 | [播放器](./player-audio#播放队列管理) |
+| `ctx.playlist.addTrack(track)` | 添加歌曲 | [播放器](./player-audio#播放队列管理) |
+| `ctx.playlist.removeTrack(id)` | 移除歌曲 | [播放器](./player-audio#播放队列管理) |
+| `ctx.playlist.clear()` | 清空队列 | [播放器](./player-audio#播放队列管理) |
+| `ctx.playlist.reorder(from, to)` | 重排 | [播放器](./player-audio#播放队列管理) |
+| `ctx.playlist.playNext(track)` | 插播（下一首播放） | [播放器](./player-audio#播放队列管理) |
 
 ### 音频频谱
+
+> 需要 capability：`audioSpectrum: true`
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
 | `ctx.audio.spectrum.getStatus()` | 获取捕获状态 | [频谱](./audio-spectrum#getstatus) |
 | `ctx.audio.spectrum.getSnapshot()` | 单帧频谱快照 | [频谱](./audio-spectrum#getsnapshot) |
-| `ctx.audio.spectrum.subscribe(opts, cb, meta?)` | 实时订阅频谱 | [频谱](./audio-spectrum#subscribe) |
+| `ctx.audio.spectrum.subscribe(opts, cb)` | 实时订阅频谱 | [频谱](./audio-spectrum#subscribe) |
 
 ### 自定义音源 & 歌词
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
-| `ctx.player.audioSource.register(opts)` | 注册音源解析器 | [播放器](./player-audio#自定义音源) |
-| `ctx.lyrics.registerResolver(opts)` | 注册歌词解析器 | [播放器](./player-audio#注册歌词解析器) |
+| `ctx.player.audioSource.register(opts)` | 注册音源解析器（需 `audioSource: true`） | [播放器](./player-audio#自定义音源) |
+| `ctx.lyrics.registerResolver(opts)` | 注册歌词解析器（需 `lyrics: true`） | [播放器](./player-audio#注册歌词解析器) |
 | `ctx.lyrics.getSnapshot()` | 歌词状态快照 | [播放器](./player-audio#获取订阅歌词快照) |
 | `ctx.lyrics.onSnapshot(fn)` | 订阅歌词变化 | [播放器](./player-audio#获取订阅歌词快照) |
-| `ctx.lyricEffects.register(opts)` | 注册歌词动效 | [播放器](./player-audio#歌词视觉效果) |
+| `ctx.lyrics.command(cmd)` | 发送歌词命令 | [播放器](./player-audio#获取订阅歌词快照) |
+| `ctx.lyricEffects.register(opts)` | 注册歌词动效（需 `lyricEffects: true`） | [播放器](./player-audio#歌词视觉效果) |
+
+> ℹ️ mpv 引擎高级控制（EQ/空间音效/IR/设备/渐变等）属于内部 API，不在插件范围内。详见 [内部 API 参考 →](../internal-api/audio-engine)。
 
 ---
 
@@ -149,120 +133,204 @@ outline: [2, 4]
 
 ### KV 存储
 
-| API | 说明 | 详见 |
-|-----|------|:--:|
-| `ctx.storage.kvGet(key)` | 读取键值 | [数据](./filesystem-storage#kv-存储) |
-| `ctx.storage.kvSet(key, value)` | 写入键值 | [数据](./filesystem-storage#kv-存储) |
-| `ctx.storage.kvDelete(key)` | 删除键值 | [数据](./filesystem-storage#kv-存储) |
-
-### 播放队列持久化
+`ctx.storage` 提供按插件隔离的持久化 KV 存储。
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
-| `ctx.storage.playbackGetSnapshot()` | 播放状态快照 | [数据](./filesystem-storage#播放队列持久化) |
-| `ctx.storage.playbackGetQueue()` | 完整队列 | [数据](./filesystem-storage#播放队列持久化) |
-| `ctx.storage.playbackReplaceQueue(items)` | 替换队列 | [数据](./filesystem-storage#播放队列持久化) |
-| `ctx.storage.playbackAppendQueueItems(items)` | 追加歌曲 | [数据](./filesystem-storage#播放队列持久化) |
-| `ctx.storage.playbackRemoveQueueItem(id)` | 移除歌曲 | [数据](./filesystem-storage#播放队列持久化) |
-| `ctx.storage.playbackReorderQueueItems(from,to)` | 重排 | [数据](./filesystem-storage#播放队列持久化) |
-| `ctx.storage.playbackSetCurrentTrack(id)` | 设置当前曲目 | [数据](./filesystem-storage#播放队列持久化) |
-| `ctx.storage.playbackUpdateMeta(meta)` | 更新队列元数据 | [数据](./filesystem-storage#播放队列持久化) |
+| `ctx.storage.get(key)` | 读取键值 | [数据](./filesystem-storage#kv-存储) |
+| `ctx.storage.set(key, value)` | 写入键值 | [数据](./filesystem-storage#kv-存储) |
+
+> 插件卸载时 KV 数据自动清除；升级（覆盖安装）时保留。
 
 ### 文件系统
 
-| API | 说明 | 详见 |
-|-----|------|:--:|
-| `ctx.fs.listFiles(opts)` | 扫描目录 | [数据](./filesystem-storage#文件系统) |
-| `ctx.fs.listImageFiles(opts)` | 扫描图片 | [数据](./filesystem-storage#文件系统) |
-| `ctx.fs.readTextFile(opts)` | 读取文本文件 | [数据](./filesystem-storage#文件系统) |
-| `ctx.fs.readFileBytes(opts)` | 读取二进制 | [数据](./filesystem-storage#文件系统) |
-| `ctx.fs.writeFile(opts)` | 写入文件 | [数据](./filesystem-storage#文件系统) |
-| `ctx.fs.deleteFile(path)` | 删除文件 | [数据](./filesystem-storage#文件系统) |
-| `ctx.fs.getFileUrl(path)` | 获取播放 URL | [数据](./filesystem-storage#文件系统) |
-
-### HTTP & 事件
+> 需要 capability：`localFiles: true`（大部分操作）
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
-| `ctx.api.request(config)` | HTTP 请求 | [数据](./filesystem-storage#http-请求) |
-| `ctx.events.onTrackChange(fn)` | 歌曲切换 | [数据](./filesystem-storage#事件监听) |
-| `ctx.events.onPlayStateChange(fn)` | 播放/暂停 | [数据](./filesystem-storage#事件监听) |
-| `ctx.events.onVolumeChange(fn)` | 音量变化 | [数据](./filesystem-storage#事件监听) |
-| `ctx.appearance.getSnapshot()` | 外观快照 | [数据](./filesystem-storage#外观订阅) |
+| `ctx.fs.listFiles(directory, opts?)` | 扫描目录 | [数据](./filesystem-storage#文件系统) |
+| `ctx.fs.listImageFiles(directory, opts?)` | 扫描图片文件 | [数据](./filesystem-storage#文件系统) |
+| `ctx.fs.readTextFile(path, opts?)` | 读取文本文件 | [数据](./filesystem-storage#文件系统) |
+| `ctx.fs.readFileBytes(path, opts?)` | 读取二进制文件 | [数据](./filesystem-storage#文件系统) |
+| `ctx.fs.writeFile(path, data, opts?)` | 写入文件（仅插件目录内） | [数据](./filesystem-storage#文件系统) |
+| `ctx.fs.deleteFile(path)` | 删除文件（仅插件目录内） | [数据](./filesystem-storage#文件系统) |
+| `ctx.fs.getFileUrl(path)` | 获取文件播放 URL | [数据](./filesystem-storage#文件系统) |
+
+### 外观 & 字体
+
+| API | 说明 | 详见 |
+|-----|------|:--:|
+| `ctx.appearance.getSnapshot()` | 外观快照（主题色/深色模式/字体） | [数据](./filesystem-storage#外观订阅) |
 | `ctx.appearance.onSnapshot(fn)` | 订阅外观变化 | [数据](./filesystem-storage#外观订阅) |
+| `ctx.fonts.getAll()` | 系统字体名称列表 | — |
+| `ctx.fonts.getOptions({includeFollow?})` | 字体选项（可用于 Select 组件） | — |
+| `ctx.fonts.buildFamily(name)` | 构建 CSS font-family 字符串 | — |
 
 ---
 
 ## 🪟 窗口 & 系统
 
-### 浮窗
+### 插件浮窗
+
+> 浮窗需在 manifest `contributes.windows` 中声明。
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
-| `ctx.window.show(pluginId, windowId, opts?)` | 显示浮窗 | [系统](./windows-system#浮窗管理) |
-| `ctx.window.hide(pluginId, windowId)` | 隐藏浮窗 | [系统](./windows-system#浮窗管理) |
-| `ctx.window.getContext()` | 浮窗上下文 | [系统](./windows-system#浮窗管理) |
-
-### 桌面歌词
-
-| API | 说明 | 详见 |
-|-----|------|:--:|
-| `ctx.desktopLyric.getSnapshot()` | 状态快照 | [系统](./windows-system#桌面歌词) |
-| `ctx.desktopLyric.show()` / `hide()` / `toggleLock()` | 显示/隐藏/锁定 | [系统](./windows-system#桌面歌词) |
-| `ctx.desktopLyric.updateSettings(s)` | 更新设置 | [系统](./windows-system#桌面歌词) |
-| `ctx.desktopLyric.onSnapshot(fn)` | 订阅状态 | [系统](./windows-system#桌面歌词) |
-| `ctx.desktopLyric.command(cmd)` | 发送命令 | [系统](./windows-system#桌面歌词) |
-| `ctx.desktopLyric.setIgnoreMouseEvents(bool)` | 鼠标穿透 | [系统](./windows-system#桌面歌词) |
-
-### Mini 播放器
-
-| API | 说明 | 详见 |
-|-----|------|:--:|
-| `ctx.miniPlayer.getSnapshot()` | 状态快照 | [系统](./windows-system#mini-播放器) |
-| `ctx.miniPlayer.show()` / `hide()` / `toggle()` | 显示/隐藏/切换 | [系统](./windows-system#mini-播放器) |
-| `ctx.miniPlayer.setExpanded(bool)` | 展开/收缩 | [系统](./windows-system#mini-播放器) |
-| `ctx.miniPlayer.setAlwaysOnTop(bool)` | 置顶 | [系统](./windows-system#mini-播放器) |
-| `ctx.miniPlayer.getBounds()` / `move(x, y)` | 位置/尺寸 | [系统](./windows-system#mini-播放器) |
-| `ctx.miniPlayer.onSnapshot(fn)` | 订阅状态 | [系统](./windows-system#mini-播放器) |
-| `ctx.miniPlayer.onCommand(fn)` | 命令监听 | [系统](./windows-system#mini-播放器) |
+| `ctx.windows.show()` | 显示浮窗 | [系统](./windows-system#浮窗管理) |
+| `ctx.windows.hide()` | 隐藏浮窗 | [系统](./windows-system#浮窗管理) |
+| `ctx.windows.close()` | 关闭浮窗 | [系统](./windows-system#浮窗管理) |
+| `ctx.windows.move(x, y)` | 移动浮窗 | [系统](./windows-system#浮窗管理) |
+| `ctx.windows.getBounds()` | 获取浮窗位置和尺寸 | [系统](./windows-system#浮窗管理) |
+| `ctx.windows.setIgnoreMouseEvents(bool)` | 鼠标穿透 | [系统](./windows-system#浮窗管理) |
 
 ### Now Playing
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
-| `ctx.nowPlaying.getSnapshot()` | 状态快照 | [系统](./windows-system#now-playing-浮窗) |
-| `ctx.nowPlaying.onSnapshot(fn)` | 订阅状态 | [系统](./windows-system#now-playing-浮窗) |
-| `ctx.nowPlaying.command(cmd)` / `onCommand(fn)` | 命令 | [系统](./windows-system#now-playing-浮窗) |
+| `ctx.nowPlaying.getSnapshot()` | 当前状态快照 | [系统](./windows-system#now-playing-浮窗) |
+| `ctx.nowPlaying.onSnapshot(fn)` | 订阅状态变化 | [系统](./windows-system#now-playing-浮窗) |
+| `ctx.nowPlaying.onCommand(fn)` | 监听命令 | [系统](./windows-system#now-playing-浮窗) |
+| `ctx.nowPlaying.syncPlayback(state)` | 同步播放状态 | [系统](./windows-system#now-playing-浮窗) |
+| `ctx.nowPlaying.syncLyric(state)` | 同步歌词状态 | [系统](./windows-system#now-playing-浮窗) |
 
-### 其他系统 API
+### 进程管理
+
+> 需要 capability：`process: true`
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
-| `ctx.shortcuts.register({enabled, shortcutMap})` | 注册快捷键 | [系统](./windows-system#快捷键) |
-| `ctx.shortcuts.refresh()` | 刷新快捷键 | [系统](./windows-system#快捷键) |
-| `ctx.shortcuts.onTrigger(fn)` | 监听触发 | [系统](./windows-system#快捷键) |
-| `ctx.tray.syncPlayback(state)` | 同步托盘状态 | [系统](./windows-system#系统托盘) |
-| `ctx.tray.onSetPlayMode(fn)` | 托盘模式切换 | [系统](./windows-system#系统托盘) |
-| `ctx.windowControl(action)` | 最大化/最小化/关闭/全屏 | [系统](./windows-system#窗口控制) |
-| `ctx.power.onSuspend(fn)` | 系统休眠 | [系统](./windows-system#电源事件) |
-| `ctx.power.onResume(fn)` | 系统唤醒 | [系统](./windows-system#电源事件) |
-| `ctx.process.launch(opts)` | 启动程序 | [系统](./windows-system#进程管理) |
-| `ctx.process.terminate()` | 终止进程 | [系统](./windows-system#进程管理) |
-| `ctx.icons.refresh()` | 刷新图标 | [系统](./windows-system#应用图标) |
-| `ctx.icons.setRuntimeWindowIcon(path)` | 设置窗口图标 | [系统](./windows-system#应用图标) |
-| `ctx.icons.restoreDefaultWindowIcon()` | 恢复窗口图标 | [系统](./windows-system#应用图标) |
-| `ctx.icons.restoreDefaultDesktopIcon()` | 恢复桌面图标 | [系统](./windows-system#应用图标) |
-| `ctx.icons.restoreDefaultTaskbarIcon()` | 恢复任务栏图标 | [系统](./windows-system#应用图标) |
-| `ctx.appInfo.get()` | 应用信息 | [系统](./windows-system#应用信息) |
-| `ctx.appInfo.getChangelog()` | 更新日志 | [系统](./windows-system#应用信息) |
-| `ctx.updater.download()` / `install(silent?)` | 更新 | [系统](./windows-system#更新器) |
-| `ctx.updater.onDownloadStatus(fn)` | 下载进度 | [系统](./windows-system#更新器) |
-| `ctx.apiServer.start()` / `status()` | 本地 API 服务 | [系统](./windows-system#api-服务器) |
-| `ctx.fonts.getAll()` | 系统字体列表 | [系统](./windows-system#字体) |
-| `ctx.audioEffects.importImpulseResponse()` | 导入 IR 文件 | [系统](./windows-system#音频特效管理) |
-| `ctx.audioEffects.deleteImpulseResponse(path)` | 删除 IR | [系统](./windows-system#音频特效管理) |
-| `ctx.logger.info/error/warn/debug(...)` | 结构化日志 | [系统](./windows-system#日志) |
-| `ctx.logging.get()` / `update(s)` | 日志设置 | [系统](./windows-system#日志) |
+| `ctx.process.launch(opts)` | 启动插件目录内程序 | [系统](./windows-system#进程管理) |
+| `ctx.process.terminate(pid?)` | 终止已启动的进程 | [系统](./windows-system#进程管理) |
+
+### 应用图标
+
+| API | 说明 | 详见 |
+|-----|------|:--:|
+| `ctx.appIcons.refresh()` | 刷新所有图标缓存 | [系统](./windows-system#应用图标) |
+| `ctx.appIcons.setRuntimeWindowIcon(path)` | 设置运行时窗口图标 | [系统](./windows-system#应用图标) |
+| `ctx.appIcons.restoreDefaultWindowIcon()` | 恢复默认窗口图标 | [系统](./windows-system#应用图标) |
+| `ctx.appIcons.restoreDefaultDesktopIcon()` | 恢复默认桌面图标 | [系统](./windows-system#应用图标) |
+| `ctx.appIcons.restoreDefaultTaskbarIcon()` | 恢复默认任务栏图标 | [系统](./windows-system#应用图标) |
+
+### 图标库
+
+| API | 说明 |
+|-----|------|
+| `ctx.icons` | Iconify 图标对象，如 `ctx.icons.iconPictureInPicture`，可直接传入 `Icon` 组件 |
+
+```js
+const Icon = ctx.vue.resolveComponent("Icon");
+h(Icon, { icon: ctx.icons.iconPictureInPicture, width: 16, height: 16 });
+```
+
+### 系统对话框
+
+| API | 说明 |
+|-----|------|
+| `ctx.dialog.selectDirectory(opts?)` | 打开目录选择对话框，返回 `{canceled, paths}` |
+| `ctx.dialog.selectFiles(opts?)` | 打开文件选择对话框，支持 `multiple`、`filters` |
+
+### 字体
+
+| API | 说明 |
+|-----|------|
+| `ctx.fonts.getAll()` | 系统可用字体名称列表 |
+| `ctx.fonts.getOptions({includeFollow?})` | 字体下拉选项 |
+| `ctx.fonts.buildFamily(name)` | 构建 CSS `font-family` 值 |
+
+---
+
+## 🎨 主题 & 样式
+
+### 表面样式
+
+```js
+ctx.theme.surface.set({
+  enabled: true,
+  mainOpacity: 82,         // 0-100
+  sidebarOpacity: 82,
+  cardOpacity: 86,
+  playerOpacity: 92,
+  backdropFilter: "blur(10px)",
+  playerBackdropFilter: "blur(20px) saturate(180%)",
+});
+ctx.theme.surface.clear(); // 恢复默认
+```
+
+### 页面过渡动画
+
+```js
+ctx.theme.pageTransition.set({
+  enabled: true,
+  mode: "out-in",
+  appear: true,
+  durationMs: 450,
+  enterOpacity: 0,
+  leaveOpacity: 0,
+  enterTranslateY: 6,
+});
+ctx.theme.pageTransition.clear();
+```
+
+### 主题色渐变
+
+```js
+ctx.theme.accentGradient.set({
+  color: "#ff5c8a",
+  angle: 180,
+  height: "46%",
+  peakOpacity: 0.28,
+});
+ctx.theme.accentGradient.clear();
+```
+
+---
+
+## 📜 滚动画布
+
+`ctx.scroll` 提供页面滚动容器的高级控制，适合滚动增强类插件。
+
+| API | 说明 |
+|-----|------|
+| `queryContainers()` | 获取所有滚动容器 |
+| `getCurrentContainer()` | 获取当前焦点容器 |
+| `getState(el?)` | 获取滚动状态 |
+| `scrollToTop(el?)` | 滚动到顶部 |
+| `scrollToBottom(el?)` | 滚动到底部 |
+| `observeContainers(handler)` | 监听滚动容器变化 |
+
+---
+
+## 🌐 酷狗 API
+
+> 需要 capability：`kugouApi: true`
+
+`ctx.kugou` 提供对 EchoMusic 内置酷狗音乐接口的访问。API 采用延迟加载，按需调用。
+
+| 命名空间 | 示例 |
+|----------|------|
+| `ctx.kugou.music` | `ctx.kugou.music.getSongUrl(hash)` |
+| `ctx.kugou.user` | `ctx.kugou.user.getUserDetail()` |
+| `ctx.kugou.playlist` | `ctx.kugou.playlist.getUserPlaylists()` |
+| `ctx.kugou.video` | `ctx.kugou.video.getVideoDetail(id)` |
+| `ctx.kugou.search` | `ctx.kugou.search.search(keyword)` |
+| `ctx.kugou.artist` | `ctx.kugou.artist.getArtistDetail(id)` |
+| `ctx.kugou.album` | `ctx.kugou.album.getAlbumDetail(id)` |
+| `ctx.kugou.comment` | `ctx.kugou.comment.getMusicComments(mixSongId)` |
+
+> ⚠️ 插件仅传业务参数（`hash`、`id` 等），不传敏感凭证（token、dfid、mid）。主进程自动注入当前登录态。
+
+---
+
+## ⚡ 原生 API
+
+### Electron 对象
+
+```js
+ctx.electron.platform  // "win32" | "darwin" | "linux"
+```
+
+可直接访问宿主 Electron API（如 `ctx.electron.miniPlayer?.show()`），但大部分场景应使用 `ctx` 封装的 API。
 
 ---
 
@@ -270,12 +338,10 @@ outline: [2, 4]
 
 | API | 说明 | 详见 |
 |-----|------|:--:|
-| `ctx.manifest` | 只读，当前插件 manifest.json | [Manifest](./manifest) |
-| `ctx.dispose(fn)` | 注册清理函数 | [概览](./) |
-| `ctx.toast.success(msg)` | 绿色成功提示 | [概览](./) |
-| `ctx.toast.info(msg)` | 蓝色信息提示 | [概览](./) |
-| `ctx.toast.error(msg)` | 红色错误提示 | [概览](./) |
-| `ctx.dialog.open(opts)` | 打开系统对话框 | — |
+| `ctx.id` | 当前插件 ID（只读） | — |
+| `ctx.manifest` | 当前插件 manifest.json（只读） | [Manifest](./manifest) |
+| `ctx.dispose(fn)` | 注册清理函数（插件禁用时调用） | [概览](./) |
+| `ctx.toast.info(msg)` / `success(msg)` / `warning(msg)` / `danger(msg)` | 提示消息 | — |
 | `ctx.plugins.list()` | 列出所有插件 | [发布](./publishing#插件管理-api) |
 | `ctx.plugins.installLocal(paths, opts?)` | 本地安装 | [发布](./publishing#本地安装) |
 | `ctx.plugins.uninstall(pluginId)` | 卸载插件 | [发布](./publishing#卸载) |
@@ -297,8 +363,9 @@ outline: [2, 4]
 | 文档 | 内容 |
 |------|------|
 | [UI 扩展指南 →](./ui-extension) | 界面定制的深入实践 |
-| [播放器与音频引擎 →](./player-audio) | 播放控制、EQ、空间音效、歌词系统 |
-| [文件存储与数据 →](./filesystem-storage) | FS、KV、播放队列持久化、事件 |
+| [播放器与音频引擎 →](./player-audio) | 播放控制、播放队列、频谱、歌词系统 |
+| [文件存储与数据 →](./filesystem-storage) | 文件系统、KV 存储、外观订阅 |
 | [音频频谱 →](./audio-spectrum) | 实时 FFT 频谱数据 |
-| [窗口与系统 →](./windows-system) | 浮窗、桌面歌词、Mini、快捷键 |
+| [窗口与系统 →](./windows-system) | 浮窗、Now Playing、进程、图标 |
 | [发布与分发 →](./publishing) | 插件源、市场、故障管理 |
+| [内部 API 参考 →](../internal-api/) | 不暴露给插件的内部 API（mpv 引擎等） |

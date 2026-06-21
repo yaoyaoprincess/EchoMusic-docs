@@ -12,28 +12,30 @@ Welcome to EchoMusic! This guide will help you get started and master all of Ech
 
 If you're new to EchoMusic, we recommend reading in this order:
 
-1. [Getting Started](/en/guide/getting-started) — Download, install & log in
-2. [Playback](/en/guide/playback) — Master basic playback controls
-3. [Music Discovery](/en/guide/music-discovery) — Browse recommendations & charts
-4. [Search](/en/guide/search) — Find the music you want
+- [Getting Started](/en/guide/getting-started) — Download, install & log in
+- [Playback](/en/guide/playback) — Master basic playback controls
+- [Music Discovery](/en/guide/music-discovery) — Browse recommendations & charts
+- [Search](/en/guide/search) — Find the music you want
 
 ### Advanced Features
 
 Once you're comfortable with the basics, explore these advanced features:
 
-5. [Lyrics](/en/guide/lyrics) — LRC/YRC lyrics, full-screen & desktop lyrics
-6. [Audio Settings](/en/guide/audio) — EQ equalizer, sound effects, audio quality
-7. [Personal FM](/en/guide/personal-fm) — Personalized radio recommendations
-8. [Music Recognition](/en/guide/music-recognition) — Identify songs playing around you
-9. [Song Details & Comments](/en/guide/song-detail) — View song info & reviews
+- [Lyrics](/en/guide/lyrics) — LRC/YRC lyrics, full-screen & desktop lyrics
+- [Audio Settings](/en/guide/audio) — EQ equalizer, sound effects, audio quality
+- [Personal FM](/en/guide/personal-fm) — Personalized radio recommendations
+- [Music Recognition](/en/guide/music-recognition) — Identify songs playing around you
+- [Song Details & Comments](/en/guide/song-detail) — View song info & reviews
+- [Play History](/en/guide/settings#data-management) — View and manage listening history
+- [Plugin System](/en/guide/plugins/) — Extend functionality, install & manage plugins
 
 ### Personalization
 
-10. [Preferences](/en/guide/settings) — Themes, shortcuts, system tray
+- [Preferences](/en/guide/settings) — Themes, shortcuts, system tray
 
 ### Need Help?
 
-11. [FAQ](/en/guide/faq) — Frequently asked questions
+- [FAQ](/en/guide/faq) — Frequently asked questions
 
 ## Document Structure
 
@@ -49,6 +51,6 @@ en/guide/
 ├── music-recognition.md       ← Music recognition
 ├── song-detail.md             ← Song details & comments
 ├── settings.md                ← Personalization settings
-├── plugins.md                 ← Plugin system
+├── plugins/                   ← Plugin system (4 subpages)
 └── faq.md                     ← Frequently asked questions
 ```

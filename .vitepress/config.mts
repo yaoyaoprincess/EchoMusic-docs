@@ -36,7 +36,7 @@ export default defineConfig({
               { text: '快速开始', link: '/guide/getting-started' },
               { text: '核心功能', link: '/guide/playback' },
               { text: '体验定制', link: '/guide/lyrics' },
-              { text: '插件系统', link: '/guide/plugins' },
+              { text: '插件系统', link: '/guide/plugins/' },
               { text: '常见问题', link: '/guide/faq' },
             ]
           },
@@ -69,7 +69,7 @@ export default defineConfig({
                 { text: '🚀 快速开始', link: '/guide/getting-started' },
                 {
                   text: '🎵 核心功能',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: '播放控制', link: '/guide/playback' },
                     { text: '发现音乐', link: '/guide/music-discovery' },
@@ -80,7 +80,7 @@ export default defineConfig({
                 },
                 {
                   text: '🎨 体验定制',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: '歌词系统', link: '/guide/lyrics' },
                     { text: '音频设置', link: '/guide/audio' },
@@ -88,7 +88,16 @@ export default defineConfig({
                     { text: '个性化设置', link: '/guide/settings' },
                   ]
                 },
-                { text: '🧩 插件系统', link: '/guide/plugins' },
+                {
+                  text: '🧩 插件系统',
+                  collapsed: false,
+                  items: [
+                    { text: '概览', link: '/guide/plugins/' },
+                    { text: '安装插件', link: '/guide/plugins/install' },
+                    { text: '插件列表', link: '/guide/plugins/list' },
+                    { text: '管理与安全', link: '/guide/plugins/manage' },
+                  ]
+                },
                 { text: '❓ 常见问题', link: '/guide/faq' },
               ]
             },
@@ -101,7 +110,7 @@ export default defineConfig({
                 { text: '📋 开发概览', link: '/develop/' },
                 {
                   text: '📐 基础',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: '项目架构', link: '/develop/architecture' },
                     { text: '项目结构', link: '/develop/project-structure' },
@@ -110,17 +119,28 @@ export default defineConfig({
                 },
                 {
                   text: '⚙️ 进阶',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: '原生模块', link: '/develop/native-addons' },
                     { text: '编译构建', link: '/develop/build' },
                     { text: '贡献指南', link: '/develop/contributing' },
-                    { text: 'API 参考', link: '/develop/api' },
+                    { text: '酷狗 API 参考', link: '/develop/api' },
+                  ]
+                },
+                {
+                  text: '🔧 内部 API 参考',
+                  collapsed: false,
+                  items: [
+                    { text: '概览', link: '/develop/internal-api/' },
+                    { text: '音频引擎', link: '/develop/internal-api/audio-engine' },
+                    { text: '播放状态与持久化', link: '/develop/internal-api/playback-state' },
+                    { text: '窗口与交互管理', link: '/develop/internal-api/window-management' },
+                    { text: '系统功能集成', link: '/develop/internal-api/system-features' },
                   ]
                 },
                 {
                   text: '🔌 插件开发',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: '概览', link: '/develop/plugin-dev/' },
                     { text: '快速开始', link: '/develop/plugin-dev/getting-started' },
@@ -167,7 +187,7 @@ export default defineConfig({
               { text: 'Getting Started', link: '/en/guide/getting-started' },
               { text: 'Core Features', link: '/en/guide/playback' },
               { text: 'Customization', link: '/en/guide/lyrics' },
-              { text: 'Plugin System', link: '/en/guide/plugins' },
+              { text: 'Plugin System', link: '/en/guide/plugins/' },
               { text: 'FAQ', link: '/en/guide/faq' },
             ]
           },
@@ -200,7 +220,7 @@ export default defineConfig({
                 { text: '🚀 Getting Started', link: '/en/guide/getting-started' },
                 {
                   text: '🎵 Core Features',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: 'Playback', link: '/en/guide/playback' },
                     { text: 'Music Discovery', link: '/en/guide/music-discovery' },
@@ -211,7 +231,7 @@ export default defineConfig({
                 },
                 {
                   text: '🎨 Customization',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: 'Lyrics', link: '/en/guide/lyrics' },
                     { text: 'Audio Settings', link: '/en/guide/audio' },
@@ -219,7 +239,16 @@ export default defineConfig({
                     { text: 'Preferences', link: '/en/guide/settings' },
                   ]
                 },
-                { text: '🧩 Plugin System', link: '/en/guide/plugins' },
+                {
+                  text: '🧩 Plugin System',
+                  collapsed: false,
+                  items: [
+                    { text: 'Overview', link: '/en/guide/plugins/' },
+                    { text: 'Installation', link: '/en/guide/plugins/install' },
+                    { text: 'Plugin List', link: '/en/guide/plugins/list' },
+                    { text: 'Management & Safety', link: '/en/guide/plugins/manage' },
+                  ]
+                },
                 { text: '❓ FAQ', link: '/en/guide/faq' },
               ]
             },
@@ -232,7 +261,7 @@ export default defineConfig({
                 { text: '📋 Overview', link: '/en/develop/' },
                 {
                   text: '📐 Basics',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: 'Architecture', link: '/en/develop/architecture' },
                     { text: 'Project Structure', link: '/en/develop/project-structure' },
@@ -241,17 +270,28 @@ export default defineConfig({
                 },
                 {
                   text: '⚙️ Advanced',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: 'Native Addons', link: '/en/develop/native-addons' },
                     { text: 'Build', link: '/en/develop/build' },
                     { text: 'Contributing', link: '/en/develop/contributing' },
-                    { text: 'API Reference', link: '/en/develop/api' },
+                    { text: 'Kugou API Reference', link: '/en/develop/api' },
+                  ]
+                },
+                {
+                  text: '🔧 Internal API Reference',
+                  collapsed: false,
+                  items: [
+                    { text: 'Overview', link: '/en/develop/internal-api/' },
+                    { text: 'Audio Engine', link: '/en/develop/internal-api/audio-engine' },
+                    { text: 'Playback & State', link: '/en/develop/internal-api/playback-state' },
+                    { text: 'Window Management', link: '/en/develop/internal-api/window-management' },
+                    { text: 'System Features', link: '/en/develop/internal-api/system-features' },
                   ]
                 },
                 {
                   text: '🔌 Plugin Dev',
-                  collapsed: true,
+                  collapsed: false,
                   items: [
                     { text: 'Overview', link: '/en/develop/plugin-dev/' },
                     { text: 'Getting Started', link: '/en/develop/plugin-dev/getting-started' },

@@ -7,237 +7,56 @@ outline: [2, 4]
 
 本文档介绍插件如何控制 EchoMusic 的各类窗口以及访问系统级 API。
 
+> ℹ️ 桌面歌词、Mini 播放器、快捷键、托盘、电源、更新器、日志等属于内部 API，不在插件范围内。详见 [内部 API 参考 →](../internal-api/)。
+
 ---
 
 ## 浮窗管理
 
-声明在 `contributes.windows` 中的浮窗可以通过 `ctx.window` 编程式控制。
-
-### API
+声明在 `contributes.windows` 中的浮窗可以通过 `ctx.windows` 编程式控制。
 
 | API | 说明 |
 |-----|------|
-| `ctx.window.show(pluginId, windowId, options?)` | 显示指定浮窗 |
-| `ctx.window.hide(pluginId, windowId)` | 隐藏指定浮窗 |
-| `ctx.window.getContext()` | 获取当前浮窗的上下文（仅在浮窗内调用时可用） |
+| `ctx.windows.show()` | 显示浮窗 |
+| `ctx.windows.hide()` | 隐藏浮窗 |
+| `ctx.windows.close()` | 关闭浮窗 |
+| `ctx.windows.move(x, y)` | 移动窗口到指定坐标 |
+| `ctx.windows.getBounds()` | 获取窗口位置和尺寸 `{ x, y, width, height }` |
+| `ctx.windows.setIgnoreMouseEvents(bool)` | 鼠标穿透开关 |
 
 ```js
 // 显示浮窗
-ctx.window.show("my-plugin", "my-float", {
-  width: 400,
-  height: 300,
-});
-
+ctx.windows.show();
 // 隐藏浮窗
-ctx.window.hide("my-plugin", "my-float");
+ctx.windows.hide();
+// 移动
+ctx.windows.move(100, 200);
 ```
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| `pluginId` | `string` | 插件 ID（`ctx.manifest.id`） |
-| `windowId` | `string` | 在 manifest 中声明的浮窗 `id` |
-| `options` | `object` | 可选，覆盖 manifest 中的默认尺寸 |
-
----
-
-## 桌面歌词
-
-`ctx.desktopLyric` 提供对桌面歌词悬浮窗的完整控制。
-
-### 状态查询与控制
-
-| API | 返回 | 说明 |
-|-----|------|------|
-| `getSnapshot()` | `Promise<DesktopLyricSnapshot>` | 获取当前歌词状态快照 |
-| `show()` | `Promise<DesktopLyricSnapshot>` | 显示桌面歌词 |
-| `hide()` | `Promise<DesktopLyricSnapshot>` | 隐藏桌面歌词 |
-| `toggleLock()` | `Promise<DesktopLyricSnapshot>` | 切换锁定状态 |
-| `updateSettings(settings)` | `Promise<DesktopLyricSnapshot>` | 更新歌词设置 |
-| `command(cmd)` | `void` | 发送命令（如调整字体大小） |
-| `setIgnoreMouseEvents(ignore)` | `void` | 鼠标穿透开关（`true` 时点击穿透） |
-
-### 订阅歌词状态
-
-```js
-ctx.desktopLyric.onSnapshot((snapshot) => {
-  console.log("歌词状态:", snapshot);
-  // { visible, locked, lines, currentLine, ... }
-});
-```
-
-返回值是一个取消函数，插件禁用时自动取消。
-
-### 同步状态
-
-```js
-// 将歌词状态同步给其他窗口
-ctx.desktopLyric.syncSnapshot({
-  locked: true,
-  // ... 其他需要同步的字段
-});
-```
-
----
-
-## Mini 播放器
-
-`ctx.miniPlayer` 控制迷你播放器窗口。
-
-### 状态查询与控制
-
-| API | 返回 | 说明 |
-|-----|------|------|
-| `getSnapshot()` | `Promise<MiniPlayerSnapshot>` | 获取当前状态 |
-| `show()` / `hide()` / `toggle()` | `Promise<MiniPlayerSnapshot>` | 显示/隐藏/切换 |
-| `setExpanded(bool)` | `Promise<MiniPlayerSnapshot>` | 展开/收缩 |
-| `setAlwaysOnTop(bool)` | `Promise<MiniPlayerSnapshot>` | 置顶开关 |
-| `getBounds()` | `Promise<{x,y,width,height}>` | 获取窗口位置和尺寸 |
-| `move(x, y)` | `void` | 移动窗口到指定坐标 |
-| `applyExpandBounds()` | `Promise<MiniPlayerSnapshot>` | 应用展开尺寸 |
-| `command(cmd)` | `void` | 发送命令 |
-| `notifyLyricVisibility(bool)` | `void` | 通知歌词可见性 |
-
-### 订阅
-
-```js
-// 状态变化
-ctx.miniPlayer.onSnapshot((snapshot) => {
-  console.log("Mini 播放器状态:", snapshot);
-});
-
-// 命令监听
-ctx.miniPlayer.onCommand((cmd) => {
-  console.log("接收到命令:", cmd);
-});
-
-// 歌词可见性变化
-ctx.miniPlayer.onLyricVisibility((visible) => {
-  console.log("歌词是否可见:", visible);
-});
-```
+> 在浮窗内调用 `ctx.windows` 时，操作的是当前浮窗自身。
 
 ---
 
 ## Now Playing 浮窗
 
-`ctx.nowPlaying` 操作正在播放信息浮窗。
+`ctx.nowPlaying` 操作正在播放信息浮窗，支持同步播放与歌词状态。
 
 | API | 说明 |
 |-----|------|
 | `getSnapshot()` | 获取当前状态快照 |
-| `syncSnapshot(patch)` | 同步状态 |
-| `command(cmd)` | 发送命令 |
 | `onSnapshot(fn)` | 订阅状态变化 |
 | `onCommand(fn)` | 订阅命令 |
+| `syncPlayback(state)` | 同步播放状态 |
+| `syncLyric(state)` | 同步歌词状态 |
 
 ```js
-// 监听歌词显示状态
+// 监听播放状态
 ctx.nowPlaying.onSnapshot((snapshot) => {
   console.log("Now Playing:", snapshot.title, snapshot.artist);
 });
 
-// 发送命令
-ctx.nowPlaying.command("toggleLyrics");
-```
-
----
-
-## 快捷键
-
-`ctx.shortcuts` 允许插件注册和管理全局快捷键。
-
-| API | 说明 |
-|-----|------|
-| `register({ enabled, shortcutMap })` | 注册快捷键映射 |
-| `refresh()` | 刷新快捷键注册（用于更新后重新绑定） |
-| `onTrigger(fn)` | 监听快捷键触发，回调参数为命令名 |
-
-```js
-// 注册快捷键
-ctx.shortcuts.register({
-  enabled: true,
-  shortcutMap: {
-    "toggle-visualizer": "Ctrl+Shift+V",
-    "next-theme": "Ctrl+Shift+T",
-  },
-});
-
-// 监听触发
-ctx.shortcuts.onTrigger((command) => {
-  switch (command) {
-    case "toggle-visualizer":
-      toggleVisualizer();
-      break;
-    case "next-theme":
-      cycleTheme();
-      break;
-  }
-});
-```
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `enabled` | `boolean` | 是否启用快捷键 |
-| `shortcutMap` | `Record<string, string>` | 命令名 → 按键组合 |
-
-按键组合格式：`Ctrl+Shift+Key`、`Alt+Key`、`CommandOrControl+Key` 等，兼容 Electron accelerator 语法。
-
----
-
-## 窗口控制
-
-`ctx.windowControl` 操作当前窗口。
-
-```js
-ctx.windowControl("minimize");   // 最小化
-ctx.windowControl("maximize");   // 最大化
-ctx.windowControl("close");      // 关闭
-ctx.windowControl("fullscreen"); // 全屏
-```
-
-> 仅在主窗口和 Mini 播放器中可用，浮窗内不可调用。
-
----
-
-## 系统托盘
-
-`ctx.tray` 与系统托盘交互。
-
-```js
-// 同步播放状态到托盘图标
-ctx.tray.syncPlayback({
-  isPlaying: true,
-  playMode: "loop",
-  volume: 80,
-});
-
-// 监听托盘播放模式切换
-ctx.tray.onSetPlayMode((playMode) => {
-  console.log("播放模式切换为:", playMode);
-});
-```
-
----
-
-## 电源事件
-
-`ctx.power` 响应系统休眠/唤醒。
-
-| API | 说明 |
-|-----|------|
-| `onSuspend(fn)` | 系统即将休眠时回调，返回取消函数 |
-| `onResume(fn)` | 系统从休眠中唤醒时回调，返回取消函数 |
-
-```js
-ctx.power.onSuspend(() => {
-  console.log("系统即将休眠，保存状态...");
-  ctx.storage.kvSet("lastState", getCurrentState());
-});
-
-ctx.power.onResume(() => {
-  console.log("系统已唤醒");
-  // 恢复界面
-});
+// 同步歌词
+ctx.nowPlaying.syncLyric({ currentLine: 5, lines: [...] });
 ```
 
 ---
@@ -251,7 +70,7 @@ ctx.power.onResume(() => {
 | API | 说明 |
 |-----|------|
 | `launch(options)` | 启动插件目录内的程序 |
-| `terminate()` | 终止已启动的进程 |
+| `terminate(pid?)` | 终止已启动的进程 |
 
 ```js
 // 启动程序
@@ -279,122 +98,47 @@ ctx.process.terminate();
 
 ## 应用图标
 
-`ctx.icons` 管理应用窗口和任务栏图标。
+`ctx.appIcons` 管理应用窗口和任务栏图标。通过 `ctx.storage` 配置自定义图标路径后调用 `refresh()` 生效。
 
 | API | 说明 |
 |-----|------|
-| `refresh()` | 刷新所有图标缓存（重新读取图标文件） |
+| `refresh()` | 刷新所有图标缓存（重新读取配置的图标文件） |
 | `setRuntimeWindowIcon(iconPath)` | 设置运行时窗口图标（插件目录内路径） |
 | `restoreDefaultWindowIcon()` | 恢复 EchoMusic 默认窗口图标 |
 | `restoreDefaultDesktopIcon()` | 恢复默认桌面图标 |
 | `restoreDefaultTaskbarIcon()` | 恢复默认任务栏图标 |
 
 ```js
-// 切换为自定义窗口图标
-ctx.icons.setRuntimeWindowIcon("icons/alt-icon.png");
-
-// 恢复默认
-ctx.icons.restoreDefaultWindowIcon();
-```
-
----
-
-## 应用信息
-
-`ctx.appInfo` 获取 EchoMusic 应用信息。
-
-| API | 说明 |
-|-----|------|
-| `get()` | 获取版本号、平台等应用信息 |
-| `getChangelog()` | 获取更新日志文本 |
-
-```js
-const info = await ctx.appInfo.get();
-// { version: "2.2.7", platform: "win32", arch: "x64", ... }
-
-const changelog = await ctx.appInfo.getChangelog();
-```
-
----
-
-## 更新器
-
-`ctx.updater` 控制 EchoMusic 的自动更新流程。
-
-| API | 说明 |
-|-----|------|
-| `download()` | 下载最新更新 |
-| `install(silent?)` | 安装已下载的更新（`silent=true` 时不弹窗） |
-| `onDownloadStatus(fn)` | 下载进度监听，返回取消函数 |
-
-```js
-ctx.updater.onDownloadStatus((status) => {
-  console.log(`下载进度: ${status.percent}%`);
-  if (status.complete) {
-    ctx.toast.info("更新已下载，重启后生效");
-  }
+// 配置自定义图标
+await ctx.storage.set("appIcons", {
+  trayIconPath: "generated/tray.png",
+  taskbarIconPath: "generated/taskbar.ico",
+  desktopIconPath: "generated/desktop.ico",
 });
-
-// 手动触发下载
-ctx.updater.download();
-```
-
----
-
-## API 服务器
-
-`ctx.apiServer` 控制 EchoMusic 的内置本地 API 服务。
-
-| API | 说明 |
-|-----|------|
-| `start()` | 启动本地 HTTP API 服务 |
-| `status()` | 获取服务运行状态 |
-
-```js
-const { running, port } = await ctx.apiServer.status();
-if (!running) {
-  await ctx.apiServer.start();
+const result = await ctx.appIcons.refresh();
+if (!result.desktopApplied && result.desktopError) {
+  ctx.toast.warning(result.desktopError);
 }
 ```
 
----
-
-## 字体
-
-`ctx.fonts` 获取系统可用字体。
+支持按平台分别配置：
 
 ```js
-const fonts = await ctx.fonts.getAll();
-// ["Microsoft YaHei", "SimSun", "Arial", ...]
+await ctx.storage.set("appIcons", {
+  win32: { trayIconPath: "icons/tray.ico", taskbarIconPath: "icons/taskbar.ico" },
+  linux: { trayIconPath: "icons/tray.png", taskbarIconPath: "icons/taskbar.png" },
+  darwin: { trayIconPath: "icons/trayTemplate.png", taskbarIconPath: "icons/dock.icns" },
+});
+await ctx.appIcons.refresh();
 ```
 
----
+### 图标库（ctx.icons）
 
-## 音频特效管理
-
-`ctx.audioEffects` 管理脉冲响应（IR）音效文件。
-
-| API | 说明 |
-|-----|------|
-| `importImpulseResponse()` | 打开文件选择器导入 IR 音频文件 |
-| `deleteImpulseResponse(filePath)` | 删除已导入的 IR 文件 |
-| `reconcileImpulseResponses(files)` | 同步 IR 文件列表 |
-
----
-
-## 日志
-
-`ctx.logging` 和 `ctx.logger` 提供日志功能。
+`ctx.icons` 提供 Iconify 图标对象，可直接传入 `Icon` 组件使用：
 
 ```js
-// 结构化日志（自动带插件 ID 前缀）
-ctx.logger.info("用户执行了操作");
-ctx.logger.error("处理失败", { details: "..." });
-ctx.logger.warn("即将废弃的 API");
-
-// 日志设置
-const settings = await ctx.logging.get();
-await ctx.logging.update({ level: "debug" });
+const Icon = ctx.vue.resolveComponent("Icon");
+h(Icon, { icon: ctx.icons.iconPictureInPicture, width: 16, height: 16 });
 ```
 
 ---
@@ -423,7 +167,8 @@ channel.onmessage = (event) => {
 
 | 文档 | 内容 |
 |------|------|
-| [播放器与音频引擎 →](./player-audio) | 播放控制、EQ、空间音效、IR 卷积 |
+| [播放器与音频引擎 →](./player-audio) | 播放控制、播放队列、频谱、歌词系统 |
 | [音频频谱 →](./audio-spectrum) | 实时频谱数据订阅与可视化 |
-| [文件存储与数据 →](./filesystem-storage) | FS、KV 存储、播放队列 |
-| [API 总览 →](./context-api) | ctx 完整 API 列表 |
+| [文件存储与数据 →](./filesystem-storage) | 文件系统、KV 存储、外观订阅 |
+| [API 总览 →](./context-api) | ctx 完整插件 API 列表 |
+| [内部 API 参考 →](../internal-api/) | 内部 API（桌面歌词/Mini/快捷键等） |

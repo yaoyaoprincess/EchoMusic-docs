@@ -191,31 +191,45 @@ ctx.ui.addSongContextMenuItem({
 
 ## 播放器按钮
 
-使用 `ctx.ui.addPlayerButton()` 在播放器控制栏中添加自定义按钮。
+> ℹ️ `ctx.ui.addPlayerButton()` 属于内部 API，不保证在插件中可用。
+> 推荐使用 `ctx.ui.mount()` 挂载到播放器区域来实现自定义按钮，跨版本更稳定。
 
 ```js
-ctx.ui.addPlayerButton({
-  id: "my-action",
-  icon: "❤️",
-  label: "收藏",
-  onClick() {
-    const track = ctx.player.currentTrack;
-    if (track) {
-      addToFavorites(track);
-      ctx.toast.success("已添加到收藏");
-    }
-  },
-  order: 50,
-});
+// 推荐：使用 mount 挂载到播放器操作区
+export function activate(ctx) {
+  const Badge = ctx.vue.defineComponent({
+    setup() {
+      return () =>
+        ctx.vue.h(
+          "button",
+          {
+            class: "my-plugin-btn",
+            onClick: () => {
+              const track = ctx.player.currentTrack;
+              if (track) {
+                addToFavorites(track);
+                ctx.toast.success("已添加到收藏");
+              }
+            },
+          },
+          "❤️ 收藏",
+        );
+    },
+  });
+
+  ctx.ui.mount(".player-actions", Badge, {
+    id: "my-favorite-btn",
+    position: "prepend",
+  });
+}
 ```
 
 | 参数 | 类型 | 必选 | 说明 |
 |------|------|:--:|------|
-| `id` | `string` | ✅ | 按钮唯一标识 |
-| `icon` | `string` | ✅ | 按钮图标（Emoji 或 SVG） |
-| `label` | `string` | ❌ | 悬停提示文本 |
-| `onClick` | `() => void` | ✅ | 点击回调 |
-| `order` | `number` | ❌ | 排序权重，越小越靠左 |
+| `target` | `string \| Element` | ✅ | DOM 选择器或元素（如 `".player-actions"`） |
+| `component` | `Component` | ✅ | Vue 组件 |
+| `options.id` | `string` | ✅ | 唯一标识（用于卸载） |
+| `options.position` | `string` | ❌ | `"append"` / `"prepend"` / `"before"` / `"after"` / `"replace"` |
 
 ---
 

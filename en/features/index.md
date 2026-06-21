@@ -184,7 +184,7 @@ Auto-start on boot and minimize to tray. Music starts with your computer — no 
 
 VS Code-style high-freedom plugin extension. Browse and install from online plugin sources, register custom pages, inject styles, create desktop floating windows, intercept audio resolution — infinitely extend EchoMusic.
 
-[Learn more →](/en/guide/plugins)
+[Learn more →](/en/guide/plugins/)
 
 </div>
 

@@ -1,8 +1,8 @@
 ---
-title: API Reference
+title: Kugou API Reference
 ---
 
-# 🔌 API Reference
+# 🔌 Kugou API Reference
 
 This document provides a reference for the Kugou Music public API endpoints used by EchoMusic. The project uses [KuGouMusicApi](https://github.com/MakcRe/KuGouMusicApi) for API call encapsulation.
 
