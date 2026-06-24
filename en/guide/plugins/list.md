@@ -4,7 +4,7 @@ title: Plugin List
 
 # 📋 Plugin List
 
-Below are plugins available in the official plugin source (18 total):
+Below are plugins available in the official plugin source (20 total):
 
 ## 🎨 UI & Themes
 
@@ -24,6 +24,7 @@ Below are plugins available in the official plugin source (18 total):
 | [water-lyrics](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/water-lyrics) | Water ripple effect on lyrics page, demonstrates `ctx.lyricEffects.register()` | hoowhoami |
 | [lyric-info-scroll](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll) | Scroll lyric information in the playback bar area, also adapts to mini player | hoowhoami |
 | [Lyrics-bridge](https://github.com/xiaotian2333/Lyrics-bridge) | External lyrics bridging service via WinIsland | xiaotian2333 |
+| [EchoMusic-Record-player](https://github.com/xiaotian2333/EchoMusic-Record-player) | Kugou-style vinyl record player interface | xiaotian2333 |
 
 ## 🔊 Audio Enhancement
 
@@ -37,6 +38,7 @@ Below are plugins available in the official plugin source (18 total):
 | Plugin | Description | Author |
 |------|------|------|
 | [webdav-music](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/webdav-music) | Play music files stored on cloud storage via WebDAV protocol, with browsing, search, and online playback | hoowhoami |
+| [echo-local-simple](https://github.com/SkyShadowHero/echo-local-simple) | Simple local music file playback | 天影大侠 |
 
 ## 🛠️ Productivity Tools
 

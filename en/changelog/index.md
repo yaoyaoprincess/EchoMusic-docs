@@ -10,6 +10,56 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
+## [2.2.7-beta.22] - 2026-06-24
+
+### Added
+
+- Share functionality
+- Windows taskbar thumbnail toolbar
+- "Queue on Next" in song right-click menu
+- "Auto-play on startup" setting, disabled by default
+- One-click update all plugins
+- Account verification flow
+- Account password login
+- New batch of plugin API capabilities
+- Experimental feature: DevTools toggle
+
+### Improved
+
+- Optimized lyrics page loading and matching logic
+- Optimized audio filter application logic when switching songs
+- API modules now load on demand instead of preloading all at startup
+- Playback history migrated to SQLite for persistence, reducing renderer state size
+- Reduced high-frequency desktop lyrics IPC sync overhead
+- Reduced high-frequency writes for window move, resize, and local state persistence
+- Optimized playback history cleanup logic, auto-cleaning unreferenced song data
+- Split plugin main process base modules to reduce plugin system maintenance cost
+- Optimized multiple internal pages
+- Optimized online plugin loading logic
+- Music recognition rewritten using official API
+- Optimized MediaSession initialization timing, registering event handlers early
+- Optimized song list right-click menu interaction, preventing list scrolling when menu is open
+- Optimized window code logic to prevent accidental window resizing
+- Dynamically calculated minimum window height to adapt to high DPI environments
+- Optimized echo-storage module bundling
+- Optimized first screen loading
+- Optimized gradient layer implementation
+
+### Fixed
+
+- Fixed desktop lyrics unlock button occasionally persisting
+- Fixed plugin system operations causing song, lyrics, and cover desync on the lyrics page
+- Fixed progress bar jumping when switching songs
+- Fixed lyrics page memory leak
+- Fixed Windows ARM64 build issues
+- Fixed playback freezing, progress bar stuck, and no sound when network disconnects or URL becomes invalid during playback
+- Fixed MPRIS cover display and cover not refreshing after track change
+- Fixed Linux packaging libav library version regex causing HTTP audio stream playback failure
+- Fixed page lyrics per-character highlight intermittently disappearing
+- Fixed plugin update or uninstall failing due to file being in use after plugin launches an executable
+- Fixed VIP membership expiration causing playback failure even after claiming membership in Profile, requiring app restart
+- Fixed desktop lyrics width slowly increasing when clicked on Windows
+
 ## [2.2.6-beta.8] - 2026-06-04
 
 ### Added

@@ -4,7 +4,7 @@ title: 插件列表
 
 # 📋 插件列表
 
-以下是官方插件源中已收录的插件（共 18 款）：
+以下是官方插件源中已收录的插件（共 20 款）：
 
 ## 🎨 界面美化
 
@@ -24,6 +24,7 @@ title: 插件列表
 | [water-lyrics](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/water-lyrics) | 页面歌词水波动效，演示 `ctx.lyricEffects.register()` 的接入方式 | hoowhoami |
 | [lyric-info-scroll](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll) | 在播放栏区域滚动显示歌词信息，同时适配迷你播放器 | hoowhoami |
 | [Lyrics-bridge](https://github.com/xiaotian2333/Lyrics-bridge) | 通过 WinIsland 实现外部歌词桥接服务 | xiaotian2333 |
+| [EchoMusic-Record-player](https://github.com/xiaotian2333/EchoMusic-Record-player) | 仿酷狗唱片播放器，黑胶唱片风格播放界面 | xiaotian2333 |
 
 ## 🔊 音频增强
 
@@ -37,6 +38,7 @@ title: 插件列表
 | 插件 | 说明 | 作者 |
 |------|------|------|
 | [webdav-music](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/webdav-music) | 通过 WebDAV 协议播放云端存储的音乐文件，支持浏览、搜索和在线播放 | hoowhoami |
+| [echo-local-simple](https://github.com/SkyShadowHero/echo-local-simple) | 简单实现的本地音乐播放 | 天影大侠 |
 
 ## 🛠️ 效率工具
 

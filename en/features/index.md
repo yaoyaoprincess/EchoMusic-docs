@@ -96,6 +96,14 @@ View complete song archives and playback details, browse insightful comments, su
 
 <div class="feature-card">
 
+### 🔗 Share
+
+Share songs and playlists with one click. Generate share links or cards to spread great music.
+
+</div>
+
+<div class="feature-card">
+
 ### 🖥️ Cross-Platform
 
 Full support for macOS, Windows, and Linux desktop operating systems. Whatever computer you use, EchoMusic runs perfectly.
