@@ -1,0 +1,80 @@
+name: Auto-Sync Upstream
+
+on:
+  schedule:
+    # 每小时运行一次
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    # 手动触发
+
+# 并发控制：同一时间只运行一个实例
+concurrency:
+  group: auto-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run sync script
+        id: sync
+        run: |
+          echo ">>> 运行同步脚本 <<<"
+          python scripts/sync-upstream.py
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo ">>> 无变更，跳过 PR 创建 <<<"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo ">>> 检测到变更 <<<"
+            git diff --stat
+          fi
+
+      - name: Create Pull Request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'chore: auto-sync upstream plugin list & changelog'
+          title: '🤖 Auto-sync: upstream plugin list & changelog'
+          body: |
+            ## 🤖 自动同步
+
+            此 PR 由 GitHub Actions 自动创建。
+
+            ### 📋 变更内容
+
+            - 插件列表同步自 [EchoMusicPlugins](https://github.com/hoowhoami/EchoMusicPlugins)
+            - 更新日志同步自 [EchoMusic CHANGELOG](https://github.com/hoowhoami/EchoMusic/blob/main/CHANGELOG.md)
+
+            ### 🔍 审查要点
+
+            请检查：
+            1. 新增插件的作者信息是否正确
+            2. 新增插件的分类是否合理
+            3. 更新日志格式是否正常
+
+            > ⚠️ 自动生成的 PR，请人工审查后合并。
+          branch: auto-sync/upstream
+          delete-branch: true
+          labels: |
+            automated
+            upstream-sync
+          team-reviewers: |
+            owners
