@@ -5,6 +5,7 @@ import { InlineLinkPreviewElementTransform } from '@nolebase/vitepress-plugin-in
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  srcDir: 'docs',
   base: '/',
   title: "EchoMusic Docs",
   description: "EchoMusic Usage Guide",
