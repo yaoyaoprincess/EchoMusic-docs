@@ -221,6 +221,14 @@ CURATED = {
         'author': 'yaoyaoprincess',
         'category': 4,
     },
+    'xiaotoolkit': {
+        'zh_name': '小功能',
+        'en_name': 'XiaoToolkit',
+        'zh_desc': '热门排序 + 隐藏歌单 + 歌词隐藏控制栏 + 隐藏听歌识曲 + 顶部插件按钮 + 桌面特效',
+        'en_desc': 'Hot sort, hide playlist, lyric area hide control bar, hide music recognition, top plugin button, desktop effects',
+        'json_author': '张三',
+        'category': 4,
+    },
 }
 
 
@@ -339,9 +347,14 @@ def get_plugin_meta(plugin_entry):
     elif json_name:
         # Has metadata in JSON but not in curated - use JSON data
         zh_name = json_name
-        en_name = json_name
         zh_desc = json_desc
-        en_desc = json_desc
+        # If JSON name contains Chinese, use plugin_id as English fallback
+        if any('\u4e00' <= c <= '\u9fff' for c in json_name):
+            en_name = plugin_id
+            en_desc = '(No English description yet) ' + json_desc
+        else:
+            en_name = json_name
+            en_desc = json_desc
     else:
         # New plugin without any metadata - fetch manifest
         manifest_name, manifest_desc, _ = fetch_manifest(plugin_entry)
@@ -597,23 +610,11 @@ def sync_changelog():
     print('[3/3] 写入文件...')
     changed = False
 
-    for path, label in [
-        (changelog_path, '中文'),
-        (os.path.join(DOCS_DIR, 'docs', 'en', 'changelog', 'index.md'), '英文'),
-    ]:
-        if not os.path.exists(path):
-            print('  ⚠ {} 更新日志不存在 ({})'.format(label, path))
-            continue
-
-        with open(path, 'r', encoding='utf-8') as f:
+    # ── 中文 changelog ──
+    if os.path.exists(changelog_path):
+        with open(changelog_path, 'r', encoding='utf-8') as f:
             old = f.read()
 
-        # Insert new entries after the header/warning block, before first version
-        insert_pos = old.find('## [')
-        if insert_pos == -1:
-            insert_pos = len(old)
-
-        # Find where the header block ends (after the warning quote)
         header_end = old.find('## [')
         if header_end == -1:
             header_end = old.rfind('\n\n') + 2
@@ -621,12 +622,42 @@ def sync_changelog():
         new_content = old[:header_end] + new_section + '\n\n' + old[header_end:]
 
         if not DRY_RUN:
-            with open(path, 'w', encoding='utf-8') as f:
+            with open(changelog_path, 'w', encoding='utf-8') as f:
                 f.write(new_content)
-            print('  ✓ {} 更新日志已更新'.format(label))
+            print('  ✓ 中文更新日志已更新')
         else:
-            print('  ○ {} 更新日志有变更 (dry-run)'.format(label))
+            print('  ○ 中文更新日志有变更 (dry-run)')
         changed = True
+
+    # ── 英文 changelog ──
+    # 上游 CHANGELOG.md 是中文，直接写入英文页面会导致中文内容。
+    # 英文版本需人工翻译后手动更新，此处只插入 TODO 标记。
+    en_changelog_path = os.path.join(DOCS_DIR, 'docs', 'en', 'changelog', 'index.md')
+    if os.path.exists(en_changelog_path):
+        with open(en_changelog_path, 'r', encoding='utf-8') as f:
+            en_old = f.read()
+
+        new_versions_str = ', '.join(v[0] for v in new_entries)
+        todo_block = '\n\n> **🔔 New versions detected: {}**\n> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.\n>'.format(new_versions_str)
+
+        # Insert TODO after the first header line
+        first_header_line = en_old.find('\n', en_old.find('# Changelog')) + 1
+        if first_header_line > 0:
+            # put after the header block (before first ## [)
+            insert_pos = en_old.find('## [')
+            if insert_pos == -1:
+                insert_pos = first_header_line
+
+            if todo_block not in en_old:
+                en_new = en_old[:insert_pos] + todo_block + '\n\n' + en_old[insert_pos:]
+                if not DRY_RUN:
+                    with open(en_changelog_path, 'w', encoding='utf-8') as f:
+                        f.write(en_new)
+                    print('  ⚠ 英文更新日志已标记待翻译 ({})'.format(new_versions_str))
+                else:
+                    print('  ○ 英文更新日志将标记待翻译 ({})'.format(new_versions_str))
+            else:
+                print('  ✓ 英文更新日志已有待翻译标记')
 
     return changed
 
