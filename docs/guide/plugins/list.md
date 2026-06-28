@@ -4,7 +4,7 @@ title: 插件列表
 
 # 📋 插件列表
 
-以下是官方插件源中已收录的插件（共 21 款）：
+以下是官方插件源中已收录的插件（共 22 款）：
 
 ## 🎨 界面美化
 
@@ -40,6 +40,7 @@ title: 插件列表
 
 | 插件 | 说明 | 作者 |
 |------|------|------|
+| [频道漫游](https://github.com/xiaotian2333/EchoMusic-channel-wander) | 频道漫游，无限发现音乐 | xiaotian2333 |
 | [封面回退](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/cover-fallback) | 为无封面歌曲提供默认封面替代方案，适配迷你播放器 | hoowhoami |
 | [播放历史增强](https://github.com/yaoyaoprincess/echo-history-plus) | 本地播放历史记录与统计分析，完全本地运行，无需登录 | yaoyaoprincess |
 | [页面转场动效](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/page-motion) | 页面转场动画效果 | hoowhoami |

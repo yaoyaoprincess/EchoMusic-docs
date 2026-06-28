@@ -4,7 +4,7 @@ title: Plugin List
 
 # 📋 Plugin List
 
-Below are plugins available in the official plugin source (21 total):
+Below are plugins available in the official plugin source (22 total):
 
 ## 🎨 UI & Themes
 
@@ -40,6 +40,7 @@ Below are plugins available in the official plugin source (21 total):
 
 | Plugin | Description | Author |
 |------|------|------|
+| [channel-wander](https://github.com/xiaotian2333/EchoMusic-channel-wander) | (No English description yet) 频道漫游，无限发现音乐 | xiaotian2333 |
 | [Cover Fallback](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/cover-fallback) | Default cover fallback for songs without covers, mini player compatible | hoowhoami |
 | [Playback History Plus](https://github.com/yaoyaoprincess/echo-history-plus) | Local playback history recording and statistics analysis, fully offline, no login required | yaoyaoprincess |
 | [Page Motion](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/page-motion) | Page transition animation effects | hoowhoami |
