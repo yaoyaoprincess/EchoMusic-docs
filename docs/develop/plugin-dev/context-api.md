@@ -127,6 +127,28 @@ outline: [2, 4]
 
 > ℹ️ mpv 引擎高级控制（EQ/空间音效/IR/设备/渐变等）属于内部 API，不在插件范围内。详见 [内部 API 参考 →](../internal-api/audio-engine)。
 
+## 🌐 本地 HTTP 服务
+
+> 需要 capability：`webServer: true`
+
+| API | 说明 |
+|-----|------|
+| `ctx.webServer.listen(handler, opts?)` | 启动 HTTP 服务，默认监听 `127.0.0.1`，返回端口号 |
+| `ctx.webServer.status()` | 获取当前服务状态 |
+| `ctx.webServer.close()` | 关闭服务 |
+| `ctx.webServer.onRequest(handler)` | 注册请求处理器 |
+
+> 适合 Wallpaper Engine、OBS、本地脚本等桌面软件读取 EchoMusic 当前状态和歌词页面。插件禁用/卸载/安全模式/退出时自动释放端口。
+
+## 🖥️ 桌面歌词
+
+> 桌面歌词为独立窗口，与主窗口不共享 JS 内存。需同时声明 `runtime.desktopLyric: true`。
+
+| API | 说明 |
+|-----|------|
+| `ctx.desktopLyric` | 桌面歌词窗口上下文，用于判断当前运行环境 |
+| `ctx.lyricEffects.register({ scope: "desktop", ... })` | 注册桌面歌词视觉效果（需 `lyricEffects: true`） |
+
 ---
 
 ## 💾 数据 & 文件

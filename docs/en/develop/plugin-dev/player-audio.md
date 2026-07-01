@@ -235,40 +235,46 @@ ctx.lyrics.onSnapshot((snapshot) => {
 
 > Requires capability: `lyricEffects: true`
 
-Register custom lyric visual effects for overlaying animations or effects on the lyrics display area.
+Register custom lyric visual effects for both page lyrics and desktop lyrics. Desktop lyrics require `runtime.desktopLyric: true` in the manifest. See [EchoMusicPlugins docs/windows.md](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md).
 
 ```js
+// Page lyrics effect
 ctx.lyricEffects.register({
-  id: "my-bounce-effect",
-  name: "Bounce Lyrics",
-  cssClass: "bounce-lyric",    // CSS class injected on each lyric line
-  overlay: MyOverlayComponent, // Optional: decoration layer component for lyric area
+  id: "water",
+  title: "Water Wave Lyrics",
+  scope: "page",
+  layer: "decorator",
+  className: "my-water-lyrics",
+  css: `.my-water-lyrics [data-echo-lyric-line] { font-style: italic; }`,
+  mount(host) {
+    // Optional: create a decorator layer (SVG / Canvas)
+    return () => { /* cleanup */ };
+  },
+});
+
+// Desktop lyrics effect (requires runtime.desktopLyric: true)
+ctx.lyricEffects.register({
+  id: "vertical-desktop",
+  title: "Vertical Desktop Lyrics",
+  scope: "desktop",
+  layer: "style",
+  css: `.desktop-lyric { writing-mode: vertical-rl; }`,
 });
 ```
 
-#### Parameters
+### Parameters
 
 | Parameter | Type | Required | Description |
 |-----------|------|:--:|------|
 | `id` | `string` | ✅ | Unique effect ID |
-| `name` | `string` | ✅ | Display name |
-| `cssClass` | `string` | ❌ | CSS class injected on lyric lines |
-| `overlay` | `Component` | ❌ | Decoration layer component for lyric area |
+| `title` | `string` | ✅ | Display name |
+| `scope` | `string` | ✅ | `"page"` (page lyrics) or `"desktop"` (desktop lyrics) |
+| `layer` | `string` | ❌ | `"style"` or `"decorator"` |
+| `className` | `string` | ❌ | CSS class injected into the host node |
+| `css` | `string` | ❌ | Global CSS to inject |
+| `mount(host)` | `function` | ❌ | Called on host mount, returns cleanup function |
 
-### CSS Effect Example
-
-```css
-/* Injected alongside style.css */
-.bounce-lyric {
-  animation: bounce 0.3s ease-out;
-}
-
-@keyframes bounce {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.08); }
-  100% { transform: scale(1); }
-}
-```
+> ℹ️ The desktop lyric window is an independent renderer process. Use `ctx.desktopLyric` to detect the current runtime environment.
 
 ---
 

@@ -198,9 +198,10 @@ ctx.lyrics.command("scrollUp");
 
 > 需要 capability：`lyricEffects: true`
 
-注册自定义歌词视觉动效。详见 [EchoMusicPlugins docs/windows.md](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md)。
+注册自定义歌词视觉动效。页面歌词和桌面歌词均可注册。桌面歌词需要同时声明 `runtime.desktopLyric: true`。详见 [EchoMusicPlugins docs/windows.md](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md)。
 
 ```js
+// 页面歌词动效
 ctx.lyricEffects.register({
   id: "water",
   title: "水波歌词",
@@ -213,17 +214,28 @@ ctx.lyricEffects.register({
     return () => { /* 清理 */ };
   },
 });
+
+// 桌面歌词动效（需 runtime.desktopLyric: true）
+ctx.lyricEffects.register({
+  id: "vertical-desktop",
+  title: "竖排桌面歌词",
+  scope: "desktop",
+  layer: "style",
+  css: `.desktop-lyric { writing-mode: vertical-rl; }`,
+});
 ```
 
 | 参数 | 类型 | 必选 | 说明 |
 |------|------|:--:|------|
 | `id` | `string` | ✅ | 动效唯一 ID |
 | `title` | `string` | ✅ | 显示名称 |
-| `scope` | `string` | ✅ | 当前支持 `"page"`（页面歌词） |
+| `scope` | `string` | ✅ | `"page"`（页面歌词）或 `"desktop"`（桌面歌词） |
 | `layer` | `string` | ❌ | `"style"` 或 `"decorator"` |
 | `className` | `string` | ❌ | 注入到 host 节点的 CSS class |
 | `css` | `string` | ❌ | 注入的全局 CSS |
 | `mount(host)` | `function` | ❌ | host 挂载时调用，返回清理函数 |
+
+> ℹ️ 桌面歌词窗口是独立渲染进程，与主窗口不共享 JS 内存。需要使用 `ctx.desktopLyric` 判断当前运行环境。
 
 ---
 

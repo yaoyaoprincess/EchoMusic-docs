@@ -30,7 +30,8 @@ outline: [2, 4]
     "localFiles": true,
     "lyricEffects": false,
     "lyrics": true,
-    "process": false
+    "process": false,
+    "webServer": false
   },
   "requires": {
     "echoMusicVersion": ">=2.2.6-beta.9 <3"
@@ -223,7 +224,7 @@ Controls which windows the plugin loads in.
 | Field | Type | Default | Description |
 |-------|------|:---:|------|
 | `miniPlayer` | `boolean` | `false` | Whether to load in the Mini Player window |
-| `desktopLyric` | `boolean` | `false` | Whether to load in the Desktop Lyric window |
+| `desktopLyric` | `boolean` | `false` | Whether to load in the Desktop Lyric window. When changing desktop lyric layout, effects, or size, also use `ctx.lyricEffects.register({ scope: &quot;desktop&quot; })` and `ctx.desktopLyric`. |
 
 ### Use Cases
 
@@ -250,7 +251,8 @@ Plugin access to sensitive APIs uses **explicit declaration**. Only declare the 
   "localFiles": true,
   "lyricEffects": false,
   "lyrics": true,
-  "process": false
+  "process": false,
+  "webServer": false
 }
 ```
 
@@ -314,7 +316,7 @@ Scan and read audio files from the filesystem, or write data within the plugin d
 |----------|-------|
 | Grants | `ctx.lyricEffects.register()` |
 
-Register **lyric visual effects** via CSS injection or overlay decoration layer.
+Register **lyric visual effects** (page lyrics and desktop lyrics) via CSS injection or overlay decoration layer. For desktop lyrics, use `scope: "desktop"`. See [Player & Audio →](./player-audio#lyrics-visual-effects).
 
 #### lyrics
 
@@ -333,6 +335,21 @@ Provide a **custom lyrics resolver** for songs. Useful for integrating third-par
 Launch **native programs from within the plugin directory**. Useful for calling external tools.
 
 > ⚠️ This capability allows executing arbitrary local programs. Only enable for trusted plugins.
+
+#### webServer
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.webServer` |
+
+Create a **local HTTP server** accessible by other software on the same machine (Wallpaper Engine, OBS, local scripts, etc.) to read EchoMusic state, lyrics pages, or visualizer pages. Listens on `127.0.0.1` by default. The port is automatically released on plugin disable, uninstall, or app exit.
+
+```js
+// Requires webServer capability
+ctx.webServer.listen(async (req) => {
+  return { status: 200, body: JSON.stringify({ playing: ctx.player.currentTrack }) }
+}).then(port => console.log('Server on port', port));
+```
 
 ---
 

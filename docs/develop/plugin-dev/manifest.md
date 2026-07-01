@@ -226,7 +226,7 @@ outline: [2, 4]
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|:---:|------|
 | `miniPlayer` | `boolean` | `false` | 是否在 Mini 播放器窗口中加载 |
-| `desktopLyric` | `boolean` | `false` | 是否在桌面歌词窗口中加载 |
+| `desktopLyric` | `boolean` | `false` | 是否在桌面歌词窗口中加载。改变桌面歌词布局、动效或尺寸时，需同时使用 `ctx.lyricEffects.register({ scope: &quot;desktop&quot; })` 和 `ctx.desktopLyric`。 |
 
 ### 使用场景
 
@@ -253,7 +253,8 @@ outline: [2, 4]
   "localFiles": true,
   "lyricEffects": false,
   "lyrics": true,
-  "process": false
+  "process": false,
+  "webServer": false
 }
 ```
 
@@ -317,7 +318,7 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 |------|-----|
 | 授予 | `ctx.lyricEffects.register()` |
 
-注册**歌词视觉动效**，通过 CSS 注入或 overlay 装饰层实现。详见 [播放器与音频引擎 →](./player-audio#歌词视觉效果)。
+注册**歌词视觉动效**（页面歌词和桌面歌词），通过 CSS 注入或 overlay 装饰层实现。桌面歌词需使用 `scope: "desktop"`。详见 [播放器与音频引擎 →](./player-audio#歌词视觉效果)。
 
 #### lyrics
 
@@ -336,6 +337,21 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 启动**插件目录内的本机程序**。适用于需要调用外部工具的场景。详见 [窗口与系统 →](./windows-system#进程管理)。
 
 > ⚠️ 此能力允许执行任意本地程序，只对可信插件开启。
+
+#### webServer
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.webServer` |
+
+创建**本地 HTTP 服务**，供本机其他软件（Wallpaper Engine、OBS、本地脚本等）访问 EchoMusic 状态、歌词页面或可视化页面。服务默认监听 `127.0.0.1`，插件禁用/卸载/安全模式/退出时自动释放端口。
+
+```js
+// 需要 webServer 能力
+ctx.webServer.listen(async (req) => {
+  return { status: 200, body: JSON.stringify({ playing: ctx.player.currentTrack }) }
+}).then(port => console.log('Server on port', port))
+```
 
 ---
 

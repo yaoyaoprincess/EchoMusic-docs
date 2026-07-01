@@ -237,6 +237,53 @@ ctx.dispose(() => {
 
 ---
 
+## Local HTTP Server
+
+> Requires capability: `webServer: true`
+
+Create a local HTTP server accessible by other software on the same machine (Wallpaper Engine, OBS, local scripts, etc.) to read EchoMusic state, lyrics, or visualizer pages.
+
+| API | Description |
+|-----|------|
+| `ctx.webServer.listen(handler, opts?)` | Start HTTP server on `127.0.0.1`, returns port number |
+| `ctx.webServer.status()` | Get current server status |
+| `ctx.webServer.close()` | Stop the server |
+| `ctx.webServer.onRequest(handler)` | Register request handler |
+
+```js
+ctx.webServer.listen(async (req) => {
+  return { status: 200, body: JSON.stringify({ playing: ctx.player.currentTrack }) }
+}).then(port => console.log('Server on port', port));
+```
+
+> The server automatically releases its port when the plugin is disabled, uninstalled, or EchoMusic exits.
+
+---
+
+## Desktop Lyrics
+
+> The desktop lyric window is an independent renderer process. Requires `runtime.desktopLyric: true` in the manifest.
+
+| API | Description |
+|-----|------|
+| `ctx.desktopLyric` | Desktop lyric window context, used to detect the current runtime environment |
+| `ctx.lyricEffects.register({ scope: "desktop", ... })` | Register visual effects for the desktop lyric window (requires `lyricEffects: true`) |
+
+```js
+// Detect desktop lyric environment
+if (ctx.desktopLyric) {
+  ctx.lyricEffects.register({
+    id: "vertical-desktop",
+    title: "Vertical Desktop Lyrics",
+    scope: "desktop",
+    layer: "style",
+    css: `.desktop-lyric { writing-mode: vertical-rl; }`,
+  });
+}
+```
+
+---
+
 ## Next Steps
 
 | Document | Content |
