@@ -229,6 +229,46 @@ CURATED = {
         'json_author': '张三',
         'category': 4,
     },
+    'apple-music-lyrics': {
+        'zh_name': 'Apple Music 歌词弹跳',
+        'en_name': 'Apple Music Lyrics',
+        'zh_desc': '模仿 Apple Music 的弹簧手感，为页面歌词行切换加入轻盈回弹动画',
+        'en_desc': 'Mimics Apple Music spring physics for lightweight bounce animation when lyrics lines switch',
+        'author': 'hoowhoami',
+        'category': 1,
+    },
+    'channel-wander': {
+        'zh_name': '频道漫游',
+        'en_name': 'Channel Wander',
+        'zh_desc': '频道漫游，无限发现音乐',
+        'en_desc': 'Channel wander for endless music discovery',
+        'json_author': 'xiaotian2333',
+        'category': 3,
+    },
+    'player-frontend': {
+        'zh_name': '3D 歌词',
+        'en_name': '3D Lyrics',
+        'zh_desc': '仿 Mineradio 歌词页',
+        'en_desc': 'Mineradio-style lyrics page',
+        'json_author': 'xiaotian2333',
+        'category': 1,
+    },
+    'old-xiami-lyric-styles': {
+        'zh_name': '旧版虾米歌词风格',
+        'en_name': 'Old Xiami Lyric Styles',
+        'zh_desc': '将页面歌词替换为旧版虾米风格：当前行高亮放大带辉光、上下行渐隐、平滑滚动跟随',
+        'en_desc': 'Replace page lyrics with classic Xiami style: current line highlighted with glow, surrounding lines fade out, smooth scroll follow',
+        'json_author': 'Oneday5799',
+        'category': 1,
+    },
+    'vertical-lyric-scroll': {
+        'zh_name': '竖幅歌词',
+        'en_name': 'Vertical Lyric Scroll',
+        'zh_desc': '竖排文字桌面歌词浮窗',
+        'en_desc': 'Vertical text desktop lyrics floating window',
+        'author': 'hoowhoami',
+        'category': 1,
+    },
 }
 
 
@@ -359,9 +399,14 @@ def get_plugin_meta(plugin_entry):
         # New plugin without any metadata - fetch manifest
         manifest_name, manifest_desc, _ = fetch_manifest(plugin_entry)
         zh_name = manifest_name or plugin_id
-        en_name = manifest_name or plugin_id
         zh_desc = manifest_desc or ''
-        en_desc = manifest_desc or ''
+        # If manifest name contains Chinese, use plugin_id as English fallback
+        if manifest_name and any('\u4e00' <= c <= '\u9fff' for c in manifest_name):
+            en_name = plugin_id
+            en_desc = '(No English description yet) ' + (manifest_desc or '')
+        else:
+            en_name = manifest_name or plugin_id
+            en_desc = manifest_desc or ''
 
     # Category
     if 'category' in curated:

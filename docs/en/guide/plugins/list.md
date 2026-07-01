@@ -4,7 +4,7 @@ title: Plugin List
 
 # 📋 Plugin List
 
-Below are plugins available in the official plugin source (22 total):
+Below are plugins available in the official plugin source (26 total):
 
 ## 🎨 UI & Themes
 
@@ -18,11 +18,15 @@ Below are plugins available in the official plugin source (22 total):
 
 | Plugin | Description | Author |
 |------|------|------|
+| [Apple Music Lyrics](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/apple-music-lyrics) | Mimics Apple Music spring physics for lightweight bounce animation when lyrics lines switch | hoowhoami |
 | [Cover Color Lyric](https://github.com/rinnki-L/cover-color-lyric) | Desktop lyrics color automatically follows the album cover dominant color, with lightness normalization and spectrum pulsing | 小栀 |
 | [Lyric Info Scroll](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll) | Scroll lyric information in the playback bar area, also adapts to mini player | hoowhoami |
 | [Lyrics-bridge](https://github.com/xiaotian2333/Lyrics-bridge) | External lyrics bridging service via WinIsland | xiaotian2333 |
+| [Old Xiami Lyric Styles](https://github.com/oneday5799/EchoMusicPlugins/tree/main/old-xiami-lyric-styles) | Replace page lyrics with classic Xiami style: current line highlighted with glow, surrounding lines fade out, smooth scroll follow | Oneday5799 |
+| [3D Lyrics](hhttps://github.com/xiaotian2333/EchoMusic-player-frontend) | Mineradio-style lyrics page | xiaotian2333 |
 | [Record Player](https://github.com/xiaotian2333/EchoMusic-Record-player) | Kugou-style vinyl record player interface | xiaotian2333 |
 | [Taskbar Lyric](https://github.com/yaoyaoprincess/taskbar-lyric) | Display current lyrics and album cover in a transparent floating window above the taskbar, auto-detect taskbar position and snap to it | yaoyaoprincess |
+| [Vertical Lyric Scroll](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/vertical-lyric-scroll) | Vertical text desktop lyrics floating window | hoowhoami |
 | [Water Lyrics](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/water-lyrics) | Water ripple effect on lyrics page, demonstrates ctx.lyricEffects.register() | hoowhoami |
 ## 🔊 Audio Enhancement
 
@@ -34,13 +38,13 @@ Below are plugins available in the official plugin source (22 total):
 
 | Plugin | Description | Author |
 |------|------|------|
+| [Channel Wander](https://github.com/xiaotian2333/EchoMusic-channel-wander) | Channel wander for endless music discovery | xiaotian2333 |
 | [Echo Local Simple](https://github.com/SkyShadowHero/echo-local-simple) | Simple local music file playback | 天影大侠 |
 | [WebDAV Music](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/webdav-music) | Play music files stored on cloud storage via WebDAV protocol, with browsing, search, and online playback | hoowhoami |
 ## 🛠️ Productivity Tools
 
 | Plugin | Description | Author |
 |------|------|------|
-| [channel-wander](https://github.com/xiaotian2333/EchoMusic-channel-wander) | (No English description yet) 频道漫游，无限发现音乐 | xiaotian2333 |
 | [Cover Fallback](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/cover-fallback) | Default cover fallback for songs without covers, mini player compatible | hoowhoami |
 | [Playback History Plus](https://github.com/yaoyaoprincess/echo-history-plus) | Local playback history recording and statistics analysis, fully offline, no login required | yaoyaoprincess |
 | [Page Motion](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/page-motion) | Page transition animation effects | hoowhoami |

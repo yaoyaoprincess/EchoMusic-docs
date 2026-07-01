@@ -4,7 +4,7 @@ title: 插件列表
 
 # 📋 插件列表
 
-以下是官方插件源中已收录的插件（共 22 款）：
+以下是官方插件源中已收录的插件（共 26 款）：
 
 ## 🎨 界面美化
 
@@ -18,11 +18,15 @@ title: 插件列表
 
 | 插件 | 说明 | 作者 |
 |------|------|------|
+| [Apple Music 歌词弹跳](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/apple-music-lyrics) | 模仿 Apple Music 的弹簧手感，为页面歌词行切换加入轻盈回弹动画 | hoowhoami |
 | [取色歌词](https://github.com/rinnki-L/cover-color-lyric) | 桌面歌词颜色自动跟随歌曲封面主色调，支持深浅色归一化与频谱律动 | 小栀 |
 | [歌词信息滚动](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll) | 在播放栏区域滚动显示歌词信息，同时适配迷你播放器 | hoowhoami |
 | [Lyrics-bridge](https://github.com/xiaotian2333/Lyrics-bridge) | 通过 WinIsland 实现外部歌词桥接服务 | xiaotian2333 |
+| [旧版虾米歌词风格](https://github.com/oneday5799/EchoMusicPlugins/tree/main/old-xiami-lyric-styles) | 将页面歌词替换为旧版虾米风格：当前行高亮放大带辉光、上下行渐隐、平滑滚动跟随 | Oneday5799 |
+| [3D 歌词](hhttps://github.com/xiaotian2333/EchoMusic-player-frontend) | 仿 Mineradio 歌词页 | xiaotian2333 |
 | [唱片播放器](https://github.com/xiaotian2333/EchoMusic-Record-player) | 仿酷狗唱片播放器，黑胶唱片风格播放界面 | xiaotian2333 |
 | [任务栏歌词](https://github.com/yaoyaoprincess/taskbar-lyric) | 在任务栏上方显示当前歌词和专辑封面的透明浮窗，自动检测任务栏位置并贴靠 | yaoyaoprincess |
+| [竖幅歌词](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/vertical-lyric-scroll) | 竖排文字桌面歌词浮窗 | hoowhoami |
 | [水波歌词](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/water-lyrics) | 页面歌词水波动效，演示 ctx.lyricEffects.register() 的接入方式 | hoowhoami |
 ## 🔊 音频增强
 
@@ -34,13 +38,13 @@ title: 插件列表
 
 | 插件 | 说明 | 作者 |
 |------|------|------|
+| [频道漫游](https://github.com/xiaotian2333/EchoMusic-channel-wander) | 频道漫游，无限发现音乐 | xiaotian2333 |
 | [简单本地音乐](https://github.com/SkyShadowHero/echo-local-simple) | 简单实现的本地音乐播放 | 天影大侠 |
 | [WebDAV 音乐](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/webdav-music) | 通过 WebDAV 协议播放云端存储的音乐文件，支持浏览、搜索和在线播放 | hoowhoami |
 ## 🛠️ 效率工具
 
 | 插件 | 说明 | 作者 |
 |------|------|------|
-| [频道漫游](https://github.com/xiaotian2333/EchoMusic-channel-wander) | 频道漫游，无限发现音乐 | xiaotian2333 |
 | [封面回退](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/cover-fallback) | 为无封面歌曲提供默认封面替代方案，适配迷你播放器 | hoowhoami |
 | [播放历史增强](https://github.com/yaoyaoprincess/echo-history-plus) | 本地播放历史记录与统计分析，完全本地运行，无需登录 | yaoyaoprincess |
 | [页面转场动效](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/page-motion) | 页面转场动画效果 | hoowhoami |
