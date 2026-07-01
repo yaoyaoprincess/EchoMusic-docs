@@ -4,16 +4,18 @@ title: Plugin List
 
 # 📋 Plugin List
 
-Below are plugins available in the official plugin source (22 total):
+Below are plugins available in the official plugin source (26 total):
 
 ## 🎨 UI & Themes
 
 | Plugin | Description | Author |
 |------|------|------|
+| [Apple Music 歌词弹跳](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/apple-music-lyrics) | 模仿 Apple Music 的弹簧手感，为页面歌词行切换加入轻盈回弹动画。 | EchoMusic |
 | [Custom Icon](https://github.com/oneday5799/EchoMusicPlugins/tree/main/custom-icon) | Customize tray icon, title bar icon, taskbar icon, desktop shortcut icon, and splash screen | Oneday5799 |
 | [Echo Liquid Glass](https://github.com/SkyShadowHero/echo-liquid-glass) | Add liquid refraction effect to the bottom music controls, adjustable from iOS to HarmonyOS style. Requires echo-miuix-plugin | 天影大侠 |
 | [Echo Miuix](https://github.com/SkyShadowHero/echo-miuix-plugin) | Transform EchoMusic UI to MIUIX (Xiaomi HyperOS) style | 天影大侠 |
 | [Blue Archive Theme](https://github.com/venti1112/echo_music-blue_archive-theme) | Blue Archive theme pack with customizable adjustments | venti1112 |
+| [old-xiami-lyric-styles](https://github.com/oneday5799/EchoMusicPlugins/tree/main/old-xiami-lyric-styles) | (No English description yet) 将页面歌词替换为旧版虾米风格：当前行高亮放大带辉光、上下行渐隐、平滑滚动跟随。 | Oneday5799 |
 ## 🎵 Lyrics & Playback
 
 | Plugin | Description | Author |
@@ -21,8 +23,10 @@ Below are plugins available in the official plugin source (22 total):
 | [Cover Color Lyric](https://github.com/rinnki-L/cover-color-lyric) | Desktop lyrics color automatically follows the album cover dominant color, with lightness normalization and spectrum pulsing | 小栀 |
 | [Lyric Info Scroll](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll) | Scroll lyric information in the playback bar area, also adapts to mini player | hoowhoami |
 | [Lyrics-bridge](https://github.com/xiaotian2333/Lyrics-bridge) | External lyrics bridging service via WinIsland | xiaotian2333 |
+| [player-frontend](hhttps://github.com/xiaotian2333/EchoMusic-player-frontend) | (No English description yet) 仿Mineradio歌词页 | xiaotian2333 |
 | [Record Player](https://github.com/xiaotian2333/EchoMusic-Record-player) | Kugou-style vinyl record player interface | xiaotian2333 |
 | [Taskbar Lyric](https://github.com/yaoyaoprincess/taskbar-lyric) | Display current lyrics and album cover in a transparent floating window above the taskbar, auto-detect taskbar position and snap to it | yaoyaoprincess |
+| [竖幅歌词](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/vertical-lyric-scroll) | 竖排文字桌面歌词浮窗 | 小栀 |
 | [Water Lyrics](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/water-lyrics) | Water ripple effect on lyrics page, demonstrates ctx.lyricEffects.register() | hoowhoami |
 ## 🔊 Audio Enhancement
 
