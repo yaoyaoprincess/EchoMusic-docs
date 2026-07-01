@@ -147,3 +147,8 @@ package-lock.json
 
 # OpenCode
 .sisyphus
+
+# Python
+__pycache__/
+*.pyc
+scripts/__pycache__/
