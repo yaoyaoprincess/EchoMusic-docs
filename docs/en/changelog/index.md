@@ -10,23 +10,123 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
+## [2.2.8-beta.2] - 2026-07-02
 
+### Added
 
-> **🔔 New versions detected: 2.2.7-beta.28, 2.2.6**
-> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.
->
+- New batch of plugin APIs
+- Vertical layout for desktop lyrics
+- Plugin statistics functionality
 
+### Improved
 
+- Optimized song right-click menu grouping
 
-> **🔔 New versions detected: 2.2.7-beta.29**
-> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.
->
+### Fixed
 
+- Fixed inconsistent divider line thickness in song right-click menu
 
+## [2.2.7] - 2026-07-01
 
-> **🔔 New versions detected: 2.2.8-beta.2, 2.2.7**
-> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.
->
+### Added
+
+- Risk control verification
+- Style recommendation
+- High DPI support
+- Share functionality
+- Windows taskbar thumbnail toolbar
+- "Queue on Next" in song right-click menu
+- "Auto-play on startup" setting, disabled by default
+- One-click plugin update
+- Account verification flow
+- Account password login
+- New batch of plugin API capabilities
+- Experimental feature: DevTools toggle
+
+### Improved
+
+- Homepage recommended playlists now include Hi-Res category filter
+- Clicking song name in player bar now prioritizes album detail page
+- App startup flow with "Continue Anyway" option
+- Unified Linux startup wrapper, preloading system libav to prevent libmpv / libffmpeg symbol conflicts
+- Song detail now includes chart performance data
+- Playback engine async refactored, blocking operations moved to worker threads
+- Optimized page lyrics loading and matching logic
+- Optimized audio filter application on track switch
+- API modules now loaded on demand instead of all at startup
+- Playback history migrated to SQLite for persistence, reducing renderer state overhead
+- Reduced high-frequency desktop lyrics IPC sync overhead
+- Reduced high-frequency writes for window move, resize, and local state persistence
+- Optimized playback history cleanup, auto-removing unreferenced song data
+- Split plugin main process base modules to lower plugin system maintenance cost
+- Optimized multiple internal pages
+- Optimized online plugin loading logic
+- Music recognition rewritten using official API
+- Optimized MediaSession initialization timing, registering event handlers early
+- Optimized song list right-click menu interaction, preventing scroll when menu is open
+- Dynamically calculated minimum window height for high DPI compatibility
+- Optimized echo-storage module bundling
+- Optimized first screen loading
+- Optimized gradient layer implementation
+
+### Fixed
+
+- Fixed shortcut mute/unmute potentially triggering volume reset
+- Fixed Windows libmpv download failure during packaging
+- Fixed Linux shortcut unable to pause playback
+- Fixed page animation causing blur
+- Fixed profile page data display errors
+- Fixed Private FM "dislike" not correctly reporting and song info mapping incomplete
+- Fixed Windows desktop lyrics mouse stutter when switching tracks while locked
+- Fixed desktop lyrics unlock button occasionally persisting
+- Fixed plugin system operations causing lyrics page track/lyrics/cover desync
+- Fixed progress bar jumping when switching tracks
+- Fixed page lyrics memory leak
+- Fixed Windows ARM64 build issues
+- Fixed playback freezing with stuck progress bar and no sound on network interruption or invalid URL
+- Fixed MPRIS cover display and not refreshing after track change
+- Fixed Linux packaging libav version regex causing HTTP audio stream playback failure
+- Fixed page lyrics per-character highlight intermittently disappearing
+- Fixed plugin update or uninstall failing due to file in use after plugin launches an executable
+- Fixed VIP expiration causing playback failure even after claiming membership, requiring app restart
+- Fixed Windows desktop lyrics width slowly increasing on click
+
+## [2.2.6] - 2026-06-14
+
+### Added
+
+- Experimental captcha verification dialog
+- Global page animations
+- Settings search
+- Audio buffer configuration for network-limited scenarios
+- Spectrum capture
+- Plugin system
+- External playlist import now supports more platforms
+- Auto-start on boot and start minimized to tray
+- **Mini Mode**: compact mini window player
+- Sort functionality for songs and albums on artist detail page
+- Lyrics selection
+- **Spatial Audio**: import, rename, and remove IR files in settings with quick switching
+
+### Improved
+
+- Optimized play queue logic
+- Optimized EQ equalizer
+- Improved add-to-playlist experience with duplicate detection and synced detail updates
+- Improved favorite/unfavorite flow with real-time "Liked Songs" playlist updates
+- Optimized various settings items
+- Playlist UI with playlist indicator bar
+- Improved sidebar collapse behavior
+- Improved lyrics selection
+- Improved log output
+
+### Fixed
+
+- Fixed desktop lyrics occasionally displaying incorrectly after track switch
+- Fixed UI thread blocking and lag when play queue has too many songs
+- Fixed Windows fullscreen mode with scaling causing window control button display issues
+- Fixed page lyrics progress bar tooltip clipping at start and end on hover
+- Fixed app freezing after waking from extended sleep
 
 ## [2.2.7-beta.22] - 2026-06-24
 
