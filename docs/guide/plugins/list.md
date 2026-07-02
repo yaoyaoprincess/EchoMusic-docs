@@ -50,7 +50,7 @@ title: 插件列表
 | [页面转场动效](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/page-motion) | 页面转场动画效果 | hoowhoami |
 | [插件面板](https://github.com/yaoyaoprincess/plugin-panel) | 在侧边栏添加插件面板快捷入口，一键跳转到插件管理 | yaoyaoprincess |
 | [滚动辅助](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/scroll-assistant) | 滚动辅助工具，提升长列表浏览体验 | hoowhoami |
-| [小功能](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/xiaotoolkit) | 热门排序 + 隐藏歌单 + 歌词隐藏控制栏 + 隐藏听歌识曲 + 顶部插件按钮 + 桌面特效 | 张三 |
+| [小功能](https://github.com/Max8808/xiaotoolkit) | 热门排序 + 隐藏歌单 + 歌词隐藏控制栏 + 隐藏听歌识曲 + 顶部插件按钮 + 桌面特效 | Max8808 |
 ## 📚 开发示例
 
 | 插件 | 说明 | 作者 |
