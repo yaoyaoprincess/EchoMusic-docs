@@ -284,6 +284,36 @@ if (ctx.desktopLyric) {
 
 ---
 
+## SQLite Database
+
+> Requires capability: `sqlite: true`
+
+Plugin-private SQLite database, isolated by plugin ID and managed by the host.
+
+| API | Description |
+|-----|------|
+| `ctx.sqlite.open({name?, migrations?})` | Open/create a database, defaults to `main` |
+| `ctx.sqlite.listDatabases()` | List all databases |
+| `ctx.sqlite.deleteDatabase(name?)` | Delete a named database |
+| `db.exec(sql)` | Execute SQL |
+| `db.run(sql, params?)` | Execute INSERT/UPDATE/DELETE |
+| `db.get(sql, params?)` | Query a single row |
+| `db.all(sql, params?)` | Query multiple rows |
+| `db.transaction(fn)` | Execute within a transaction |
+| `db.close()` | Close the connection |
+
+```js
+const db = await ctx.sqlite.open({ name: "library" });
+await db.run("CREATE TABLE IF NOT EXISTS songs (id TEXT PRIMARY KEY, title TEXT)");
+await db.run("INSERT OR REPLACE INTO songs (id, title) VALUES (?, ?)", ["1", "My Song"]);
+const row = await db.get("SELECT * FROM songs WHERE id = ?", ["1"]);
+console.log(row.row?.title); // "My Song"
+```
+
+> Supports BLOB parameters: `{ type: "hex", data }` or `{ type: "base64", data }` for writes. Queries return BLOBs as hex strings.
+
+---
+
 ## Next Steps
 
 | Document | Content |

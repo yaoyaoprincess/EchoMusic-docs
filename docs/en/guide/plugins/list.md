@@ -50,7 +50,7 @@ Below are plugins available in the official plugin source (26 total):
 | [Page Motion](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/page-motion) | Page transition animation effects | hoowhoami |
 | [Plugin Panel](https://github.com/yaoyaoprincess/plugin-panel) | Add a plugin panel shortcut in the sidebar, one-click jump to Plugin Manager | yaoyaoprincess |
 | [Scroll Assistant](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/scroll-assistant) | Scroll assist tool for better long-list browsing | hoowhoami |
-| [XiaoToolkit](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/xiaotoolkit) | Hot sort, hide playlist, lyric area hide control bar, hide music recognition, top plugin button, desktop effects | 张三 |
+| [XiaoToolkit](https://github.com/Max8808/xiaotoolkit) | Hot sort, hide playlist, lyric area hide control & toolbar, hide music recognition, top plugin button, desktop effects | Max8808 |
 ## 📚 Development Examples
 
 | Plugin | Description | Author |

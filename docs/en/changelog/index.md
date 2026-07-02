@@ -10,20 +10,24 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
-## [2.2.8-beta.2] - 2026-07-02
+## [2.2.8-beta.5] - 2026-07-02
 
 ### Added
 
-- New batch of plugin APIs
+- Arch Linux pacman installation package
+- SQLite plugin API (`ctx.sqlite`)
+- Desktop lyrics plugin API (`ctx.desktopLyric` + `ctx.lyricEffects` desktop scope)
 - Vertical layout for desktop lyrics
 - Plugin statistics functionality
 
 ### Improved
 
+- Optimized app menus
 - Optimized song right-click menu grouping
 
 ### Fixed
 
+- Fixed update detection stuck on "Checking..." on Arch Linux
 - Fixed inconsistent divider line thickness in song right-click menu
 
 ## [2.2.7] - 2026-07-01

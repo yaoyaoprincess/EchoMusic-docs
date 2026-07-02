@@ -30,7 +30,8 @@ outline: [2, 4]
     "localFiles": true,
     "lyricEffects": false,
     "lyrics": true,
-    "process": false
+    "process": false,
+    "sqlite": false
   },
   "permissions": {
     "http": ["https://api.my-service.com/*"]
@@ -254,7 +255,8 @@ outline: [2, 4]
   "lyricEffects": false,
   "lyrics": true,
   "process": false,
-  "webServer": false
+  "webServer": false,
+  "sqlite": false
 }
 ```
 
@@ -351,6 +353,22 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 ctx.webServer.listen(async (req) => {
   return { status: 200, body: JSON.stringify({ playing: ctx.player.currentTrack }) }
 }).then(port => console.log('Server on port', port))
+```
+
+#### sqlite
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.sqlite` |
+
+使用**插件私有 SQLite 数据库**，由宿主创建在 EchoMusic 用户数据目录下，按插件 id 隔离。数据库名默认 `main`，支持建表、CRUD、事务和 BLOB。详见 [文件存储与数据 →](./filesystem-storage#sqlite-数据库)。
+
+```js
+// 需要 sqlite 能力
+const db = await ctx.sqlite.open({ name: "library" });
+await db.run("CREATE TABLE IF NOT EXISTS songs (id TEXT PRIMARY KEY, title TEXT)");
+await db.run("INSERT OR REPLACE INTO songs (id, title) VALUES (?, ?)", ["1", "My Song"]);
+const row = await db.get("SELECT * FROM songs WHERE id = ?", ["1"]);
 ```
 
 ---

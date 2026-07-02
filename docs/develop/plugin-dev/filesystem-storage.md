@@ -147,6 +147,108 @@ const settings = (await ctx.storage.get("settings")) || defaults;
 
 ---
 
+## SQLite 数据库
+
+> 需要 capability：`sqlite: true`
+
+`ctx.sqlite` 提供插件私有的 SQLite 数据库，由宿主创建并托管在 EchoMusic 的用户数据目录下，按插件 id 隔离。插件只能通过库名访问自己的数据库，不能传入任意本地路径。
+
+### 打开数据库
+
+```js
+const db = await ctx.sqlite.open({
+  name: "library",                        // 可选，默认 "main"
+  migrations: [                           // 可选，版本迁移
+    { version: 1, sql: `CREATE TABLE IF NOT EXISTS songs (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      artist TEXT NOT NULL,
+      play_count INTEGER DEFAULT 0
+    )` },
+    { version: 2, sql: `ALTER TABLE songs ADD COLUMN rating INTEGER DEFAULT 0` }
+  ]
+});
+```
+
+数据库名只能包含字母、数字、点、下划线和短横线，且必须以字母或数字开头。
+
+### CRUD 操作
+
+| API | 说明 |
+|-----|------|
+| `db.run(sql, params?)` | 执行 INSERT/UPDATE/DELETE，返回 `{ changes: n }` |
+| `db.get(sql, params?)` | 查询一行，返回 `{ ok, row? }` 或 `null` |
+| `db.all(sql, params?)` | 查询多行，返回 `{ ok, rows }` |
+| `db.exec(sql)` | 执行任意 SQL（CREATE TABLE 等） |
+
+```js
+// 写入
+await db.run("INSERT OR REPLACE INTO songs (id, title, artist, play_count) VALUES (?, ?, ?, ?)",
+  ["1001", "晴天", "周杰伦", 42]);
+
+// 查询单行
+const row = await db.get("SELECT * FROM songs WHERE id = ?", ["1001"]);
+console.log(row.row?.title); // "晴天"
+
+// 查询多行
+const list = await db.all("SELECT * FROM songs ORDER BY play_count DESC");
+for (const item of list.rows) {
+  console.log(item.title, item.play_count);
+}
+```
+
+### 参数与 BLOB
+
+参数支持 `string`、`number`、`boolean` 和 `null`。写入二进制使用对象包装：
+
+```js
+// 写入 BLOB（hex 或 base64 均可）
+await db.run("INSERT INTO covers (id, data) VALUES (?, ?)", [
+  "album-cover",
+  { type: "base64", data: "iVBORw0KGgo=" }
+]);
+
+// 查询 BLOB，统一返回 hex 字符串
+const row = await db.get("SELECT data FROM covers WHERE id = ?", ["album-cover"]);
+console.log(row.row?.data); // { type: "hex", data: "89504e47..." }
+```
+
+### 事务
+
+```js
+await db.transaction([
+  ["UPDATE songs SET play_count = play_count + 1 WHERE id = ?", ["1001"]],
+  ["INSERT INTO play_log (song_id, time) VALUES (?, ?)", ["1001", Date.now()]]
+]);
+```
+
+每个事务最多 500 条语句，单条 SQL 最长约 256 KB，单次查询最多 5000 行，结果 JSON 最大约 8 MB。
+
+### 数据库管理
+
+| API | 说明 |
+|-----|------|
+| `ctx.sqlite.listDatabases()` | 列出该插件的所有数据库名 |
+| `ctx.sqlite.deleteDatabase(name?)` | 删除指定数据库（默认 `main`） |
+| `db.close()` | 关闭当前连接 |
+
+```js
+const databases = await ctx.sqlite.listDatabases();
+// ["main", "library", "cache"]
+
+await ctx.sqlite.deleteDatabase("cache");
+```
+
+### 生命周期
+
+- 插件安装后首次 `ctx.sqlite.open()` 时创建数据库文件
+- 插件禁用、安全模式或 EchoMusic 退出时自动关闭连接
+- 插件**卸载**时删除该插件的整个 SQLite 私有目录
+- 插件更新（升级版本）时数据库保留
+- 宿主拦截 `ATTACH`、`DETACH`、`VACUUM INTO`、`load_extension()` 等越界语句
+
+---
+
 ## 外观订阅
 
 `ctx.appearance` 允许插件响应主题和外观变化。

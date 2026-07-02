@@ -188,6 +188,26 @@ outline: [2, 4]
 | `ctx.fonts.getOptions({includeFollow?})` | 字体选项（可用于 Select 组件） | — |
 | `ctx.fonts.buildFamily(name)` | 构建 CSS font-family 字符串 | — |
 
+### SQLite 数据库
+
+> 需要 capability：`sqlite: true`
+
+插件私有 SQLite 数据库，按插件 id 隔离，由宿主托管。
+
+| API | 说明 | 详见 |
+|-----|------|:--:|
+| `ctx.sqlite.open({name?, migrations?})` | 打开/创建数据库，默认库名 `main` | [数据](./filesystem-storage#sqlite-数据库) |
+| `ctx.sqlite.listDatabases()` | 列出所有数据库 | [数据](./filesystem-storage#sqlite-数据库) |
+| `ctx.sqlite.deleteDatabase(name?)` | 删除指定数据库 | [数据](./filesystem-storage#sqlite-数据库) |
+| `db.exec(sql)` | 执行 SQL | [数据](./filesystem-storage#sqlite-数据库) |
+| `db.run(sql, params?)` | 执行 INSERT/UPDATE/DELETE | [数据](./filesystem-storage#sqlite-数据库) |
+| `db.get(sql, params?)` | 查询单行 | [数据](./filesystem-storage#sqlite-数据库) |
+| `db.all(sql, params?)` | 查询多行 | [数据](./filesystem-storage#sqlite-数据库) |
+| `db.transaction(fn)` | 事务执行 | [数据](./filesystem-storage#sqlite-数据库) |
+| `db.close()` | 关闭连接 | [数据](./filesystem-storage#sqlite-数据库) |
+
+> 支持 BLOB 参数，写入 `{ type: "hex", data }` 或 `{ type: "base64", data }`，查询返回 hex 字符串。
+
 ---
 
 ## 🪟 窗口 & 系统

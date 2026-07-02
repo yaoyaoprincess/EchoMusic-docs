@@ -224,9 +224,9 @@ CURATED = {
     'xiaotoolkit': {
         'zh_name': '小功能',
         'en_name': 'XiaoToolkit',
-        'zh_desc': '热门排序 + 隐藏歌单 + 歌词隐藏控制栏 + 隐藏听歌识曲 + 顶部插件按钮 + 桌面特效',
-        'en_desc': 'Hot sort, hide playlist, lyric area hide control bar, hide music recognition, top plugin button, desktop effects',
-        'json_author': '张三',
+        'zh_desc': '热门排序 + 隐藏歌单 + 歌词隐藏控制栏和工具栏 + 隐藏听歌识曲 + 顶部插件按钮 + 桌面特效',
+        'en_desc': 'Hot sort, hide playlist, lyric area hide control & toolbar, hide music recognition, top plugin button, desktop effects',
+        'json_author': 'Max8808',
         'category': 4,
     },
     'apple-music-lyrics': {

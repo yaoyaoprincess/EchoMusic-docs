@@ -31,7 +31,8 @@ outline: [2, 4]
     "lyricEffects": false,
     "lyrics": true,
     "process": false,
-    "webServer": false
+    "webServer": false,
+    "sqlite": false
   },
   "requires": {
     "echoMusicVersion": ">=2.2.6-beta.9 <3"
@@ -252,7 +253,8 @@ Plugin access to sensitive APIs uses **explicit declaration**. Only declare the 
   "lyricEffects": false,
   "lyrics": true,
   "process": false,
-  "webServer": false
+  "webServer": false,
+  "sqlite": false
 }
 ```
 
@@ -349,6 +351,22 @@ Create a **local HTTP server** accessible by other software on the same machine 
 ctx.webServer.listen(async (req) => {
   return { status: 200, body: JSON.stringify({ playing: ctx.player.currentTrack }) }
 }).then(port => console.log('Server on port', port));
+```
+
+#### sqlite
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.sqlite` |
+
+Use a **plugin-private SQLite database**, created by the host in EchoMusic's user data directory and isolated by plugin ID. Default database name is `main`. Supports table creation, CRUD, transactions, and BLOBs. See [Filesystem & Storage →](./filesystem-storage#sqlite-database).
+
+```js
+// Requires sqlite capability
+const db = await ctx.sqlite.open({ name: "library" });
+await db.run("CREATE TABLE IF NOT EXISTS songs (id TEXT PRIMARY KEY, title TEXT)");
+await db.run("INSERT OR REPLACE INTO songs (id, title) VALUES (?, ?)", ["1", "My Song"]);
+const row = await db.get("SELECT * FROM songs WHERE id = ?", ["1"]);
 ```
 
 ---
