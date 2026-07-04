@@ -33,7 +33,6 @@ jobs:
         run: |
           echo ">>> 运行同步脚本 <<<"
           python scripts/sync-upstream.py
-          echo "exit_code=$?" >> $GITHUB_OUTPUT
 
       - name: Check for changes
         id: diff
@@ -49,6 +48,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
         uses: peter-evans/create-pull-request@v7
         with:
           commit-message: 'chore: auto-sync upstream plugin list & changelog'
@@ -76,5 +76,4 @@ jobs:
           labels: |
             automated
             upstream-sync
-          team-reviewers: |
-            owners
+

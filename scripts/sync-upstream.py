@@ -11,6 +11,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.request
 import urllib.error
 from datetime import datetime
@@ -252,6 +253,7 @@ CURATED = {
         'en_desc': 'Mineradio-style lyrics page',
         'json_author': 'xiaotian2333',
         'category': 1,
+        'link_prefix': 'https://github.com/xiaotian2333/EchoMusic-player-frontend',
     },
     'old-xiami-lyric-styles': {
         'zh_name': '旧版虾米歌词风格',
@@ -275,17 +277,37 @@ CURATED = {
 # ── 工具函数 ──────────────────────────────────────────
 
 def fetch_json(url):
-    """Fetch and parse JSON from URL."""
+    """Fetch and parse JSON from URL with retry."""
     req = urllib.request.Request(url, headers={'User-Agent': 'EchoMusic-docs-sync/1.0'})
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return json.loads(resp.read().decode('utf-8'))
+    last_err = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return json.loads(resp.read().decode('utf-8'))
+        except (urllib.error.URLError, urllib.error.HTTPError) as e:
+            last_err = e
+            if attempt < 2:
+                wait = 2 ** attempt  # 1s, 2s, 4s
+                print('  Retrying ({}/3) after {}s: {}'.format(attempt + 1, wait, e))
+                time.sleep(wait)
+    raise last_err
 
 
 def fetch_text(url):
-    """Fetch raw text from URL."""
+    """Fetch raw text from URL with retry."""
     req = urllib.request.Request(url, headers={'User-Agent': 'EchoMusic-docs-sync/1.0'})
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return resp.read().decode('utf-8')
+    last_err = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return resp.read().decode('utf-8')
+        except (urllib.error.URLError, urllib.error.HTTPError) as e:
+            last_err = e
+            if attempt < 2:
+                wait = 2 ** attempt  # 1s, 2s, 4s
+                print('  Retrying ({}/3) after {}s: {}'.format(attempt + 1, wait, e))
+                time.sleep(wait)
+    raise last_err
 
 
 def fetch_manifest(plugin_entry):
@@ -604,7 +626,7 @@ def parse_changelog_versions(text):
 
 def sync_changelog():
     """Sync changelog from upstream CHANGELOG.md."""
-    print('[1/3] 获取上游更新日志...')
+    print('[1/2] 获取上游更新日志...')
     try:
         upstream = fetch_text(CHANGELOG_URL)
     except Exception as e:
@@ -619,118 +641,97 @@ def sync_changelog():
     latest_ver, latest_date, _ = upstream_versions[0]
     print('  ✓ 最新版本: {} ({})'.format(latest_ver, latest_date))
 
-    # Read existing changelog (zh)
-    changelog_path = os.path.join(DOCS_DIR, 'docs', 'changelog', 'index.md')
-    if not os.path.exists(changelog_path):
-        print('  ✗ 文件不存在: {}'.format(changelog_path))
-        return False
-
-    with open(changelog_path, 'r', encoding='utf-8') as f:
-        existing = f.read()
-
-    # Check if latest version already exists
-    if '## [{}]'.format(latest_ver) in existing:
-        print('  ✓ 版本 {} 已存在，无需更新'.format(latest_ver))
-        return False
-
-    # Find which versions are new
-    new_entries = []
-    for ver, date, body in upstream_versions:
-        if '## [{}]'.format(ver) not in existing:
-            new_entries.append((ver, date, body))
-        else:
-            break
-
-    if not new_entries:
-        print('  ✓ 无新版本')
-        return False
-
-    print('[2/3] 发现 {} 个新版本: {}'.format(
-        len(new_entries), ', '.join(v[0] for v in new_entries)
-    ))
-
-    # Build new entries markdown
-    new_section = '\n\n'.join(body for _, _, body in new_entries)
-
-    print('[3/3] 写入文件...')
+    print('[2/2] 处理更新日志...')
     changed = False
 
     # ── 中文 changelog ──
-    zh_path = changelog_path
+    zh_path = os.path.join(DOCS_DIR, 'docs', 'changelog', 'index.md')
     if os.path.exists(zh_path):
         with open(zh_path, 'r', encoding='utf-8') as f:
             zh_old = f.read()
 
-        if '## [{}]'.format(latest_ver) not in zh_old:
-            # Find new entries
-            zh_new_entries = []
-            for ver, date, body in upstream_versions:
-                if '## [{}]'.format(ver) not in zh_old:
-                    zh_new_entries.append((ver, date, body))
-                else:
-                    break
-
-            if zh_new_entries:
-                zh_section = '\n\n'.join(body for _, _, body in zh_new_entries)
-                header_end = zh_old.find('## [')
-                if header_end == -1:
-                    header_end = zh_old.rfind('\n\n') + 2
-                zh_new_content = zh_old[:header_end] + zh_section + '\n\n' + zh_old[header_end:]
-
-                if not DRY_RUN:
-                    with open(zh_path, 'w', encoding='utf-8') as f:
-                        f.write(zh_new_content)
-                    print('  ✓ 中文更新日志已更新 ({})'.format(
-                        ', '.join(v[0] for v in zh_new_entries)))
-                else:
-                    print('  ○ 中文更新日志有变更 (dry-run)')
-                changed = True
+        # Use regex to extract existing version numbers
+        existing_versions = set(re.findall(r'^## \[([^\]]+)\]', zh_old, re.MULTILINE))
+        zh_new_entries = []
+        for ver, date, body in upstream_versions:
+            if ver not in existing_versions:
+                zh_new_entries.append((ver, date, body))
             else:
-                print('  ✓ 中文更新日志已是最新')
+                break
+
+        if zh_new_entries:
+            print('  发现 {} 个新版本: {}'.format(
+                len(zh_new_entries), ', '.join(v[0] for v in zh_new_entries)
+            ))
+            zh_section = '\n\n'.join(body for _, _, body in zh_new_entries)
+            header_end = zh_old.find('## [')
+            if header_end == -1:
+                found = zh_old.rfind('\n\n')
+                header_end = found + 2 if found != -1 else len(zh_old)
+            zh_new_content = zh_old[:header_end] + zh_section + '\n\n' + zh_old[header_end:]
+
+            if not DRY_RUN:
+                with open(zh_path, 'w', encoding='utf-8') as f:
+                    f.write(zh_new_content)
+                print('  ✓ 中文更新日志已更新 ({})'.format(
+                    ', '.join(v[0] for v in zh_new_entries)))
+            else:
+                print('  ○ 中文更新日志有变更 (dry-run)')
+            changed = True
         else:
-            print('  ✓ 版本 {} 已存在于中文更新日志'.format(latest_ver))
+            print('  ✓ 中文更新日志已是最新')
     else:
         print('  ✗ 中文更新日志文件不存在: {}'.format(zh_path))
 
     # ── 英文 changelog ──
     # 上游 CHANGELOG.md 是中文，不能直接写入英文页面。
     # 只插入翻译提醒标记，不覆盖已翻译内容。
+    # 与中文处理解耦：即使中文处理失败，英文标记仍独立运行。
     en_changelog_path = os.path.join(DOCS_DIR, 'docs', 'en', 'changelog', 'index.md')
-    if os.path.exists(en_changelog_path):
-        with open(en_changelog_path, 'r', encoding='utf-8') as f:
-            en_old = f.read()
+    try:
+        if os.path.exists(en_changelog_path):
+            with open(en_changelog_path, 'r', encoding='utf-8') as f:
+                en_old = f.read()
 
-        # Find versions that are missing from English changelog
-        en_missing = []
-        for ver, date, body in upstream_versions:
-            if '## [{}]'.format(ver) not in en_old:
-                en_missing.append(ver)
-            else:
-                break
-
-        if en_missing:
-            todo_block = '\n\n> **🔔 New versions detected: {}**\n> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.\n>'.format(', '.join(en_missing))
-
-            # Find insertion point: first ## [version] header
-            first_version_pos = en_old.find('## [')
-            if first_version_pos == -1:
-                first_version_pos = en_old.find('\n', en_old.find('# Changelog')) + 1
-
-            if first_version_pos > 0 and todo_block not in en_old:
-                en_new = en_old[:first_version_pos] + todo_block + '\n\n' + en_old[first_version_pos:]
-                if not DRY_RUN:
-                    with open(en_changelog_path, 'w', encoding='utf-8') as f:
-                        f.write(en_new)
-                    print('  ⚠ 英文更新日志已标记待翻译 ({})'.format(', '.join(en_missing)))
-                    changed = True
+            # Use regex to extract existing version numbers
+            existing_en_versions = set(re.findall(r'^## \[([^\]]+)\]', en_old, re.MULTILINE))
+            en_missing = []
+            for ver, date, body in upstream_versions:
+                if ver not in existing_en_versions:
+                    en_missing.append(ver)
                 else:
-                    print('  ○ 英文更新日志将标记待翻译 ({})'.format(', '.join(en_missing)))
+                    break
+
+            if en_missing:
+                todo_block = '\n\n> **🔔 New versions detected: {}**\n> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.\n>'.format(', '.join(en_missing))
+
+                # Find insertion point: first ## [version] header
+                first_version_pos = en_old.find('## [')
+                if first_version_pos == -1:
+                    title_pos = en_old.find('# Changelog')
+                    if title_pos == -1:
+                        first_version_pos = 0
+                    else:
+                        nl = en_old.find('\n', title_pos)
+                        first_version_pos = nl + 1 if nl != -1 else len(en_old)
+
+                if first_version_pos > 0 and todo_block not in en_old:
+                    en_new = en_old[:first_version_pos] + todo_block + '\n\n' + en_old[first_version_pos:]
+                    if not DRY_RUN:
+                        with open(en_changelog_path, 'w', encoding='utf-8') as f:
+                            f.write(en_new)
+                        print('  ⚠ 英文更新日志已标记待翻译 ({})'.format(', '.join(en_missing)))
+                        changed = True
+                    else:
+                        print('  ○ 英文更新日志将标记待翻译 ({})'.format(', '.join(en_missing)))
+                else:
+                    print('  ✓ 英文更新日志已有待翻译标记或无需标记')
             else:
-                print('  ✓ 英文更新日志已有待翻译标记或无需标记')
+                print('  ✓ 英文更新日志已是最新')
         else:
-            print('  ✓ 版本 {} 已存在于英文更新日志'.format(latest_ver))
-    else:
-        print('  ✗ 英文更新日志文件不存在: {}'.format(en_changelog_path))
+            print('  ✗ 英文更新日志文件不存在: {}'.format(en_changelog_path))
+    except Exception as e:
+        print('  ✗ 英文更新日志处理失败: {}'.format(e))
 
     return changed
 
