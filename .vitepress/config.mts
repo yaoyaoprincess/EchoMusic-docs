@@ -30,7 +30,6 @@ export default defineConfig({
         },
         nav: [
           { text: '首页', link: '/' },
-          { text: '常见问题', link: '/faq/' },
           {
             text: '使用指南',
             items: [
@@ -40,6 +39,7 @@ export default defineConfig({
               { text: '插件系统', link: '/guide/plugins/' },
             ]
           },
+          { text: '常见问题', link: '/faq/' },
           {
             text: '开发文档',
             items: [
@@ -161,7 +161,13 @@ export default defineConfig({
               text: '❓ 常见问题',
               collapsed: false,
               items: [
-                { text: '常见问题', link: '/faq/' },
+                { text: '📋 总览', link: '/faq/' },
+                { text: '🚀 安装与启动', link: '/faq/install' },
+                { text: '🎵 播放与音质', link: '/faq/playback' },
+                { text: '👤 账号与会员', link: '/faq/account' },
+                { text: '🔧 功能使用', link: '/faq/features' },
+                { text: '🔄 更新与反馈', link: '/faq/updates' },
+                { text: '📱 平台限制', link: '/faq/platform' },
               ]
             },
           ],
@@ -215,7 +221,6 @@ export default defineConfig({
         },
         nav: [
           { text: 'Home', link: '/en/' },
-          { text: 'FAQ', link: '/en/faq/' },
           {
             text: 'User Guide',
             items: [
@@ -225,6 +230,7 @@ export default defineConfig({
               { text: 'Plugin System', link: '/en/guide/plugins/' },
             ]
           },
+          { text: 'FAQ', link: '/en/faq/' },
           {
             text: 'Development',
             items: [
@@ -346,7 +352,13 @@ export default defineConfig({
               text: '❓ FAQ',
               collapsed: false,
               items: [
-                { text: 'FAQ', link: '/en/faq/' },
+                { text: '📋 Overview', link: '/en/faq/' },
+                { text: '🚀 Installation & Startup', link: '/en/faq/install' },
+                { text: '🎵 Playback & Quality', link: '/en/faq/playback' },
+                { text: '👤 Account & Membership', link: '/en/faq/account' },
+                { text: '🔧 Feature Usage', link: '/en/faq/features' },
+                { text: '🔄 Updates & Feedback', link: '/en/faq/updates' },
+                { text: '📱 Platform Limitations', link: '/en/faq/platform' },
               ]
             },
           ],
