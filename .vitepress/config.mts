@@ -30,7 +30,6 @@ export default defineConfig({
         },
         nav: [
           { text: '首页', link: '/' },
-          { text: '功能特性', link: '/features/' },
           { text: '常见问题', link: '/guide/faq' },
           {
             text: '使用指南',
@@ -158,6 +157,33 @@ export default defineConfig({
               ]
             },
           ],
+          '/features/': [
+            {
+              text: '✨ 功能特性',
+              collapsed: false,
+              items: [
+                { text: '功能一览', link: '/features/' },
+              ]
+            },
+          ],
+          '/community/': [
+            {
+              text: '🌐 社区',
+              collapsed: false,
+              items: [
+                { text: '社区首页', link: '/community/' },
+              ]
+            },
+          ],
+          '/changelog/': [
+            {
+              text: '📝 更新日志',
+              collapsed: false,
+              items: [
+                { text: '更新日志', link: '/changelog/' },
+              ]
+            },
+          ],
         },
       }
     },
@@ -181,7 +207,6 @@ export default defineConfig({
         },
         nav: [
           { text: 'Home', link: '/en/' },
-          { text: 'Features', link: '/en/features/' },
           { text: 'FAQ', link: '/en/guide/faq' },
           {
             text: 'User Guide',
@@ -306,6 +331,33 @@ export default defineConfig({
                     { text: 'Publishing', link: '/en/develop/plugin-dev/publishing' },
                   ]
                 },
+              ]
+            },
+          ],
+          '/en/features/': [
+            {
+              text: '✨ Features',
+              collapsed: false,
+              items: [
+                { text: 'Overview', link: '/en/features/' },
+              ]
+            },
+          ],
+          '/en/community/': [
+            {
+              text: '🌐 Community',
+              collapsed: false,
+              items: [
+                { text: 'Community', link: '/en/community/' },
+              ]
+            },
+          ],
+          '/en/changelog/': [
+            {
+              text: '📝 Changelog',
+              collapsed: false,
+              items: [
+                { text: 'Changelog', link: '/en/changelog/' },
               ]
             },
           ],

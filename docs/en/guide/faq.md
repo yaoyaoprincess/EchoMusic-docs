@@ -22,6 +22,10 @@ xattr -cr /Applications/EchoMusic.app
 
 Click "More info" → "Run anyway".
 
+### Windows: Only Uninstaller Present After Installation, No Main Program
+
+You installed an architecture-mismatched package. If you don't know your PC's architecture, use the **x64 installer** (available in the group files).
+
 ### Linux: AppImage Won't Run
 
 Ensure it has executable permissions:
@@ -55,7 +59,7 @@ Run the following command in the program's root directory, then take a screensho
 .\EchoMusic.exe --console
 ```
 
-## Playback Issues
+## Playback & Quality
 
 ### Can't Play Songs
 
@@ -69,10 +73,6 @@ Run the following command in the program's root directory, then take a screensho
 1. Check if you have a VIP membership
 2. If not, you can manually sign in on the **Kugou Concept Edition** mobile app to claim VIP
 3. Alternatively, search GitHub for automated sign-in tools
-
-### Creating/Favoriting Playlists Fails After Login
-
-Please check whether your account is a **Kugou Concept Edition account**. If not, register a Kugou Concept Edition account and log in again.
 
 ### Stuttering or Intermittent Playback
 
@@ -93,7 +93,31 @@ Some songs may only offer specific quality tiers:
 2. Adjust the lyrics delay in lyrics settings
 3. Some songs may not have precise word-level lyrics and fall back to LRC
 
-## Feature Issues
+## Account & Membership
+
+### Is It Free?
+
+**Yes.** EchoMusic is completely free and open source. If you obtained it through a paid channel, you've been scammed.
+
+### Creating/Favoriting Playlists Fails After Login
+
+Please check whether your account is a **Kugou Concept Edition account**. If not, register a Kugou Concept Edition account and log in again.
+
+### The Old Version Had Auto VIP Claim, Why Is It Gone?
+
+This feature was removed to avoid risks. You can manually sign in on the Kugou Concept Edition mobile app to claim VIP, or search GitHub for automated sign-in tools.
+
+### Account Security
+
+- EchoMusic connects directly to Kugou's official servers
+- Account data never passes through third parties
+- We recommend using a strong password to protect your Kugou account
+
+### How to Log Out / Switch Accounts
+
+Go to **Settings → Account** and select log out, then log in with another account.
+
+## Feature Usage
 
 ### Music Recognition Not Working
 
@@ -118,37 +142,15 @@ FM recommendations are based on your listening history and feedback:
 
 **No.** EchoMusic does not provide music file download functionality, nor does it cache audio files locally.
 
-### The Old Version Had Auto VIP Claim, Why Is It Gone?
-
-This feature was removed to avoid risks. You can manually sign in on the Kugou Concept Edition mobile app to claim VIP, or search GitHub for automated sign-in tools.
-
-## Account Issues
-
-### Is It Free?
-
-**Yes.** EchoMusic is completely free and open source. If you obtained it through a paid channel, you've been scammed.
-
-### Account Security
-
-- EchoMusic connects directly to Kugou's official servers
-- Account data never passes through third parties
-- We recommend using a strong password to protect your Kugou account
-
-### How to Log Out / Switch Accounts
-
-Go to **Settings → Account** and select log out, then log in with another account.
-
-## Updates & Network
-
-### Slow Download Speed / Can't Get Latest Version / Plugin System Won't Load Latest Plugins
-
-Configure a GitHub acceleration proxy in **Settings → Experimental Features → GitHub Acceleration Settings** (see group announcement for details).
-
 ## Updates & Feedback
 
 ### How to Check for Updates
 
 EchoMusic automatically checks for updates on launch. You can also check manually: **Settings → About → Check for Updates**.
+
+### Slow Download Speed / Can't Get Latest Version / Plugin System Won't Load Latest Plugins
+
+Configure a GitHub acceleration proxy in **Settings → Experimental Features → GitHub Acceleration Settings** (see group announcement for details).
 
 ### How to Report Issues
 
@@ -169,7 +171,3 @@ No. EchoMusic is designed exclusively for desktop and will not support Android/i
 ### Will There Be Mobile/Car/TV Clients?
 
 EchoMusic is designed exclusively for desktop. There are no plans to support other platforms.
-
-### Windows: Only Uninstaller Present After Installation, No Main Program
-
-You installed an architecture-mismatched package. If you don't know your PC's architecture, use the **x64 installer** (available in the group files).
