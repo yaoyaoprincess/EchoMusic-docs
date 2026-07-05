@@ -31,6 +31,7 @@ export default defineConfig({
         nav: [
           { text: '首页', link: '/' },
           { text: '功能特性', link: '/features/' },
+          { text: '常见问题', link: '/guide/faq' },
           {
             text: '使用指南',
             items: [
@@ -38,7 +39,6 @@ export default defineConfig({
               { text: '核心功能', link: '/guide/playback' },
               { text: '体验定制', link: '/guide/lyrics' },
               { text: '插件系统', link: '/guide/plugins/' },
-              { text: '常见问题', link: '/guide/faq' },
             ]
           },
           {
@@ -182,6 +182,7 @@ export default defineConfig({
         nav: [
           { text: 'Home', link: '/en/' },
           { text: 'Features', link: '/en/features/' },
+          { text: 'FAQ', link: '/en/guide/faq' },
           {
             text: 'User Guide',
             items: [
@@ -189,7 +190,6 @@ export default defineConfig({
               { text: 'Core Features', link: '/en/guide/playback' },
               { text: 'Customization', link: '/en/guide/lyrics' },
               { text: 'Plugin System', link: '/en/guide/plugins/' },
-              { text: 'FAQ', link: '/en/guide/faq' },
             ]
           },
           {

@@ -37,6 +37,24 @@ chmod +x EchoMusic-*.AppImage
 2. Try running with administrator/root privileges
 3. Check if security software is blocking it
 
+### "Playback Engine Initialization Failed"
+
+Please update to the latest version. If you're already on the latest version, contact the developer.
+
+### "Device Registration Failed"
+
+1. Check your network environment
+2. Disable any proxy/accelerator and retry
+3. If it still doesn't work, try switching to a different network (e.g., mobile hotspot)
+
+### App Won't Start or Fails to Launch
+
+Run the following command in the program's root directory, then take a screenshot of the terminal output and share it in the community group:
+
+```bash
+.\EchoMusic.exe --console
+```
+
 ## Playback Issues
 
 ### Can't Play Songs
@@ -45,6 +63,16 @@ chmod +x EchoMusic-*.AppImage
 2. Verify you're logged in correctly
 3. Try switching audio quality (some qualities may require VIP)
 4. Restart the app
+
+### Playback Failed: "Temporarily Unable to Get Available Audio Source"
+
+1. Check if you have a VIP membership
+2. If not, you can manually sign in on the **Kugou Concept Edition** mobile app to claim VIP
+3. Alternatively, search GitHub for automated sign-in tools
+
+### Creating/Favoriting Playlists Fails After Login
+
+Please check whether your account is a **Kugou Concept Edition account**. If not, register a Kugou Concept Edition account and log in again.
 
 ### Stuttering or Intermittent Playback
 
@@ -86,6 +114,14 @@ FM recommendations are based on your listening history and feedback:
 2. Favorites data is stored locally — switching devices won't sync
 3. If you cleared app data, favorites are lost
 
+### Can I Download Music?
+
+**No.** EchoMusic does not provide music file download functionality, nor does it cache audio files locally.
+
+### The Old Version Had Auto VIP Claim, Why Is It Gone?
+
+This feature was removed to avoid risks. You can manually sign in on the Kugou Concept Edition mobile app to claim VIP, or search GitHub for automated sign-in tools.
+
 ## Account Issues
 
 ### Is It Free?
@@ -101,6 +137,12 @@ FM recommendations are based on your listening history and feedback:
 ### How to Log Out / Switch Accounts
 
 Go to **Settings → Account** and select log out, then log in with another account.
+
+## Updates & Network
+
+### Slow Download Speed / Can't Get Latest Version / Plugin System Won't Load Latest Plugins
+
+Configure a GitHub acceleration proxy in **Settings → Experimental Features → GitHub Acceleration Settings** (see group announcement for details).
 
 ## Updates & Feedback
 
@@ -124,6 +166,10 @@ Please read the [Contributing Guide](/en/develop/contributing). Pull Requests ar
 
 No. EchoMusic is designed exclusively for desktop and will not support Android/iOS or other mobile platforms.
 
-### Can I Download Music?
+### Will There Be Mobile/Car/TV Clients?
 
-No. EchoMusic is a player and does not provide music file download functionality.
+EchoMusic is designed exclusively for desktop. There are no plans to support other platforms.
+
+### Windows: Only Uninstaller Present After Installation, No Main Program
+
+You installed an architecture-mismatched package. If you don't know your PC's architecture, use the **x64 installer** (available in the group files).
