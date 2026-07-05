@@ -35,7 +35,7 @@ Once you're comfortable with the basics, explore these advanced features:
 
 ### Need Help?
 
-- [FAQ](/en/guide/faq) — Frequently asked questions
+- [FAQ](/en/faq/) — Frequently asked questions
 
 ## Document Structure
 

@@ -86,4 +86,4 @@ EchoMusic connects directly to Kugou's official servers. Your data never passes 
 
 - [Playback](/en/guide/playback) — Learn basic playback controls
 - [Music Discovery](/en/guide/music-discovery) — Explore recommendations & charts
-- [FAQ](/en/guide/faq) — Find answers to common questions
+- [FAQ](/en/faq/) — Find answers to common questions

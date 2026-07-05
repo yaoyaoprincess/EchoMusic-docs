@@ -30,7 +30,7 @@ export default defineConfig({
         },
         nav: [
           { text: '首页', link: '/' },
-          { text: '常见问题', link: '/guide/faq' },
+          { text: '常见问题', link: '/faq/' },
           {
             text: '使用指南',
             items: [
@@ -98,7 +98,6 @@ export default defineConfig({
                     { text: '管理与安全', link: '/guide/plugins/manage' },
                   ]
                 },
-                { text: '❓ 常见问题', link: '/guide/faq' },
               ]
             },
           ],
@@ -157,6 +156,15 @@ export default defineConfig({
               ]
             },
           ],
+          '/faq/': [
+            {
+              text: '❓ 常见问题',
+              collapsed: false,
+              items: [
+                { text: '常见问题', link: '/faq/' },
+              ]
+            },
+          ],
           '/features/': [
             {
               text: '✨ 功能特性',
@@ -207,7 +215,7 @@ export default defineConfig({
         },
         nav: [
           { text: 'Home', link: '/en/' },
-          { text: 'FAQ', link: '/en/guide/faq' },
+          { text: 'FAQ', link: '/en/faq/' },
           {
             text: 'User Guide',
             items: [
@@ -275,7 +283,6 @@ export default defineConfig({
                     { text: 'Management & Safety', link: '/en/guide/plugins/manage' },
                   ]
                 },
-                { text: '❓ FAQ', link: '/en/guide/faq' },
               ]
             },
           ],
@@ -331,6 +338,15 @@ export default defineConfig({
                     { text: 'Publishing', link: '/en/develop/plugin-dev/publishing' },
                   ]
                 },
+              ]
+            },
+          ],
+          '/en/faq/': [
+            {
+              text: '❓ FAQ',
+              collapsed: false,
+              items: [
+                { text: 'FAQ', link: '/en/faq/' },
               ]
             },
           ],
