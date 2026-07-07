@@ -23,7 +23,7 @@ title: 插件列表
 | [歌词信息滚动](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll) | 在播放栏区域滚动显示歌词信息，同时适配迷你播放器 | hoowhoami |
 | [Lyrics-bridge](https://github.com/xiaotian2333/Lyrics-bridge) | 通过 WinIsland 实现外部歌词桥接服务 | xiaotian2333 |
 | [旧版虾米歌词风格](https://github.com/oneday5799/EchoMusicPlugins/tree/main/old-xiami-lyric-styles) | 将页面歌词替换为旧版虾米风格：当前行高亮放大带辉光、上下行渐隐、平滑滚动跟随 | Oneday5799 |
-| [3D 歌词](hhttps://github.com/xiaotian2333/EchoMusic-player-frontend) | 仿 Mineradio 歌词页 | xiaotian2333 |
+| [3D 歌词](https://github.com/xiaotian2333/EchoMusic-player-frontend) | 仿 Mineradio 歌词页 | xiaotian2333 |
 | [唱片播放器](https://github.com/xiaotian2333/EchoMusic-Record-player) | 仿酷狗唱片播放器，黑胶唱片风格播放界面 | xiaotian2333 |
 | [任务栏歌词](https://github.com/yaoyaoprincess/taskbar-lyric) | 在任务栏上方显示当前歌词和专辑封面的透明浮窗，自动检测任务栏位置并贴靠 | yaoyaoprincess |
 | [竖幅歌词](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/vertical-lyric-scroll) | 竖排文字桌面歌词浮窗 | hoowhoami |

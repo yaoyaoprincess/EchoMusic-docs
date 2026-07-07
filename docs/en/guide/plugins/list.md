@@ -23,7 +23,7 @@ Below are plugins available in the official plugin source (26 total):
 | [Lyric Info Scroll](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll) | Scroll lyric information in the playback bar area, also adapts to mini player | hoowhoami |
 | [Lyrics-bridge](https://github.com/xiaotian2333/Lyrics-bridge) | External lyrics bridging service via WinIsland | xiaotian2333 |
 | [Old Xiami Lyric Styles](https://github.com/oneday5799/EchoMusicPlugins/tree/main/old-xiami-lyric-styles) | Replace page lyrics with classic Xiami style: current line highlighted with glow, surrounding lines fade out, smooth scroll follow | Oneday5799 |
-| [3D Lyrics](hhttps://github.com/xiaotian2333/EchoMusic-player-frontend) | Mineradio-style lyrics page | xiaotian2333 |
+| [3D Lyrics](https://github.com/xiaotian2333/EchoMusic-player-frontend) | Mineradio-style lyrics page | xiaotian2333 |
 | [Record Player](https://github.com/xiaotian2333/EchoMusic-Record-player) | Kugou-style vinyl record player interface | xiaotian2333 |
 | [Taskbar Lyric](https://github.com/yaoyaoprincess/taskbar-lyric) | Display current lyrics and album cover in a transparent floating window above the taskbar, auto-detect taskbar position and snap to it | yaoyaoprincess |
 | [Vertical Lyric Scroll](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/vertical-lyric-scroll) | Vertical text desktop lyrics floating window | hoowhoami |
