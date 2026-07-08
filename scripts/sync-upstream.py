@@ -684,48 +684,91 @@ def sync_changelog():
         print('  ✗ 中文更新日志文件不存在: {}'.format(zh_path))
 
     # ── 英文 changelog ──
-    # 上游 CHANGELOG.md 是中文，不能直接写入英文页面。
-    # 只插入翻译提醒标记，不覆盖已翻译内容。
-    # 与中文处理解耦：即使中文处理失败，英文标记仍独立运行。
+    # 使用 Google Translate 自动翻译上游中文 CHANGELOG
+    # 如果 deep_translator 不可用则回退到翻译提醒标记
     en_changelog_path = os.path.join(DOCS_DIR, 'docs', 'en', 'changelog', 'index.md')
     try:
         if os.path.exists(en_changelog_path):
             with open(en_changelog_path, 'r', encoding='utf-8') as f:
                 en_old = f.read()
 
-            # Use regex to extract existing version numbers
             existing_en_versions = set(re.findall(r'^## \[([^\]]+)\]', en_old, re.MULTILINE))
-            en_missing = []
+            en_new_entries = []
             for ver, date, body in upstream_versions:
                 if ver not in existing_en_versions:
-                    en_missing.append(ver)
+                    en_new_entries.append((ver, date, body))
                 else:
                     break
 
-            if en_missing:
-                todo_block = '\n\n> **🔔 New versions detected: {}**\n> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.\n>'.format(', '.join(en_missing))
+            if en_new_entries:
+                print('  发现 {} 个新版本需要翻译: {}'.format(
+                    len(en_new_entries), ', '.join(v[0] for v in en_new_entries)
+                ))
 
-                # Find insertion point: first ## [version] header
-                first_version_pos = en_old.find('## [')
-                if first_version_pos == -1:
-                    title_pos = en_old.find('# Changelog')
-                    if title_pos == -1:
-                        first_version_pos = 0
-                    else:
-                        nl = en_old.find('\n', title_pos)
-                        first_version_pos = nl + 1 if nl != -1 else len(en_old)
+                # Attempt auto-translation
+                en_sections = []
+                translation_ok = True
+                for ver, date, body in en_new_entries:
+                    print('  -> 翻译 {}... '.format(ver), end='')
+                    translated = translate_changelog_body(body)
+                    if translated is None:
+                        print('✗')
+                        translation_ok = False
+                        break
+                    en_sections.append(translated)
+                    print('✓')
 
-                if first_version_pos > 0 and todo_block not in en_old:
-                    en_new = en_old[:first_version_pos] + todo_block + '\n\n' + en_old[first_version_pos:]
+                if translation_ok and en_sections:
+                    # Insert translated entries
+                    en_section_text = '\n\n'.join(en_sections)
+                    first_version_pos = en_old.find('## [')
+                    if first_version_pos == -1:
+                        title_pos = en_old.find('# Changelog')
+                        if title_pos != -1:
+                            nl = en_old.find('\n', title_pos)
+                            first_version_pos = nl + 1 if nl != -1 else len(en_old)
+                        else:
+                            first_version_pos = len(en_old)
+
+                    # Remove stale reminder blocks
+                    en_old_clean = re.sub(
+                        r'\n*> \*\*🔔 New versions detected[^\n]*\n(?:> [^\n]*\n)*',
+                        '\n', en_old
+                    )
+
+                    en_new = en_old_clean[:first_version_pos] + en_section_text + '\n\n' + en_old_clean[first_version_pos:]
+
                     if not DRY_RUN:
                         with open(en_changelog_path, 'w', encoding='utf-8') as f:
                             f.write(en_new)
-                        print('  ⚠ 英文更新日志已标记待翻译 ({})'.format(', '.join(en_missing)))
-                        changed = True
+                        print('  ✓ 英文更新日志已翻译并更新')
                     else:
-                        print('  ○ 英文更新日志将标记待翻译 ({})'.format(', '.join(en_missing)))
+                        print('  ○ 英文更新日志将翻译更新 (dry-run)')
+                    changed = True
                 else:
-                    print('  ✓ 英文更新日志已有待翻译标记或无需标记')
+                    # Fallback: insert reminder block
+                    print('  ⚠ 自动翻译不可用，回退到翻译提醒')
+                    en_missing = [v[0] for v in en_new_entries]
+                    todo_block = '\n\n> **🔔 New versions detected: {}**\n> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.\n>'.format(', '.join(en_missing))
+
+                    first_version_pos = en_old.find('## [')
+                    if first_version_pos == -1:
+                        title_pos = en_old.find('# Changelog')
+                        if title_pos == -1:
+                            first_version_pos = 0
+                        else:
+                            nl = en_old.find('\n', title_pos)
+                            first_version_pos = nl + 1 if nl != -1 else len(en_old)
+
+                    if first_version_pos > 0 and todo_block not in en_old:
+                        en_new = en_old[:first_version_pos] + todo_block + '\n\n' + en_old[first_version_pos:]
+                        if not DRY_RUN:
+                            with open(en_changelog_path, 'w', encoding='utf-8') as f:
+                                f.write(en_new)
+                            print('  ⚠ 英文更新日志已标记待翻译 ({})'.format(', '.join(en_missing)))
+                            changed = True
+                        else:
+                            print('  ○ 英文更新日志将标记待翻译 ({})'.format(', '.join(en_missing)))
             else:
                 print('  ✓ 英文更新日志已是最新')
         else:

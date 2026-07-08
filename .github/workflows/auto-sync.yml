@@ -28,6 +28,10 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install dependencies
+        run: |
+          pip install deep-translator
+
       - name: Run sync script
         id: sync
         run: |
