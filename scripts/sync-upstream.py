@@ -624,6 +624,69 @@ def parse_changelog_versions(text):
     return versions
 
 
+def translate_changelog_body(body):
+    """Translate a changelog version body from Chinese to English using Google Translate.
+    Preserves version headers and markdown structure.
+    Returns None if deep_translator is unavailable."""
+    try:
+        from deep_translator import GoogleTranslator
+    except ImportError:
+        print('  ⚠ deep_translator 未安装，跳过翻译')
+        return None
+
+    lines = body.split('\n')
+    if not lines:
+        return body
+
+    # Extract and preserve version header line
+    header_line = ''
+    content_start = 0
+    if lines[0].startswith('## ['):
+        header_line = lines[0]
+        content_start = 1
+
+    # Build body content (everything after the header)
+    body_content = '\n'.join(lines[content_start:]).strip()
+    if not body_content or not any('\u4e00' <= c <= '\u9fff' for c in body_content):
+        return body
+
+    # Translate in chunks (Google Translate endpoint ~5000 char limit)
+    max_chunk = 4000
+    paragraphs = re.split(r'(\n\n+)', body_content)
+    translated_parts = []
+    current_chunk = []
+    current_len = 0
+
+    for para in paragraphs:
+        if current_len + len(para) > max_chunk and current_chunk:
+            chunk_text = ''.join(current_chunk)
+            try:
+                translated = GoogleTranslator(source='zh-CN', target='en').translate(chunk_text)
+                translated_parts.append(translated)
+            except Exception as e:
+                print('  ⚠ 翻译块失败，保留原文: {}'.format(e))
+                return None
+            current_chunk = []
+            current_len = 0
+        current_chunk.append(para)
+        current_len += len(para)
+
+    if current_chunk:
+        chunk_text = ''.join(current_chunk)
+        try:
+            translated = GoogleTranslator(source='zh-CN', target='en').translate(chunk_text)
+            translated_parts.append(translated)
+        except Exception as e:
+            print('  ⚠ 翻译块失败，保留原文: {}'.format(e))
+            return None
+
+    translated_body = ''.join(translated_parts)
+
+    if header_line:
+        return header_line + '\n' + translated_body
+    return translated_body
+
+
 def sync_changelog():
     """Sync changelog from upstream CHANGELOG.md."""
     print('[1/2] 获取上游更新日志...')

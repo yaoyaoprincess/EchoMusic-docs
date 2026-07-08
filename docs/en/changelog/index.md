@@ -10,6 +10,32 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
+## [2.2.8-beta.9] - 2026-07-07
+### New
+
+- Added API proxy and MPV proxy configuration
+- Added risk control verification plug-in API
+- Added Arch Linux pacman installation package
+- Added sqlite plug-in API
+- Added desktop lyrics plug-in API
+- Added desktop lyrics vertical layout
+- Added plug-in related statistical functions
+
+### Optimization
+
+- Optimize MPV song address selection logic and correctly try alternative CDN addresses
+- Optimize API request logic and correctly apply system proxy configuration
+- Optimize software menu
+- Optimize song right-click menu grouping
+
+### Fix
+
+- Fixed the issue of occasional CoreAudio/HAL crash during playback under macOS
+- Fixed an issue where Windows x64 packaging fails when the latest upstream mpv release contains only arm64 assets
+- Fixed the problem of finding livmpv on Linux
+- Fixed the issue where "Checking..." is always displayed when detecting updates on Arch Linux
+- Fixed the problem of inconsistent thickness of the dividing lines in the right-click menu of songs
+
 ## [2.2.8-beta.5] - 2026-07-02
 
 ### Added
