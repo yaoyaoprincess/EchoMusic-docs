@@ -4,7 +4,7 @@ title: 插件列表
 
 # 📋 插件列表
 
-以下是官方插件源中已收录的插件（共 26 款）：
+以下是官方插件源中已收录的插件（共 27 款）：
 
 ## 🎨 界面美化
 
@@ -20,6 +20,7 @@ title: 插件列表
 |------|------|------|
 | [Apple Music 歌词弹跳](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/apple-music-lyrics) | 模仿 Apple Music 的弹簧手感，为页面歌词行切换加入轻盈回弹动画 | hoowhoami |
 | [取色歌词](https://github.com/rinnki-L/cover-color-lyric) | 桌面歌词颜色自动跟随歌曲封面主色调，支持深浅色归一化与频谱律动 | 小栀 |
+| [Folia 歌词 beta](https://github.com/oneday5799/EchoMusicPlugins/tree/main/folia-style) | 基于 Folia 的歌词可视化插件。 | Oneday5799 |
 | [歌词信息滚动](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll) | 在播放栏区域滚动显示歌词信息，同时适配迷你播放器 | hoowhoami |
 | [Lyrics-bridge](https://github.com/xiaotian2333/Lyrics-bridge) | 通过 WinIsland 实现外部歌词桥接服务 | xiaotian2333 |
 | [旧版虾米歌词风格](https://github.com/oneday5799/EchoMusicPlugins/tree/main/old-xiami-lyric-styles) | 将页面歌词替换为旧版虾米风格：当前行高亮放大带辉光、上下行渐隐、平滑滚动跟随 | Oneday5799 |
