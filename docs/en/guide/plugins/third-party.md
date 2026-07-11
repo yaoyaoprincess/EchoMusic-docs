@@ -2,13 +2,22 @@
 title: Third-Party Plugins
 ---
 
-# 🧪 Third-Party Plugins
+# Third-Party Plugins
 
 > ⚠️ **Disclaimer**: The plugins listed below are from a third-party source [ZHCOOL520 Plugin Source](https://github.com/ZHCOOL520/EchoMusicPluginst), NOT officially maintained. Please carefully assess security risks before installation. The developers are not responsible for any issues caused by third-party plugins.
 
 This page lists 6 plugins from ZHCOOL520 Plugin Source, maintained by an automated sync script.
 
-## 🧪 Third Party
+## 📦 Add This Plugin Source
+
+In EchoMusic's plugin management panel, click "Add Plugin Source" and paste the following URL to add this source:
+
+```
+https://github.com/ZHCOOL520/EchoMusicPluginst
+```
+
+
+## Plugin List
 
 | Plugin | Description | Author |
 |------|------|------|

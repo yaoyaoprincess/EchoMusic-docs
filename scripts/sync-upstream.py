@@ -1004,31 +1004,46 @@ def build_third_party_page(plugins, lang='zh'):
             '---\n'
             'title: 第三方插件\n'
             '---\n\n'
-            '# 🧪 第三方插件\n\n'
+            '# 第三方插件\n\n'
             '> ⚠️ **免责声明**：以下插件来自第三方插件源 [{source_name}]({source_link})，'
             '非官方维护。安装前请仔细评估安全风险，开发者不对第三方插件导致的任何问题负责。\n\n'
             '本页面共收录 {source_name} 的 {total} 款插件，由自动同步脚本维护。\n'
         ).format(source_name=source_name, source_link=source_link, total=total)
+        add_source_block = (
+            '## 📦 添加此插件源\n\n'
+            '在 EchoMusic 的插件管理界面中，点击「添加插件源」，粘贴以下地址即可添加：\n\n'
+            '```\n'
+            '{source_link}\n'
+            '```\n\n'
+        ).format(source_link=source_link)
     else:
         header = (
             '---\n'
             'title: Third-Party Plugins\n'
             '---\n\n'
-            '# 🧪 Third-Party Plugins\n\n'
+            '# Third-Party Plugins\n\n'
             '> ⚠️ **Disclaimer**: The plugins listed below are from a third-party source '
             '[{source_name}]({source_link}), NOT officially maintained. Please carefully assess '
             'security risks before installation. The developers are not responsible for any '
             'issues caused by third-party plugins.\n\n'
             'This page lists {total} plugins from {source_name}, maintained by an automated sync script.\n'
         ).format(source_name=source_name, source_link=source_link, total=total)
+        add_source_block = (
+            '## 📦 Add This Plugin Source\n\n'
+            'In EchoMusic\'s plugin management panel, click "Add Plugin Source" and paste the '
+            'following URL to add this source:\n\n'
+            '```\n'
+            '{source_link}\n'
+            '```\n\n'
+        ).format(source_link=source_link)
 
-    sections = [header]
+    sections = [header, add_source_block]
 
     if lang == 'zh':
-        sections.append('## 🧪 第三方插件源\n')
+        sections.append('## 插件列表\n')
         sections.append('| 插件 | 说明 | 作者 |')
     else:
-        sections.append('## 🧪 Third Party\n')
+        sections.append('## Plugin List\n')
         sections.append('| Plugin | Description | Author |')
     sections.append('|------|------|------|')
 

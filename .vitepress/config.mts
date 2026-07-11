@@ -95,8 +95,8 @@ export default defineConfig({
                     { text: '概览', link: '/guide/plugins/' },
                     { text: '安装插件', link: '/guide/plugins/install' },
                     { text: '插件列表', link: '/guide/plugins/list' },
+                    { text: '第三方插件', link: '/guide/plugins/third-party' },
                     { text: '管理与安全', link: '/guide/plugins/manage' },
-                    { text: '🧪 第三方插件', link: '/guide/plugins/third-party' },
                   ]
                 },
               ]
