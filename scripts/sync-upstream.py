@@ -22,6 +22,8 @@ DOCS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLUGINS_JSON_URL = 'https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/echo-plugins.json'
 CHANGELOG_URL = 'https://raw.githubusercontent.com/hoowhoami/EchoMusic/main/CHANGELOG.md'
 PLUGINS_REPO_RAW = 'https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main'
+THIRD_PARTY_JSON_URL = 'https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/echo-plugins.json'
+THIRD_PARTY_RAW = 'https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master'
 
 DRY_RUN = '--dry-run' in sys.argv
 
@@ -271,6 +273,63 @@ CURATED = {
         'author': 'hoowhoami',
         'category': 1,
     },
+}
+
+# ── 第三方插件源元数据（人工维护）─────────────────────
+# 来源: ZHCOOL520/EchoMusicPluginst
+# 所有第三方插件归入统一分类 CATEGORY_THIRD_PARTY
+
+CATEGORY_THIRD_PARTY = len(CATEGORIES)  # 追加到分类列表末尾
+
+THIRD_PARTY_CURATED = {
+    'echo-ad-system': {
+        'zh_name': '广告系统',
+        'en_name': 'Ad System',
+        'zh_desc': '开屏广告 + 播放中插播广告 + 启动音效，支持 Bing 每日壁纸、自定义图片与弹窗时间',
+        'en_desc': 'Splash screen ads + in-app advertising + startup sound, with Bing daily wallpaper, custom images, and popup timer',
+        'author': 'ZHCOOL520',
+    },
+    'genshin-launcher': {
+        'zh_name': '原神启动器',
+        'en_name': 'Genshin Launcher',
+        'zh_desc': '游戏启动器、云游戏集成',
+        'en_desc': 'Game launcher and cloud gaming integration',
+        'author': 'ZHCOOL520',
+    },
+    'echomusic-stress-test': {
+        'zh_name': '究极双挖',
+        'en_name': 'Stress Test',
+        'zh_desc': '系统压力测试工具',
+        'en_desc': 'System stress testing tool',
+        'author': 'ZHCOOL520',
+    },
+    'prank-system': {
+        'zh_name': '恶搞系统',
+        'en_name': 'Prank System',
+        'zh_desc': '关机、蓝屏、冻结窗口等恶搞功能',
+        'en_desc': 'Shutdown, blue screen, window freeze, and other prank features',
+        'author': 'ZHCOOL520',
+    },
+    'music-downloader': {
+        'zh_name': '音乐下载',
+        'en_name': 'Music Downloader',
+        'zh_desc': '酷狗概念版音乐搜索与下载：多选批量下载，快捷下载按钮，内联音质选择，自定义链接，融合原生下载引擎',
+        'en_desc': 'Kugou Concept Edition music search and download: batch multi-select, quick download button, inline quality selection, custom links, integrated with native download engine',
+        'author': 'ZHCOOL520',
+    },
+    'avatar-nickname-self-comfort': {
+        'zh_name': '头像昵称自慰',
+        'en_name': 'Avatar & Nickname Self-Comfort',
+        'zh_desc': '本地修改头像和昵称显示',
+        'en_desc': 'Locally modify avatar and nickname display',
+        'author': 'ZHCOOL520',
+    },
+}
+
+THIRD_PARTY_SOURCE = {
+    'name': 'ZHCOOL520 猎奇插件源',
+    'en_name': 'ZHCOOL520 Plugin Source',
+    'homepage': 'https://github.com/ZHCOOL520/EchoMusicPluginst',
 }
 
 
@@ -842,6 +901,154 @@ def sync_changelog():
     return changed
 
 
+# ── 第三方插件同步 ────────────────────────────────────
+
+def sync_third_party_plugins():
+    """Sync third-party plugin list from ZHCOOL520/EchoMusicPluginst."""
+    print('[1/4] 获取第三方插件源索引...')
+    try:
+        data = fetch_json(THIRD_PARTY_JSON_URL)
+    except Exception as e:
+        print('  ✗ 获取失败: {}'.format(e))
+        return False
+
+    source_name = data.get('name', THIRD_PARTY_SOURCE['name'])
+    plugins_json = data.get('plugins', [])
+    print('  ✓ 获取到 {} 个第三方插件 (源: {})'.format(len(plugins_json), source_name))
+
+    print('[2/4] 解析第三方插件元数据...')
+    third_party_plugins = []
+    for entry in plugins_json:
+        pid = entry.get('id', '')
+        curated = THIRD_PARTY_CURATED.get(pid, {})
+        link = entry.get('homepage', '') or '{}/{}/'.format(THIRD_PARTY_RAW, entry.get('path', ''))
+
+        if 'zh_name' in curated:
+            zh_name = curated['zh_name']
+            en_name = curated['en_name']
+            zh_desc = curated.get('zh_desc', entry.get('description', ''))
+            en_desc = curated.get('en_desc', entry.get('description', ''))
+        else:
+            # Unknown plugin - try fetching manifest
+            path = entry.get('path', '')
+            if path:
+                manifest_url = '{}/{}/manifest.json'.format(THIRD_PARTY_RAW, path)
+                try:
+                    manifest = fetch_json(manifest_url)
+                    zh_name = manifest.get('name', pid)
+                    zh_desc = manifest.get('description', '')
+                except Exception:
+                    zh_name = pid
+                    zh_desc = ''
+            else:
+                zh_name = pid
+                zh_desc = ''
+            en_name = pid
+            en_desc = '(No English description) ' + (zh_desc or '')
+
+        author = curated.get('author', entry.get('author', ''))
+
+        third_party_plugins.append({
+            'id': pid,
+            'zh_name': zh_name,
+            'en_name': en_name,
+            'zh_desc': zh_desc,
+            'en_desc': en_desc,
+            'author': author if author else 'ZHCOOL520',
+            'category': CATEGORY_THIRD_PARTY,
+            'link': link,
+        })
+        print('  -> {}... {}'.format(pid, author if author else 'ZHCOOL520'))
+
+    # Sort by ID
+    third_party_plugins.sort(key=lambda p: p['id'].lower())
+
+    # Build markdown
+    print('[3/4] 生成第三方插件列表...')
+    zh_list = build_third_party_page(third_party_plugins, 'zh')
+    en_list = build_third_party_page(third_party_plugins, 'en')
+
+    print('[4/4] 对比现有文件...')
+    zh_path = os.path.join(DOCS_DIR, 'docs', 'guide', 'plugins', 'third-party.md')
+    en_path = os.path.join(DOCS_DIR, 'docs', 'en', 'guide', 'plugins', 'third-party.md')
+
+    changed = False
+    for path, content, label in [(zh_path, zh_list, '中文'), (en_path, en_list, '英文')]:
+        old = ''
+        if os.path.exists(path):
+            with open(path, 'r', encoding='utf-8') as f:
+                old = f.read()
+        if old.strip() == content.strip():
+            print('  ✓ {} 第三方插件列表无变化'.format(label))
+        else:
+            changed = True
+            if DRY_RUN:
+                print('  ○ {} 第三方插件列表有变更 (dry-run, 跳过写入)'.format(label))
+            else:
+                os.makedirs(os.path.dirname(path), exist_ok=True)
+                with open(path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                print('  ✓ {} 第三方插件列表已更新'.format(label))
+
+    return changed
+
+
+def build_third_party_page(plugins, lang='zh'):
+    """Build the third-party plugin list page."""
+    total = len(plugins)
+    source_name = THIRD_PARTY_SOURCE['name' if lang == 'zh' else 'en_name']
+    source_link = THIRD_PARTY_SOURCE['homepage']
+
+    if lang == 'zh':
+        header = (
+            '---\n'
+            'title: 第三方插件\n'
+            '---\n\n'
+            '# 🧪 第三方插件\n\n'
+            '> ⚠️ **免责声明**：以下插件来自第三方插件源 [{source_name}]({source_link})，'
+            '非官方维护。安装前请仔细评估安全风险，开发者不对第三方插件导致的任何问题负责。\n\n'
+            '本页面共收录 {source_name} 的 {total} 款插件，由自动同步脚本维护。\n'
+        ).format(source_name=source_name, source_link=source_link, total=total)
+    else:
+        header = (
+            '---\n'
+            'title: Third-Party Plugins\n'
+            '---\n\n'
+            '# 🧪 Third-Party Plugins\n\n'
+            '> ⚠️ **Disclaimer**: The plugins listed below are from a third-party source '
+            '[{source_name}]({source_link}), NOT officially maintained. Please carefully assess '
+            'security risks before installation. The developers are not responsible for any '
+            'issues caused by third-party plugins.\n\n'
+            'This page lists {total} plugins from {source_name}, maintained by an automated sync script.\n'
+        ).format(source_name=source_name, source_link=source_link, total=total)
+
+    sections = [header]
+
+    if lang == 'zh':
+        sections.append('## 🧪 第三方插件源\n')
+        sections.append('| 插件 | 说明 | 作者 |')
+    else:
+        sections.append('## 🧪 Third Party\n')
+        sections.append('| Plugin | Description | Author |')
+    sections.append('|------|------|------|')
+
+    for p in plugins:
+        name = p['zh_name'] if lang == 'zh' else p['en_name']
+        desc = p['zh_desc'] if lang == 'zh' else p['en_desc']
+        sections.append('| [{}]({}) | {} | {} |'.format(
+            name, p['link'], desc, p['author']
+        ))
+
+    # Footer navigation
+    sections.append('\n---\n')
+    if lang == 'zh':
+        sections.append('- [← 返回插件列表](./list)')
+    else:
+        sections.append('- [← Back to Plugin List](./list)')
+
+    return '\n'.join(sections) + '\n'
+
+
 # ── 主流程 ────────────────────────────────────────────
 
 def main():
@@ -861,11 +1068,13 @@ def main():
 
     plugin_changed = sync_plugins()
     print()
+    third_party_changed = sync_third_party_plugins()
+    print()
     changelog_changed = sync_changelog()
 
     print()
     print('=' * 60)
-    if plugin_changed or changelog_changed:
+    if plugin_changed or third_party_changed or changelog_changed:
         print('✓ 检测到变更')
         if DRY_RUN:
             print('  (dry-run: 未实际写入)')

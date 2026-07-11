@@ -31,7 +31,7 @@ This page records the major version updates for EchoMusic. For the complete chan
 
 ### Fix
 
-- Fixed an issue where the status of the play queue and private FM page is abnormal after adding the next song to play or queuing for playback through the right-click menu during private FM playback.
+- Fixed an issue where the status of the play queue and private FM page was abnormal after adding the next song to play or queuing for playback through the right-click menu during private FM playback.
 - Fixed an issue where Windows x64 packaging fails when the latest upstream mpv release contains only arm64 assets
 - Fixed the problem of finding livmpv on Linux
 - Fixed the issue where "Checking..." is always displayed when detecting updates on Arch Linux
