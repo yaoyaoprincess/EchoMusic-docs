@@ -95,7 +95,7 @@ export default defineConfig({
                     { text: '概览', link: '/guide/plugins/' },
                     { text: '安装插件', link: '/guide/plugins/install' },
                     { text: '插件列表', link: '/guide/plugins/list' },
-                    { text: '第三方插件', link: '/guide/plugins/third-party' },
+                    { text: '社区插件源', link: '/guide/plugins/community' },
                     { text: '管理与安全', link: '/guide/plugins/manage' },
                   ]
                 },
@@ -287,6 +287,7 @@ export default defineConfig({
                     { text: 'Overview', link: '/en/guide/plugins/' },
                     { text: 'Installation', link: '/en/guide/plugins/install' },
                     { text: 'Plugin List', link: '/en/guide/plugins/list' },
+                    { text: 'Community Sources', link: '/en/guide/plugins/community' },
                     { text: 'Management & Safety', link: '/en/guide/plugins/manage' },
                   ]
                 },

@@ -22,8 +22,80 @@ DOCS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLUGINS_JSON_URL = 'https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/echo-plugins.json'
 CHANGELOG_URL = 'https://raw.githubusercontent.com/hoowhoami/EchoMusic/main/CHANGELOG.md'
 PLUGINS_REPO_RAW = 'https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main'
-THIRD_PARTY_JSON_URL = 'https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/echo-plugins.json'
-THIRD_PARTY_RAW = 'https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master'
+PLUGINS_REPO = 'https://github.com/hoowhoami/EchoMusicPlugins'
+# ── 社区插件源配置 ──────────────────────────────────
+# 每个源: { 'name', 'en_name', 'homepage', 'json_url', 'raw_base', 'curated': {...}, 'featured': bool }
+COMMUNITY_SOURCES = [
+    {
+        'name': '不知名插件源',
+        'en_name': 'Anonymous Plugin Source',
+        'homepage': 'https://github.com/yunzaiorg/kugou-sign',
+        'json_url': 'https://raw.githubusercontent.com/yunzaiorg/kugou-sign/main/echo-plugins.json',
+        'raw_base': 'https://raw.githubusercontent.com/yunzaiorg/kugou-sign/main',
+        'featured': True,
+        'curated': {
+            'kugou-sign': {
+                'zh_name': '签到',
+                'en_name': 'KuGou Sign-in',
+                'zh_desc': '酷狗概念版自动签到',
+                'en_desc': 'Auto KuGou Concept Edition sign-in',
+                'author': 'Anonymous',
+            },
+        },
+    },
+    {
+        'name': 'ZHCOOL520 猎奇插件源',
+        'en_name': 'ZHCOOL520 Plugin Source',
+        'homepage': 'https://github.com/ZHCOOL520/EchoMusicPluginst',
+        'json_url': 'https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/echo-plugins.json',
+        'raw_base': 'https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master',
+        'featured': False,
+        'curated': {
+            'echo-ad-system': {
+                'zh_name': '广告系统',
+                'en_name': 'Ad System',
+                'zh_desc': '开屏广告 + 播放中插播广告 + 启动音效，支持 Bing 每日壁纸、自定义图片与弹窗时间',
+                'en_desc': 'Splash screen ads + in-app advertising + startup sound, with Bing daily wallpaper, custom images, and popup timer',
+                'author': 'ZHCOOL520',
+            },
+            'genshin-launcher': {
+                'zh_name': '原神启动器',
+                'en_name': 'Genshin Launcher',
+                'zh_desc': '游戏启动器、云游戏集成',
+                'en_desc': 'Game launcher and cloud gaming integration',
+                'author': 'ZHCOOL520',
+            },
+            'echomusic-stress-test': {
+                'zh_name': '究极双挖',
+                'en_name': 'Stress Test',
+                'zh_desc': '系统压力测试工具',
+                'en_desc': 'System stress testing tool',
+                'author': 'ZHCOOL520',
+            },
+            'prank-system': {
+                'zh_name': '恶搞系统',
+                'en_name': 'Prank System',
+                'zh_desc': '关机、蓝屏、冻结窗口等恶搞功能',
+                'en_desc': 'Shutdown, blue screen, window freeze, and other prank features',
+                'author': 'ZHCOOL520',
+            },
+            'music-downloader': {
+                'zh_name': '音乐下载',
+                'en_name': 'Music Downloader',
+                'zh_desc': '酷狗概念版音乐搜索与下载：多选批量下载，快捷下载按钮，内联音质选择，自定义链接，融合原生下载引擎',
+                'en_desc': 'Kugou Concept Edition music search and download: batch multi-select, quick download button, inline quality selection, custom links, integrated with native download engine',
+                'author': 'ZHCOOL520',
+            },
+            'avatar-nickname-self-comfort': {
+                'zh_name': '头像昵称自慰',
+                'en_name': 'Avatar & Nickname Self-Comfort',
+                'zh_desc': '本地修改头像和昵称显示',
+                'en_desc': 'Locally modify avatar and nickname display',
+                'author': 'ZHCOOL520',
+            },
+        },
+    },
+]
 
 DRY_RUN = '--dry-run' in sys.argv
 
@@ -275,62 +347,8 @@ CURATED = {
     },
 }
 
-# ── 第三方插件源元数据（人工维护）─────────────────────
-# 来源: ZHCOOL520/EchoMusicPluginst
-# 所有第三方插件归入统一分类 CATEGORY_THIRD_PARTY
-
-CATEGORY_THIRD_PARTY = len(CATEGORIES)  # 追加到分类列表末尾
-
-THIRD_PARTY_CURATED = {
-    'echo-ad-system': {
-        'zh_name': '广告系统',
-        'en_name': 'Ad System',
-        'zh_desc': '开屏广告 + 播放中插播广告 + 启动音效，支持 Bing 每日壁纸、自定义图片与弹窗时间',
-        'en_desc': 'Splash screen ads + in-app advertising + startup sound, with Bing daily wallpaper, custom images, and popup timer',
-        'author': 'ZHCOOL520',
-    },
-    'genshin-launcher': {
-        'zh_name': '原神启动器',
-        'en_name': 'Genshin Launcher',
-        'zh_desc': '游戏启动器、云游戏集成',
-        'en_desc': 'Game launcher and cloud gaming integration',
-        'author': 'ZHCOOL520',
-    },
-    'echomusic-stress-test': {
-        'zh_name': '究极双挖',
-        'en_name': 'Stress Test',
-        'zh_desc': '系统压力测试工具',
-        'en_desc': 'System stress testing tool',
-        'author': 'ZHCOOL520',
-    },
-    'prank-system': {
-        'zh_name': '恶搞系统',
-        'en_name': 'Prank System',
-        'zh_desc': '关机、蓝屏、冻结窗口等恶搞功能',
-        'en_desc': 'Shutdown, blue screen, window freeze, and other prank features',
-        'author': 'ZHCOOL520',
-    },
-    'music-downloader': {
-        'zh_name': '音乐下载',
-        'en_name': 'Music Downloader',
-        'zh_desc': '酷狗概念版音乐搜索与下载：多选批量下载，快捷下载按钮，内联音质选择，自定义链接，融合原生下载引擎',
-        'en_desc': 'Kugou Concept Edition music search and download: batch multi-select, quick download button, inline quality selection, custom links, integrated with native download engine',
-        'author': 'ZHCOOL520',
-    },
-    'avatar-nickname-self-comfort': {
-        'zh_name': '头像昵称自慰',
-        'en_name': 'Avatar & Nickname Self-Comfort',
-        'zh_desc': '本地修改头像和昵称显示',
-        'en_desc': 'Locally modify avatar and nickname display',
-        'author': 'ZHCOOL520',
-    },
-}
-
-THIRD_PARTY_SOURCE = {
-    'name': 'ZHCOOL520 猎奇插件源',
-    'en_name': 'ZHCOOL520 Plugin Source',
-    'homepage': 'https://github.com/ZHCOOL520/EchoMusicPluginst',
-}
+# 社区源插件统一归入一个分类
+CATEGORY_COMMUNITY = len(CATEGORIES)
 
 
 # ── 工具函数 ──────────────────────────────────────────
@@ -432,9 +450,68 @@ def get_plugin_link(plugin_entry, plugin_id):
     return 'https://github.com/hoowhoami/EchoMusicPlugins'
 
 
+def fetch_plugin_version(plugin_entry, raw_base=None):
+    """Fetch plugin version from manifest.json. Returns version string or 'unknown'.
+    Accepts optional raw_base for community sources."""
+    path = plugin_entry.get('path', '')
+    repo = plugin_entry.get('repo', '')
+
+    if raw_base:
+        # Community source: use raw_base
+        if path:
+            manifest_url = '{}/{}/manifest.json'.format(raw_base, path)
+        else:
+            manifest_url = '{}/manifest.json'.format(raw_base)
+    elif repo:
+        owner_repo = repo.replace('https://github.com/', '').rstrip('/')
+        if not path:
+            # Independent repo, manifest at root
+            manifest_url = 'https://raw.githubusercontent.com/{}/main/manifest.json'.format(owner_repo)
+        else:
+            manifest_url = 'https://raw.githubusercontent.com/{}/main/{}/manifest.json'.format(owner_repo, path)
+    elif path:
+        manifest_url = '{}/{}/manifest.json'.format(PLUGINS_REPO_RAW, path)
+    else:
+        return 'unknown'
+
+    try:
+        manifest = fetch_json(manifest_url)
+        return manifest.get('version', 'unknown')
+    except Exception:
+        return 'unknown'
+
+
+def repo_to_source_id(repo_url):
+    """Extract sourceId from repo URL: github:owner/repo (lowercase)."""
+    m = re.search(r'github\.com/([^/]+/[^/]+)', repo_url, re.IGNORECASE)
+    if m:
+        return 'github:' + m.group(1).lower()
+    return 'unknown'
+
+
+def build_share_link(plugin_id, source_url, plugin_path, version, plugin_homepage=None):
+    """Build the wrapped echomusic:// plugin share link."""
+    from urllib.parse import quote, urlencode
+
+    source_id = repo_to_source_id(source_url)
+    if plugin_homepage is None:
+        plugin_homepage = '{}/tree/main/{}'.format(source_url.rstrip('/'), plugin_path) if plugin_path else source_url
+
+    # Build deep link: param values must be URL-encoded (they are decoded by the app)
+    params = {
+        'sourceId': source_id,
+        'source': source_url,
+        'version': version,
+        'homepage': plugin_homepage,
+    }
+    deep_link = 'echomusic://plugin/{}?{}'.format(plugin_id, urlencode(params, safe=''))
+    target = quote(deep_link, safe='')
+    return 'https://hoowhoami.github.io/EchoMusic/share/?target={}'.format(target)
+
+
 def get_plugin_meta(plugin_entry):
     """Get full metadata for a plugin from echo-plugins.json entry.
-    Returns dict with id, zh_name, en_name, zh_desc, en_desc, author, category, link.
+    Returns dict with id, zh_name, en_name, zh_desc, en_desc, author, category, link, share.
     """
     plugin_id = plugin_entry.get('id', '')
     curated = CURATED.get(plugin_id, {})
@@ -499,6 +576,14 @@ def get_plugin_meta(plugin_entry):
         tags = plugin_entry.get('tags', [])
         category = categorize_by_tags(tags)
 
+    # ── 构建分享链接 ─────────────────────────────
+    path = plugin_entry.get('path', '')
+    repo = plugin_entry.get('repo', '')
+    source_url = repo if repo else PLUGINS_REPO
+    version = fetch_plugin_version(plugin_entry)
+    homepage = plugin_entry.get('homepage', '')
+    share_link = build_share_link(plugin_id, source_url, path, version, homepage or None)
+
     return {
         'id': plugin_id,
         'zh_name': zh_name,
@@ -508,6 +593,7 @@ def get_plugin_meta(plugin_entry):
         'author': author if author else '',
         'category': category,
         'link': link,
+        'share': share_link,
     }
 
 
@@ -555,16 +641,17 @@ def build_plugin_list_md(plugins, lang='zh'):
         sections.append(cat_title)
 
         if lang == 'zh':
-            sections.append('| 插件 | 说明 | 作者 |')
+            sections.append('| 插件 | 说明 | 作者 | 分享 |')
         else:
-            sections.append('| Plugin | Description | Author |')
-        sections.append('|------|------|------|')
+            sections.append('| Plugin | Description | Author | Share |')
+        sections.append('|------|------|------|------|')
 
         for p in cat_plugins:
             name = p['zh_name'] if lang == 'zh' else p['en_name']
             desc = p['zh_desc'] if lang == 'zh' else p['en_desc']
-            sections.append('| [{}]({}) | {} | {} |'.format(
-                name, p['link'], desc, p['author']
+            share_label = '安装' if lang == 'zh' else 'Install'
+            sections.append('| [{}]({}) | {} | {} | <span class="nowrap">[{}]({})</span> |'.format(
+                name, p['link'], desc, p['author'], share_label, p.get('share', '#')
             ))
 
     # Footer navigation
@@ -919,77 +1006,84 @@ def sync_changelog():
     return changed
 
 
-# ── 第三方插件同步 ────────────────────────────────────
+# ── 社区插件源同步 ──────────────────────────────────
 
-def sync_third_party_plugins():
-    """Sync third-party plugin list from ZHCOOL520/EchoMusicPluginst."""
-    print('[1/4] 获取第三方插件源索引...')
-    try:
-        data = fetch_json(THIRD_PARTY_JSON_URL)
-    except Exception as e:
-        print('  ✗ 获取失败: {}'.format(e))
-        return False
+def sync_community_sources():
+    """Sync community plugin sources, building a combined community page."""
+    all_plugins = []  # (source_index, plugin_dict)
+    featured_idx = None
 
-    source_name = data.get('name', THIRD_PARTY_SOURCE['name'])
-    plugins_json = data.get('plugins', [])
-    print('  ✓ 获取到 {} 个第三方插件 (源: {})'.format(len(plugins_json), source_name))
+    for idx, src in enumerate(COMMUNITY_SOURCES):
+        if src.get('featured'):
+            featured_idx = idx
+        print('[1/{}] 获取社区源: {}...'.format(len(COMMUNITY_SOURCES) * 2, src['name']))
+        try:
+            data = fetch_json(src['json_url'])
+        except Exception as e:
+            print('  ✗ 获取失败: {}'.format(e))
+            continue
 
-    print('[2/4] 解析第三方插件元数据...')
-    third_party_plugins = []
-    for entry in plugins_json:
-        pid = entry.get('id', '')
-        curated = THIRD_PARTY_CURATED.get(pid, {})
-        link = entry.get('homepage', '') or '{}/{}/'.format(THIRD_PARTY_RAW, entry.get('path', ''))
+        source_name = data.get('name', src['name'])
+        plugins_json = data.get('plugins', [])
+        print('  ✓ 获取到 {} 个插件 (源: {})'.format(len(plugins_json), source_name))
 
-        if 'zh_name' in curated:
-            zh_name = curated['zh_name']
-            en_name = curated['en_name']
-            zh_desc = curated.get('zh_desc', entry.get('description', ''))
-            en_desc = curated.get('en_desc', entry.get('description', ''))
-        else:
-            # Unknown plugin - try fetching manifest
-            path = entry.get('path', '')
-            if path:
-                manifest_url = '{}/{}/manifest.json'.format(THIRD_PARTY_RAW, path)
-                try:
-                    manifest = fetch_json(manifest_url)
-                    zh_name = manifest.get('name', pid)
-                    zh_desc = manifest.get('description', '')
-                except Exception:
+        for entry in plugins_json:
+            pid = entry.get('id', '')
+            curated = src['curated'].get(pid, {})
+            link = entry.get('homepage', '') or '{}/{}/'.format(src['raw_base'], entry.get('path', ''))
+
+            if 'zh_name' in curated:
+                zh_name = curated['zh_name']
+                en_name = curated['en_name']
+                zh_desc = curated.get('zh_desc', entry.get('description', ''))
+                en_desc = curated.get('en_desc', entry.get('description', ''))
+            else:
+                path = entry.get('path', '')
+                if path:
+                    manifest_url = '{}/{}/manifest.json'.format(src['raw_base'], path)
+                    try:
+                        manifest = fetch_json(manifest_url)
+                        zh_name = manifest.get('name', pid)
+                        zh_desc = manifest.get('description', '')
+                    except Exception:
+                        zh_name = pid
+                        zh_desc = ''
+                else:
                     zh_name = pid
                     zh_desc = ''
-            else:
-                zh_name = pid
-                zh_desc = ''
-            # Auto-translate for English
-            en_name = translate_to_english(zh_name) or pid
-            en_desc = translate_to_english(zh_desc) if zh_desc else ''
+                en_name = translate_to_english(zh_name) or pid
+                en_desc = translate_to_english(zh_desc) if zh_desc else ''
 
-        author = curated.get('author', entry.get('author', ''))
+            author = curated.get('author', entry.get('author', ''))
 
-        third_party_plugins.append({
-            'id': pid,
-            'zh_name': zh_name,
-            'en_name': en_name,
-            'zh_desc': zh_desc,
-            'en_desc': en_desc,
-            'author': author if author else 'ZHCOOL520',
-            'category': CATEGORY_THIRD_PARTY,
-            'link': link,
-        })
-        print('  -> {}... {}'.format(pid, author if author else 'ZHCOOL520'))
+            # Build share link for community plugin
+            src_repo = src.get('repo_url', src['homepage'])
+            path = entry.get('path', '')
+            version = fetch_plugin_version(entry, raw_base=src['raw_base'])
+            # Let build_share_link construct homepage from source_url + path
+            share = build_share_link(pid, src_repo, path, version, None)
 
-    # Sort by ID
-    third_party_plugins.sort(key=lambda p: p['id'].lower())
+            all_plugins.append({
+                'source_idx': idx,
+                'id': pid,
+                'zh_name': zh_name,
+                'en_name': en_name,
+                'zh_desc': zh_desc,
+                'en_desc': en_desc,
+                'author': author if author else src['name'],
+                'link': link,
+                'share': share,
+            })
+            print('  -> {}... {}'.format(pid, author or src['name']))
 
     # Build markdown
-    print('[3/4] 生成第三方插件列表...')
-    zh_list = build_third_party_page(third_party_plugins, 'zh')
-    en_list = build_third_party_page(third_party_plugins, 'en')
+    print('[{}] 生成社区插件源页面...'.format(len(COMMUNITY_SOURCES) + 1))
+    zh_list = build_community_page(all_plugins, 'zh', featured_idx)
+    en_list = build_community_page(all_plugins, 'en', featured_idx)
 
-    print('[4/4] 对比现有文件...')
-    zh_path = os.path.join(DOCS_DIR, 'docs', 'guide', 'plugins', 'third-party.md')
-    en_path = os.path.join(DOCS_DIR, 'docs', 'en', 'guide', 'plugins', 'third-party.md')
+    # Write files
+    zh_path = os.path.join(DOCS_DIR, 'docs', 'guide', 'plugins', 'community.md')
+    en_path = os.path.join(DOCS_DIR, 'docs', 'en', 'guide', 'plugins', 'community.md')
 
     changed = False
     for path, content, label in [(zh_path, zh_list, '中文'), (en_path, en_list, '英文')]:
@@ -998,86 +1092,106 @@ def sync_third_party_plugins():
             with open(path, 'r', encoding='utf-8') as f:
                 old = f.read()
         if old.strip() == content.strip():
-            print('  ✓ {} 第三方插件列表无变化'.format(label))
+            print('  ✓ {} 社区插件源页面无变化'.format(label))
         else:
             changed = True
             if DRY_RUN:
-                print('  ○ {} 第三方插件列表有变更 (dry-run, 跳过写入)'.format(label))
+                print('  ○ {} 社区插件源页面有变更 (dry-run, 跳过写入)'.format(label))
             else:
                 os.makedirs(os.path.dirname(path), exist_ok=True)
                 with open(path, 'w', encoding='utf-8') as f:
                     f.write(content)
-                print('  ✓ {} 第三方插件列表已更新'.format(label))
+                print('  ✓ {} 社区插件源页面已更新'.format(label))
 
     return changed
 
 
-def build_third_party_page(plugins, lang='zh'):
-    """Build the third-party plugin list page."""
-    total = len(plugins)
-    source_name = THIRD_PARTY_SOURCE['name' if lang == 'zh' else 'en_name']
-    source_link = THIRD_PARTY_SOURCE['homepage']
-
+def build_community_page(plugins, lang='zh', featured_idx=None):
+    """Build the community plugin sources page."""
     if lang == 'zh':
         header = (
             '---\n'
-            'title: 第三方插件\n'
+            'title: 社区插件源\n'
             '---\n\n'
-            '# 第三方插件\n\n'
-            '> ⚠️ **免责声明**：以下插件来自第三方插件源 [{source_name}]({source_link})，'
-            '非官方维护。安装前请仔细评估安全风险，开发者不对第三方插件导致的任何问题负责。\n\n'
-            '本页面共收录 {source_name} 的 {total} 款插件，由自动同步脚本维护。\n'
-        ).format(source_name=source_name, source_link=source_link, total=total)
-        add_source_block = (
-            '## 📦 添加此插件源\n\n'
-            '在 EchoMusic 的插件管理界面中，点击「添加插件源」，粘贴以下地址即可添加：\n\n'
-            '```\n'
-            '{source_link}\n'
-            '```\n\n'
-        ).format(source_link=source_link)
+            '# 社区插件源\n\n'
+            '社区插件源是由社区开发者维护的第三方插件仓库。'
+            '在 EchoMusic 的插件管理界面中添加来源地址即可接入。\n\n'
+            '> ⚠️ **免责声明**：以下插件来自社区第三方源，非官方维护。'
+            '安装前请仔细评估安全风险。\n\n'
+        )
     else:
         header = (
             '---\n'
-            'title: Third-Party Plugins\n'
+            'title: Community Plugin Sources\n'
             '---\n\n'
-            '# Third-Party Plugins\n\n'
-            '> ⚠️ **Disclaimer**: The plugins listed below are from a third-party source '
-            '[{source_name}]({source_link}), NOT officially maintained. Please carefully assess '
-            'security risks before installation. The developers are not responsible for any '
-            'issues caused by third-party plugins.\n\n'
-            'This page lists {total} plugins from {source_name}, maintained by an automated sync script.\n'
-        ).format(source_name=source_name, source_link=source_link, total=total)
-        add_source_block = (
-            '## 📦 Add This Plugin Source\n\n'
-            'In EchoMusic\'s plugin management panel, click "Add Plugin Source" and paste the '
-            'following URL to add this source:\n\n'
-            '```\n'
-            '{source_link}\n'
-            '```\n\n'
-        ).format(source_link=source_link)
+            '# Community Plugin Sources\n\n'
+            'Community plugin sources are third-party plugin repositories maintained by community developers. '
+            'Add a source URL in EchoMusic\'s plugin management panel to access them.\n\n'
+            '> ⚠️ **Disclaimer**: The plugins listed below are from community third-party sources, NOT officially maintained. '
+            'Please carefully assess security risks before installation.\n\n'
+        )
 
-    sections = [header, add_source_block]
+    sections = [header]
 
-    if lang == 'zh':
-        sections.append('## 插件列表\n')
-        sections.append('| 插件 | 说明 | 作者 |')
-    else:
-        sections.append('## Plugin List\n')
-        sections.append('| Plugin | Description | Author |')
-    sections.append('|------|------|------|')
-
+    # Split plugins by source, order: featured first, then rest
+    by_source = {}
     for p in plugins:
-        name = p['zh_name'] if lang == 'zh' else p['en_name']
-        desc = p['zh_desc'] if lang == 'zh' else p['en_desc']
-        sections.append('| [{}]({}) | {} | {} |'.format(
-            name, p['link'], desc, p['author']
-        ))
+        sidx = p['source_idx']
+        if sidx not in by_source:
+            by_source[sidx] = []
+        by_source[sidx].append(p)
+
+    # Order: featured source first, then others preserving COMMUNITY_SOURCES order
+    ordered_indices = []
+    if featured_idx is not None and featured_idx in by_source:
+        ordered_indices.append(featured_idx)
+    for idx in range(len(COMMUNITY_SOURCES)):
+        if idx in by_source and idx not in ordered_indices:
+            ordered_indices.append(idx)
+
+    for sidx in ordered_indices:
+        src = COMMUNITY_SOURCES[sidx]
+        src_plugins = by_source[sidx]
+        src_plugins.sort(key=lambda p: p['id'].lower())
+
+        src_name = src['name' if lang == 'zh' else 'en_name']
+        src_link = src['homepage']
+        is_featured = src.get('featured', False)
+
+        if is_featured:
+            icon = '⭐' if lang == 'zh' else '\u2b50'
+        else:
+            icon = ''
+
+        if lang == 'zh':
+            sections.append('## {icon} {name}\n'.format(icon=icon + ' ' if icon else '', name=src_name))
+            sections.append('> {}：`{}`\n'.format('推荐 · 添加地址' if is_featured else '添加地址', src_link))
+        else:
+            sections.append('## {icon} {name}\n'.format(icon=icon + ' ' if icon else '', name=src_name))
+            sections.append('> {}：`{}`\n'.format('Featured · Source URL' if is_featured else 'Source URL', src_link))
+
+        if lang == 'zh':
+            sections.append('| 插件 | 说明 | 作者 | 分享 |')
+        else:
+            sections.append('| Plugin | Description | Author | Share |')
+        sections.append('|------|------|------|------|')
+
+        for p in src_plugins:
+            name = p['zh_name'] if lang == 'zh' else p['en_name']
+            desc = p['zh_desc'] if lang == 'zh' else p['en_desc']
+            share_label = '安装' if lang == 'zh' else 'Install'
+            sections.append('| [{}]({}) | {} | {} | <span class="nowrap">[{}]({})</span> |'.format(
+                name, p['link'], desc, p['author'], share_label, p.get('share', '#')
+            ))
+
+        sections.append('')
 
     # Footer navigation
-    sections.append('\n---\n')
     if lang == 'zh':
+        sections.append('---\n')
         sections.append('- [← 返回插件列表](./list)')
     else:
+        sections.append('---\n')
         sections.append('- [← Back to Plugin List](./list)')
 
     return '\n'.join(sections) + '\n'
@@ -1102,13 +1216,13 @@ def main():
 
     plugin_changed = sync_plugins()
     print()
-    third_party_changed = sync_third_party_plugins()
+    community_changed = sync_community_sources()
     print()
     changelog_changed = sync_changelog()
 
     print()
     print('=' * 60)
-    if plugin_changed or third_party_changed or changelog_changed:
+    if plugin_changed or community_changed or changelog_changed:
         print('✓ 检测到变更')
         if DRY_RUN:
             print('  (dry-run: 未实际写入)')

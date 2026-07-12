@@ -85,3 +85,10 @@
   --vp-custom-block-tip-bg: var(--vp-c-brand-soft);
   --vp-custom-block-tip-code-bg: var(--vp-c-brand-soft);
 }
+
+/**
+ * Plugin share link column — prevent narrow-column text from stacking vertically
+ */
+.nowrap {
+  white-space: nowrap;
+}
