@@ -9,14 +9,6 @@ Community plugin sources are third-party plugin repositories maintained by commu
 > ⚠️ **Disclaimer**: The plugins listed below are from community third-party sources, NOT officially maintained. Please carefully assess security risks before installation.
 
 
-## ⭐  Anonymous Plugin Source
-
-> Featured · Source URL：`https://github.com/yunzaiorg/kugou-sign`
-
-| Plugin | Description | Author | Share |
-|------|------|------|------|
-| [KuGou Sign-in](https://github.com/yunzaiorg/kugou-sign/tree/main/kugou-sign) | Auto KuGou Concept Edition sign-in | Anonymous | <span class="nowrap">[Install](https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fkugou-sign%3FsourceId%3Dgithub%253Ayunzaiorg%252Fkugou-sign%26source%3Dhttps%253A%252F%252Fgithub.com%252Fyunzaiorg%252Fkugou-sign%26version%3D1.0.4%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fyunzaiorg%252Fkugou-sign%252Ftree%252Fmain%252Fkugou-sign)</span> |
-
 ##  ZHCOOL520 Plugin Source
 
 > Source URL：`https://github.com/ZHCOOL520/EchoMusicPluginst`

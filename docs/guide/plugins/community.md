@@ -9,14 +9,6 @@ title: 社区插件源
 > ⚠️ **免责声明**：以下插件来自社区第三方源，非官方维护。安装前请仔细评估安全风险。
 
 
-## ⭐  不知名插件源
-
-> 推荐 · 添加地址：`https://github.com/yunzaiorg/kugou-sign`
-
-| 插件 | 说明 | 作者 | 分享 |
-|------|------|------|------|
-| [签到](https://github.com/yunzaiorg/kugou-sign/tree/main/kugou-sign) | 酷狗概念版自动签到 | Anonymous | <span class="nowrap">[安装](https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fkugou-sign%3FsourceId%3Dgithub%253Ayunzaiorg%252Fkugou-sign%26source%3Dhttps%253A%252F%252Fgithub.com%252Fyunzaiorg%252Fkugou-sign%26version%3D1.0.4%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fyunzaiorg%252Fkugou-sign%252Ftree%252Fmain%252Fkugou-sign)</span> |
-
 ##  ZHCOOL520 猎奇插件源
 
 > 添加地址：`https://github.com/ZHCOOL520/EchoMusicPluginst`

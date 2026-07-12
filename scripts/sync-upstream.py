@@ -27,23 +27,6 @@ PLUGINS_REPO = 'https://github.com/hoowhoami/EchoMusicPlugins'
 # 每个源: { 'name', 'en_name', 'homepage', 'json_url', 'raw_base', 'curated': {...}, 'featured': bool }
 COMMUNITY_SOURCES = [
     {
-        'name': '不知名插件源',
-        'en_name': 'Anonymous Plugin Source',
-        'homepage': 'https://github.com/yunzaiorg/kugou-sign',
-        'json_url': 'https://raw.githubusercontent.com/yunzaiorg/kugou-sign/main/echo-plugins.json',
-        'raw_base': 'https://raw.githubusercontent.com/yunzaiorg/kugou-sign/main',
-        'featured': True,
-        'curated': {
-            'kugou-sign': {
-                'zh_name': '签到',
-                'en_name': 'KuGou Sign-in',
-                'zh_desc': '酷狗概念版自动签到',
-                'en_desc': 'Auto KuGou Concept Edition sign-in',
-                'author': 'Anonymous',
-            },
-        },
-    },
-    {
         'name': 'ZHCOOL520 猎奇插件源',
         'en_name': 'ZHCOOL520 Plugin Source',
         'homepage': 'https://github.com/ZHCOOL520/EchoMusicPluginst',
