@@ -469,10 +469,13 @@ def get_plugin_meta(plugin_entry):
         # Has metadata in JSON but not in curated - use JSON data
         zh_name = json_name
         zh_desc = json_desc
-        # If JSON name contains Chinese, use plugin_id as English fallback
+        # If JSON name contains Chinese, try auto-translate as fallback
         if any('\u4e00' <= c <= '\u9fff' for c in json_name):
-            en_name = plugin_id
-            en_desc = '(No English description yet) ' + json_desc
+            en_name = translate_to_english(json_name) or plugin_id
+            if json_desc:
+                en_desc = translate_to_english(json_desc) or ('(No English description) ' + json_desc)
+            else:
+                en_desc = ''
         else:
             en_name = json_name
             en_desc = json_desc
@@ -481,10 +484,10 @@ def get_plugin_meta(plugin_entry):
         manifest_name, manifest_desc, _ = fetch_manifest(plugin_entry)
         zh_name = manifest_name or plugin_id
         zh_desc = manifest_desc or ''
-        # If manifest name contains Chinese, use plugin_id as English fallback
+        # If manifest name contains Chinese, try auto-translate as fallback
         if manifest_name and any('\u4e00' <= c <= '\u9fff' for c in manifest_name):
-            en_name = plugin_id
-            en_desc = '(No English description yet) ' + (manifest_desc or '')
+            en_name = translate_to_english(manifest_name) or plugin_id
+            en_desc = translate_to_english(manifest_desc or '') or ('(No English description) ' + (manifest_desc or ''))
         else:
             en_name = manifest_name or plugin_id
             en_desc = manifest_desc or ''
@@ -681,6 +684,21 @@ def parse_changelog_versions(text):
     for match in pattern.finditer(text):
         versions.append((match.group(1), match.group(2), match.group(0).strip()))
     return versions
+
+
+def translate_to_english(text):
+    """Translate a short Chinese text to English using Google Translate.
+    Returns None if deep_translator is unavailable or text is already English."""
+    if not text or not any('\u4e00' <= c <= '\u9fff' for c in text):
+        return None
+    try:
+        from deep_translator import GoogleTranslator
+        return GoogleTranslator(source='zh-CN', target='en').translate(text)
+    except ImportError:
+        return None
+    except Exception as e:
+        print('  ⚠ 翻译失败 ({}): {}'.format(text[:30], e))
+        return None
 
 
 def translate_changelog_body(body):
@@ -943,8 +961,9 @@ def sync_third_party_plugins():
             else:
                 zh_name = pid
                 zh_desc = ''
-            en_name = pid
-            en_desc = '(No English description) ' + (zh_desc or '')
+            # Auto-translate for English
+            en_name = translate_to_english(zh_name) or pid
+            en_desc = translate_to_english(zh_desc) if zh_desc else ''
 
         author = curated.get('author', entry.get('author', ''))
 

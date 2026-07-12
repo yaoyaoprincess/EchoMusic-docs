@@ -4,7 +4,7 @@ title: Plugin List
 
 # 📋 Plugin List
 
-Below are plugins available in the official plugin source (26 total):
+Below are plugins available in the official plugin source (27 total):
 
 ## 🎨 UI & Themes
 
@@ -20,6 +20,7 @@ Below are plugins available in the official plugin source (26 total):
 |------|------|------|
 | [Apple Music Lyrics](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/apple-music-lyrics) | Mimics Apple Music spring physics for lightweight bounce animation when lyrics lines switch | hoowhoami |
 | [Cover Color Lyric](https://github.com/rinnki-L/cover-color-lyric) | Desktop lyrics color automatically follows the album cover dominant color, with lightness normalization and spectrum pulsing | 小栀 |
+| [Folia lyrics beta](https://github.com/oneday5799/EchoMusicPlugins/tree/main/folia-style) | Lyrics visualization plug-in based on Folia. | Oneday5799 |
 | [Lyric Info Scroll](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll) | Scroll lyric information in the playback bar area, also adapts to mini player | hoowhoami |
 | [Lyrics-bridge](https://github.com/xiaotian2333/Lyrics-bridge) | External lyrics bridging service via WinIsland | xiaotian2333 |
 | [Old Xiami Lyric Styles](https://github.com/oneday5799/EchoMusicPlugins/tree/main/old-xiami-lyric-styles) | Replace page lyrics with classic Xiami style: current line highlighted with glow, surrounding lines fade out, smooth scroll follow | Oneday5799 |
