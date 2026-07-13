@@ -166,7 +166,12 @@ EchoMusic 内置应用更新检测功能（`electron/updater.ts`）：
 
 - 需在 macOS 环境下编译，交叉编译受限
 - 需要 Apple Developer 证书进行代码签名（可选）
-- 如未签名，用户需手动绕过 Gatekeeper
+- 如未签名，用户需手动绕过 Gatekeeper：
+
+  ```bash
+  xattr -cr /Applications/EchoMusic.app && codesign --force --deep --sign - /Applications/EchoMusic.app
+  ```
+
 - 分 x64 和 arm64 两个构建目标
 
 ### Windows

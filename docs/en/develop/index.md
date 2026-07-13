@@ -10,17 +10,17 @@ Welcome to the EchoMusic development documentation. This section is for develope
 
 | Category | Technology |
 |------|------|
-| Desktop Framework | Electron 42 |
-| Frontend Framework | Vue 3 + Composition API |
-| Type System | TypeScript 5.7 |
-| Build Tool | Vite |
+| Desktop Framework | Electron 42.3 |
+| Frontend Framework | Vue 3.5 + Composition API |
+| Type System | TypeScript 5.9 |
+| Build Tool | Vite 8 |
 | State Management | Pinia + pinia-plugin-persistedstate |
 | UI Component Library | Reka UI |
-| CSS Framework | Tailwind CSS v4 |
+| CSS Framework | Tailwind CSS v4.3 |
 | Routing | Vue Router |
 | Package Manager | pnpm 9+ |
 | Backend Service | Node.js (built-in local server, in-process invocation) |
-| Audio Engine | libmpv (embedded via Rust NAPI addon in-process) |
+| Audio Engine | libmpv (embedded via Rust NAPI addon in-process, zero-latency direct function calls) |
 | Native Extensions | napi-rs (Rust → Node.js native modules) |
 | Local Storage | SQLite (via echo-storage addon) |
 | License | MIT |
@@ -53,9 +53,9 @@ EchoMusic uses Electron's classic dual-process architecture with Rust NAPI nativ
 
 | Module | Function | Technology |
 |------|------|------|
-| `echo-mpv-player` | libmpv playback engine wrapper | Rust + libmpv |
-| `echo-media-controls` | System media control integration | Rust + OS API |
-| `echo-storage` | SQLite local persistence | Rust + rusqlite |
+| `echo-mpv-player` | libmpv playback engine wrapper with fade, advanced EQ, loudness normalization, optimized spatial audio, real-time spectrum analysis | Rust + libmpv |
+| `echo-media-controls` | System media control integration (macOS / Windows / Linux native APIs) | Rust + OS API |
+| `echo-storage` | SQLite local persistence for settings, playback queue, and state snapshots | Rust + rusqlite |
 
 ## Document Index
 

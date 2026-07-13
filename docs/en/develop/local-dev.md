@@ -33,7 +33,7 @@ sudo apt install libmpv-dev
 
 **Windows**:
 
-Download and install from [mpv.io](https://mpv.io/installation/), or place `mpv-1.dll` in a system PATH directory.
+Download `libmpv-2.dll` and place it in the `build\mpv` directory.
 
 ## Clone the Project
 
@@ -80,40 +80,32 @@ Error: Cannot find module '.../echo-mpv-player/echo-mpv-player.node'
 [error] [MpvController] Failed to load echo-mpv-player addon
 ```
 
-You need to manually compile the Rust native modules (`.node` files are excluded in `.gitignore`):
+You need to manually compile the Rust native modules (`.node` files are excluded in `.gitignore`). Use the napi-rs build scripts included with each addon to generate the platform-specific `.node`:
 
 ```bash
 # Compile echo-mpv-player
 cd native/echo-mpv-player
-cargo build --release
-# Windows
-cp target/release/echo_mpv_player.dll echo-mpv-player.node
-# macOS / Linux
-cp target/release/libecho_mpv_player.so echo-mpv-player.node
-# macOS
-cp target/release/libecho_mpv_player.dylib echo-mpv-player.node
+npm install
+npm run build
+
+cd ../echo-media-controls
+npm install
+npm run build
+
+cd ../echo-storage
+npm install
+npm run build
 
 cd ../..
+```
 
-# Compile echo-media-controls
-cd native/echo-media-controls
-cargo build --release
-# Windows
-cp target/release/echo_media_controls.dll echo-media-controls.node
-# macOS / Linux
-cp target/release/libecho_media_controls.so echo-media-controls.node
+`echo-mpv-player` integrates real-time spectrum analysis and optionally supports system audio capture: Windows uses WASAPI loopback, Linux uses ALSA monitor, macOS uses ScreenCaptureKit. On macOS, when using system-level spectrum capture for the first time, you need to authorize EchoMusic in "System Settings → Privacy & Security → Screen & System Audio Recording"; in development mode, you may also need to authorize Terminal, Electron, or the current launch process.
 
-cd ../..
+Building the system audio capture module on Linux requires ALSA development libraries:
 
-# Compile echo-storage
-cd native/echo-storage
-cargo build --release
-# Windows
-cp target/release/echo_storage.dll echo-storage.node
-# macOS / Linux
-cp target/release/libecho_storage.so echo-storage.node
-
-cd ../..
+```bash
+# Debian/Ubuntu
+sudo apt install libasound2-dev
 ```
 
 ## Start Dev Server
@@ -129,6 +121,17 @@ In development mode, the Electron main process automatically launches the local 
 3. Main process starts the Node.js backend server
 4. Main process creates BrowserWindow and loads the Vite dev server
 5. Renderer process communicates with the backend server via HTTP
+
+### Linux Distribution Packaging
+
+If a distribution package uses the system Electron to launch EchoMusic (e.g., Arch/Manjaro's `electron42 /usr/lib/echo-music/app.asar`), the entry script must preload the system FFmpeg/libav libraries before starting Electron. Otherwise, Electron's built-in stripped `libffmpeg.so` may conflict with system `libmpv`, causing HTTP audio streams to fail.
+
+You can directly install and use:
+
+- `build/linux-libmpv-env.sh`: shared libmpv environment fix script
+- `build/linux-system-electron-wrapper.sh`: system Electron entry wrapper template
+
+The same wrapper is automatically installed during the `afterPack` phase of `electron-builder` builds.
 
 ## Debugging
 

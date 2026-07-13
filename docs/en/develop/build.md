@@ -166,7 +166,12 @@ EchoMusic has built-in update detection (`electron/updater.ts`):
 
 - Must compile on macOS — cross-compilation is limited
 - Apple Developer certificate required for code signing (optional)
-- Unsigned builds require manual Gatekeeper bypass
+- Unsigned builds require manual Gatekeeper bypass:
+
+  ```bash
+  xattr -cr /Applications/EchoMusic.app && codesign --force --deep --sign - /Applications/EchoMusic.app
+  ```
+
 - Separate x64 and arm64 build targets
 
 ### Windows

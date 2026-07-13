@@ -33,7 +33,7 @@ sudo apt install libmpv-dev
 
 **Windows**：
 
-从 [mpv.io](https://mpv.io/installation/) 下载并安装，或将 `mpv-1.dll` 放入系统 PATH 目录。
+自行下载 `libmpv-2.dll` 放到 `build\mpv` 目录。
 
 ## 克隆项目
 
@@ -64,9 +64,9 @@ Error: ENOENT: no such file or directory, open '.../electron/path.txt'
 需要手动下载 Electron 到对应目录：
 
 ```bash
-cd node_modules/.pnpm/electron@42.0.1/node_modules/electron/
+cd node_modules/.pnpm/electron@42.3.1/node_modules/electron/
 mkdir -p dist
-curl -L -o /tmp/electron.zip "https://npmmirror.com/mirrors/electron/v42.0.1/electron-v42.0.1-linux-x64.zip"
+curl -L -o /tmp/electron.zip "https://npmmirror.com/mirrors/electron/v42.3.1/electron-v42.3.1-linux-x64.zip"
 unzip -o /tmp/electron.zip -d dist/
 printf '%s' './electron' > path.txt
 ```
@@ -80,40 +80,32 @@ Error: Cannot find module '.../echo-mpv-player/echo-mpv-player.node'
 [error] [MpvController] Failed to load echo-mpv-player addon
 ```
 
-需要手动编译 Rust 原生模块（`.node` 文件在 `.gitignore` 中被排除）：
+需要手动编译 Rust 原生模块（`.node` 文件在 `.gitignore` 中被排除）。推荐使用各 addon 自带的 napi-rs 构建脚本生成平台对应的 `.node`：
 
 ```bash
 # 编译 echo-mpv-player
 cd native/echo-mpv-player
-cargo build --release
-# Windows
-cp target/release/echo_mpv_player.dll echo-mpv-player.node
-# macOS / Linux
-cp target/release/libecho_mpv_player.so echo-mpv-player.node
-# macOS
-cp target/release/libecho_mpv_player.dylib echo-mpv-player.node
+npm install
+npm run build
+
+cd ../echo-media-controls
+npm install
+npm run build
+
+cd ../echo-storage
+npm install
+npm run build
 
 cd ../..
+```
 
-# 编译 echo-media-controls
-cd native/echo-media-controls
-cargo build --release
-# Windows
-cp target/release/echo_media_controls.dll echo-media-controls.node
-# macOS / Linux
-cp target/release/libecho_media_controls.so echo-media-controls.node
+`echo-mpv-player` 集成了实时频谱分析功能，可选地支持系统音频捕获：Windows 使用 WASAPI loopback，Linux 使用 ALSA monitor，macOS 使用 ScreenCaptureKit。macOS 首次使用系统级频谱捕获时，需要在「系统设置 → 隐私与安全性 → 屏幕与系统音频录制」中授权 EchoMusic；开发模式下也可能需要授权 Terminal、Electron 或当前启动进程。
 
-cd ../..
+Linux 构建系统音频捕获模块需要 ALSA 开发库：
 
-# 编译 echo-storage
-cd native/echo-storage
-cargo build --release
-# Windows
-cp target/release/echo_storage.dll echo-storage.node
-# macOS / Linux
-cp target/release/libecho_storage.so echo-storage.node
-
-cd ../..
+```bash
+# Debian/Ubuntu
+sudo apt install libasound2-dev
 ```
 
 ## 启动开发服务器
@@ -129,6 +121,17 @@ pnpm dev
 3. 主进程启动 Node.js 后端服务器
 4. 主进程创建 BrowserWindow，加载 Vite 开发服务器
 5. 渲染进程通过 HTTP 与后端服务器通信
+
+### Linux 发行版打包说明
+
+如果发行版包使用系统 Electron 启动 EchoMusic（例如 Arch/Manjaro 的 `electron42 /usr/lib/echo-music/app.asar`），入口脚本必须在启动 Electron 前预加载系统 FFmpeg/libav 库，否则 Electron 内置裁剪版 `libffmpeg.so` 可能与系统 `libmpv` 发生符号冲突，导致 HTTP 音频流无法播放。
+
+可直接安装并使用：
+
+- `build/linux-libmpv-env.sh`：共享的 libmpv 环境修复脚本
+- `build/linux-system-electron-wrapper.sh`：系统 Electron 启动入口模板
+
+`electron-builder` 产物会在 `afterPack` 阶段自动安装同一套 wrapper。
 
 ## 开发调试
 
