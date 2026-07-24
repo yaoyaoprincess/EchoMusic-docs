@@ -271,14 +271,6 @@ CURATED = {
         'author': 'xiaotian2333',
         'category': 1,
     },
-    'echo-history-plus': {
-        'zh_name': '播放历史增强',
-        'en_name': 'Playback History Plus',
-        'zh_desc': '本地播放历史记录与统计分析，完全本地运行，无需登录',
-        'en_desc': 'Local playback history recording and statistics analysis, fully offline, no login required',
-        'author': 'yaoyaoprincess',
-        'category': 4,
-    },
     'xiaotoolkit': {
         'zh_name': '小功能',
         'en_name': 'XiaoToolkit',
@@ -286,6 +278,7 @@ CURATED = {
         'en_desc': 'Hot sort, hide playlist, lyric area hide control & toolbar, hide music recognition, top plugin button, desktop effects',
         'json_author': 'Max8808',
         'category': 4,
+        'link_prefix': 'https://github.com/Max8808/xiaotoolkit',
     },
     'apple-music-lyrics': {
         'zh_name': 'Apple Music 歌词弹跳',
@@ -310,7 +303,7 @@ CURATED = {
         'en_desc': 'Mineradio-style lyrics page',
         'json_author': 'xiaotian2333',
         'category': 1,
-        'link_prefix': 'https://github.com/xiaotian2333/EchoMusic-player-frontend',
+        'link_prefix': 'https://github.com/EchoMusic-org/player-frontend',
     },
     'old-xiami-lyric-styles': {
         'zh_name': '旧版虾米歌词风格',
@@ -688,10 +681,8 @@ def sync_plugins():
         # Build link for extra plugin
         if 'link_prefix' in curated:
             link = curated['link_prefix']
-        elif pid == 'echo-history-plus':
-            link = 'https://github.com/yaoyaoprincess/echo-history-plus'
         else:
-            link = 'https://github.com/yaoyaoprincess/{}'.format(pid)
+            link = None  # 必须显式设置 link_prefix
 
         author = curated.get('author') or curated.get('json_author') or ''
         extra = {

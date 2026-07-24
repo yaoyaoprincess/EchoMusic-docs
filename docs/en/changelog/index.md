@@ -10,67 +10,46 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
-## [2.2.8-beta.15] - 2026-07-14
+## [2.2.9-beta.10] - 2026-07-23
+
 ### New
 
-- Added VIP status display in sidebar
-- Added API proxy and MPV proxy configuration
-- Added risk control verification plug-in API
-- Added Arch Linux pacman installation package
-- Added sqlite plug-in API
-- Added desktop lyrics plug-in API
-- Added desktop lyrics vertical layout
-- Added plug-in related statistical functions
+- Added macOS / Windows system media control fast-forward and rewind semantics; Linux continues with MPRIS relative seek override
+- Added 4-channel true-stereo spatial audio IR support
+- Added plugin playback display status API
+- Added gapless playback
+- Added in-engine spectrum analysis within the playback engine
+- Added player buffer recovery wait setting
+- Added unified playback clock snapshot; plugin `nowPlaying`, lyrics, and desktop lyrics snapshots can access the playback clock anchor
+- Added `echo-ffmpeg-player` native playback engine, using embedded FFmpeg decoding and native audio output to replace the old playback pipeline
+- Added third-party dependency and licensing notice file `THIRD_PARTY_NOTICES.md`
 
-### Optimization
+### Improvements
 
-- Optimize VIP song playback failure prompts
-- Optimize the rendering effect of Switch components when they are not turned on
-- Optimize audio output device hot-plug processing, and uniformly use libmpv device list events to refresh output devices
-- Optimize MPV song address selection logic and correctly try alternative CDN addresses
-- Optimize API request logic and correctly apply system proxy configuration
-- Optimize software menu
-- Optimize song right-click menu grouping
+- Improved desktop lyrics filtering logic
+- Improved preference entry: macOS native menu now includes a Preferences item; Windows / Linux support `Ctrl+,` to open settings at window level
+- Improved desktop lyrics transition animation speed
+- Improved timeline sync for page lyrics, desktop lyrics, and mini-player lyrics, unified through playback clock snapshot re-anchoring
+- Converged output device protection into a native device event-based "Pause on device disconnect" toggle, default off
+- Improved player state machine
+- Improved track-switch interaction responsiveness
+- Removed `echo-spectrum-capture` native audio capture spectrum output module
+- Changed project license to GNU GPL v3.0
 
-### Fix
+### Fixes
 
-- Fixed an issue where the playback position may be repeatedly jumped when dragging or undragging the playback progress bar
-- Fixed an issue where the status of the play queue and private FM page was abnormal after adding the next song to play or queuing for playback through the right-click menu during private FM playback.
-- Fixed an issue where Windows x64 packaging fails when the latest upstream mpv release contains only arm64 assets
-- Fixed the problem of finding livmpv on Linux
-- Fixed the issue where "Checking..." is always displayed when detecting updates on Arch Linux
-- Fixed the problem of inconsistent thickness of the dividing lines in the right-click menu of songs
-
-## [2.2.8-beta.13] - 2026-07-14
-### New
-
-- Added VIP status display in sidebar
-- Added API proxy and MPV proxy configuration
-- Added risk control verification plug-in API
-- Added Arch Linux pacman installation package
-- Added sqlite plug-in API
-- Added desktop lyrics plug-in API
-- Added desktop lyrics vertical layout
-- Added plug-in related statistical functions
-
-### Optimization
-
-- Optimize VIP song playback failure prompts
-- Optimize the rendering effect of Switch components when they are not turned on
-- Optimize audio output device hot-plug processing, and uniformly use libmpv device list events to refresh output devices
-- Optimize MPV song address selection logic and correctly try alternative CDN addresses
-- Optimize API request logic and correctly apply system proxy configuration
-- Optimize software menu
-- Optimize song right-click menu grouping
-
-### Fix
-
-- Fixed an issue where the playback position may be repeatedly jumped when dragging or undragging the playback progress bar
-- Fixed an issue where the status of the play queue and private FM page is abnormal after adding the next song to play or queuing for playback through the right-click menu during private FM playback.
-- Fixed an issue where Windows x64 packaging fails when the latest upstream mpv release contains only arm64 assets
-- Fixed the problem of finding livmpv on Linux
-- Fixed the issue where "Checking..." is always displayed when detecting updates on Arch Linux
-- Fixed the problem of inconsistent thickness of the dividing lines in the right-click menu of songs
+- Fixed native playback engine buffer recovery and resampling output instability during network fluctuations
+- Fixed native playback engine progress display potentially freezing after dragging seek bar to the beginning
+- Fixed desktop lyrics filtering potentially causing lyric line index and word-level progress desync
+- Fixed desktop lyrics word-level progress potentially disappearing after pausing
+- Fixed desktop lyrics potentially drifting ahead of time after extended playback
+- Fixed page lyrics previous line flickering/jumping during line transitions
+- Fixed main window size potentially growing incrementally after app update, shutdown, restart, or logout on Windows
+- Fixed Windows SMTC not responding to third-party media panel playback position adjustment requests
+- Fixed spatial audio Dry/Wet mix formula inaccuracy causing wet signal loudness boost after blending
+- Fixed EQ settings with short arrays potentially leaving stale values in some bands
+- Fixed Electron potentially crashing on startup on Windows 11 due to inability to open `nul` device
+- Fixed CI build process
 
 ## [2.2.8-beta.11] - 2026-07-08
 ### New
@@ -142,6 +121,43 @@ This page records the major version updates for EchoMusic. For the complete chan
 
 ### Fixed
 
+- Fixed update detection stuck on "Checking..." on Arch Linux
+- Fixed inconsistent divider line thickness in song right-click menu
+
+## [2.2.8] - 2026-07-17
+
+### New
+
+- Added sidebar VIP status display
+- Added API proxy and MPV proxy configuration
+- Added risk control verification plugin API
+- Added Arch Linux pacman package
+- Added SQLite plugin API
+- Added desktop lyrics plugin API
+- Added desktop lyrics vertical layout
+- Added plugin statistics
+
+### Improvements
+
+- Improved Tooltip component z-index layering
+- Improved Linux media control compatibility
+- Improved song play button: enters source queue when context is available, adds to "My Queue" for sourceless tracks
+- Improved VIP song playback failure notification
+- Improved Switch component appearance in unchecked state
+- Improved audio output device hot-plug handling, unified through libmpv device list events to refresh output devices
+- Improved MPV song URL selection logic, correctly attempting fallback CDN addresses
+- Improved API request logic, correctly applying system proxy settings
+- Improved app menu
+- Improved song right-click menu grouping
+
+### Fixes
+
+- Fixed sidebar playlist action button Tooltip missing when sidebar is collapsed
+- Fixed spectrum capture failing to find monitor source on PipeWire-only Linux causing plugin spectrum with no output
+- Fixed dragging or cancel-dragging the playback progress bar potentially causing duplicate seek jumps
+- Fixed private FM playback queue and page state becoming corrupted after adding tracks via right-click "Play Next" or "Queue"
+- Fixed Windows x64 build failure when upstream latest mpv release only contains arm64 assets
+- Fixed Linux libmpv detection issue
 - Fixed update detection stuck on "Checking..." on Arch Linux
 - Fixed inconsistent divider line thickness in song right-click menu
 
