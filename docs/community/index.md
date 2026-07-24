@@ -1,5 +1,6 @@
 ---
 title: 社区
+sidebar: false
 ---
 
 # 社区

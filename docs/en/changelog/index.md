@@ -1,5 +1,6 @@
 ---
 title: Changelog
+sidebar: false
 ---
 
 # Changelog
