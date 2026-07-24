@@ -10,6 +10,82 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
+## [2.2.9-beta.11] - 2026-07-23
+### New
+
+- Added support for fast forward and rewind semantics of media control in macOS / Windows systems, and Linux continues to be covered by MPRIS relative to Seek
+- Added 4-channel true-stereo spatial sound IR support
+- Added plug-in playback display status API
+- Added seamless playback function
+- Added spectrum analysis in the playback engine
+- Added player buffer recovery waiting settings
+- Added unified playback clock snapshot, the plug-in `nowPlaying`, lyrics and desktop lyrics snapshot can obtain the playback clock anchor point
+- Added `echo-ffmpeg-player` native playback engine, using built-in FFmpeg decoding and native audio output to replace the old playback link
+- Added third-party dependency and authorization description file `THIRD_PARTY_NOTICES.md`
+
+### Optimization
+
+- Optimize desktop lyrics filtering logic
+- Optimize the preference setting entrance: add a preference setting item to the macOS native menu, Windows / Linux supports window-level `Ctrl+,` to open settings
+- Optimize desktop lyrics switching animation speed
+- Optimize the timeline synchronization of page lyrics, desktop lyrics and mini-player lyrics, and uniformly use the playback clock snapshot to re-anchor
+- Converged output device protection to a "pause on device disconnect" switch based on native device events, turned off by default
+- Optimize player state machine
+- Optimize the interactive response of switching songs
+- Removed `echo-spectrum-capture` native audio capture spectrum output module
+- The project open source license is adjusted to GNU GPL v3.0
+
+### Fix
+
+- Fixed the problem that the buffer recovery and resampling output of the native playback engine are not stable enough when the network fluctuates.
+- Fixed an issue in the native playback engine where the progress display may get stuck after dragging the progress bar to the beginning.
+- Fixed an issue that may cause the lyrics line index and word-by-word progress to be out of sync after filtering desktop lyrics
+- Fixed the issue where the progress of verbatim lyrics may disappear after the desktop lyrics are paused
+- Fixed an issue where desktop lyrics may gradually run out after being played for a long time
+- Fixed the issue where the previous lyrics occasionally flickered and jumped when switching between lyrics lines on the page
+- Fixed an issue in Windows where the size of the main window may gradually increase after applying updates, shutting down and restarting, or logging out.
+- Fixed an issue where Windows SMTC did not respond to third-party media panel playback progress adjustment requests
+- Fixed an issue where the spatial sound effect Dry/Wet mixing formula is inaccurate resulting in high loudness after the wet sound is superimposed.
+- Fixed an issue where old values may remain in some frequency bands when EQ settings are passed into a short array
+- Fixed an issue where Electron may crash on startup due to inability to open `nul` device under Windows 11
+- Fix CI build process
+
+## [2.2.8] - 2026-07-17
+### New
+
+- Added VIP status display in sidebar
+- Added API proxy and MPV proxy configuration
+- Added risk control verification plug-in API
+- Added Arch Linux pacman installation package
+- Added sqlite plug-in API
+- Added desktop lyrics plug-in API
+- Added desktop lyrics vertical layout
+- Added plug-in related statistical functions
+
+### Optimization
+
+- Optimize the Tooltip component and improve the level
+- Optimize the compatibility of Linux media control function
+- Optimize the song play button: when there is a source context, enter the corresponding source queue, and singles without sources will continue to be added to "My Queue"
+- Optimize VIP song playback failure prompts
+- Optimize the rendering effect of Switch components when they are not turned on
+- Optimize audio output device hot-plug processing, and uniformly use libmpv device list events to refresh output devices
+- Optimize MPV song address selection logic and correctly try alternative CDN addresses
+- Optimize API request logic and correctly apply system proxy configuration
+- Optimize software menu
+- Optimize song right-click menu grouping
+
+### Fix
+
+- Fixed the issue where the Tooltip of the playlist operation button in the sidebar is missing in the collapsed state
+- Fixed the problem that spectrum capture in PipeWire-only Linux environment cannot find the monitor source, causing the plug-in spectrum to have no output.
+- Fixed an issue where the playback position may be repeatedly jumped when dragging or undragging the playback progress bar
+- Fixed an issue where the status of the play queue and private FM page is abnormal after adding the next song to play or queuing for playback through the right-click menu during private FM playback.
+- Fixed an issue where Windows x64 packaging fails when the latest upstream mpv release contains only arm64 assets
+- Fixed the problem of finding livmpv on Linux
+- Fixed the issue where "Checking..." is always displayed when detecting updates on Arch Linux
+- Fixed the problem of inconsistent thickness of the dividing lines in the right-click menu of songs
+
 ## [2.2.8-beta.15] - 2026-07-14
 ### New
 
