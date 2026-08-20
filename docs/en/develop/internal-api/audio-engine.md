@@ -5,18 +5,18 @@ outline: [2, 4]
 
 # 🎵 Audio Engine (ctx.audio)
 
-EchoMusic uses **libmpv** as its underlying audio engine, controlled within the same renderer process via `ctx.audio`.
+EchoMusic uses **FFmpeg + SoundTouch** as its underlying audio engine (via the `echo-ffmpeg-player` Rust NAPI native addon), with embedded FFmpeg decoding and SoundTouch pitch/tempo processing — no external FFmpeg binary required. `ctx.audio` provides the engine control surface within the renderer process.
 
 ---
 
 ## Equalizer (EQ)
 
-An 18-band parametric equalizer, with each band independently controllable (-12 ~ +12 dB).
+A 10-band parametric equalizer, with each band independently controllable (-12 ~ +12 dB).
 
 ```js
 ctx.audio.setEqualizer([
-  0,   // 31 Hz
-  2,   // 62 Hz
+  0,   // 31.5 Hz
+  2,   // 63 Hz
   3,   // 125 Hz
   1,   // 250 Hz
   0,   // 500 Hz
@@ -28,11 +28,13 @@ ctx.audio.setEqualizer([
 ]);
 ```
 
-EQ bands: `32 / 64 / 125 / 250 / 500 / 1k / 2k / 4k / 8k / 16k` Hz
+EQ bands: `31.5 / 63 / 125 / 250 / 500 / 1k / 2k / 4k / 8k / 16k` Hz (31Hz - 16kHz standard octave)
 
 ---
 
 ## Spatial Audio
+
+FFT-based convolution reverb with spatial presets and custom IR import support.
 
 ```js
 ctx.audio.setSpatialAudio({
@@ -118,7 +120,7 @@ ctx.audio.setNormalizationGain(-3.5); // dB
 
 | API | Description |
 |-----|------|
-| `available()` | Check if the mpv engine is available |
+| `available()` | Check if the FFmpeg engine is available |
 | `restart()` | Restart the playback engine |
 | `getState()` | Get the engine's internal state |
 
@@ -132,7 +134,7 @@ ctx.audio.setNormalizationGain(-3.5); // dB
 | `onDurationChange(fn)` | `(duration: number)` | Track duration change |
 | `onStateChange(fn)` | `({playing?, paused?})` | Play/pause state change |
 | `onPlaybackEnd(fn)` | `(reason: string)` | Playback ended ("eof" / "stop" / "error") |
-| `onError(fn)` | `(message: string)` | mpv engine error |
+| `onError(fn)` | `(message: string)` | FFmpeg engine error |
 | `onAudioDeviceListChanged(fn)` | `(devices[])` | Device list changed (headphone plug/unplug) |
 | `onImpulseResponseDisabled(fn)` | `({path?, reason?})` | IR auto-disabled notification |
 

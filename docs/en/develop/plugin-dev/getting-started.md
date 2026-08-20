@@ -170,7 +170,7 @@ After completing the steps above, your plugin directory should look like this:
 
 ```
 hello-echo/
-  manifest.json      ← Plugin description, version, permissions
+  manifest.json      ← Plugin description, version
   index.js           ← Plugin entry (ESM)
 ```
 

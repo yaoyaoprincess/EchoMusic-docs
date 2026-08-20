@@ -15,25 +15,36 @@ Before starting, ensure your system has the following tools installed:
 | Node.js | 18+ | JavaScript runtime |
 | pnpm | 9+ | Package manager |
 | Rust | 1.70+ | Required for compiling native modules |
-| mpv / libmpv | — | Audio playback engine |
+| FFmpeg dev libraries | — | Audio decoding (no external ffmpeg binary needed at runtime) |
+| LLVM / libclang (Windows only) | — | Required for compiling echo-ffmpeg-player |
 
-### Installing mpv / libmpv
+### Installing FFmpeg Dev Libraries
 
 **macOS**:
 
 ```bash
-brew install mpv
+brew install ffmpeg
 ```
 
 **Linux (Debian/Ubuntu)**:
 
 ```bash
-sudo apt install libmpv-dev
+sudo apt install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev
 ```
 
 **Windows**:
 
-Download `libmpv-2.dll` and place it in the `build\mpv` directory.
+LLVM and libclang are required to compile echo-ffmpeg-player:
+
+```powershell
+winget install LLVM.LLVM
+```
+
+Set the environment variable:
+
+```powershell
+$env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
+```
 
 ## Clone the Project
 
@@ -64,9 +75,9 @@ Error: ENOENT: no such file or directory, open '.../electron/path.txt'
 You need to manually download Electron to the appropriate directory:
 
 ```bash
-cd node_modules/.pnpm/electron@42.0.1/node_modules/electron/
+cd node_modules/.pnpm/electron@42.3.1/node_modules/electron/
 mkdir -p dist
-curl -L -o /tmp/electron.zip "https://npmmirror.com/mirrors/electron/v42.0.1/electron-v42.0.1-linux-x64.zip"
+curl -L -o /tmp/electron.zip "https://npmmirror.com/mirrors/electron/v42.3.1/electron-v42.3.1-linux-x64.zip"
 unzip -o /tmp/electron.zip -d dist/
 printf '%s' './electron' > path.txt
 ```
@@ -76,37 +87,30 @@ printf '%s' './electron' > path.txt
 If you encounter "missing .node file" errors on startup:
 
 ```
-Error: Cannot find module '.../echo-mpv-player/echo-mpv-player.node'
-[error] [MpvController] Failed to load echo-mpv-player addon
+Error: Cannot find module '.../echo-ffmpeg-player/echo-ffmpeg-player.node'
+[error] [FfmpegController] Failed to load echo-ffmpeg-player addon
 ```
 
 You need to manually compile the Rust native modules (`.node` files are excluded in `.gitignore`). Use the napi-rs build scripts included with each addon to generate the platform-specific `.node`:
 
 ```bash
-# Compile echo-mpv-player
-cd native/echo-mpv-player
-npm install
-npm run build
+# Compile echo-ffmpeg-player
+cd native/echo-ffmpeg-player
+pnpm install --ignore-workspace
+pnpm exec napi build --release --no-const-enum
 
 cd ../echo-media-controls
 npm install
 npm run build
 
-cd ../echo-storage
+cd ../echo-sqlite-store
 npm install
 npm run build
 
 cd ../..
 ```
 
-`echo-mpv-player` integrates real-time spectrum analysis and optionally supports system audio capture: Windows uses WASAPI loopback, Linux uses ALSA monitor, macOS uses ScreenCaptureKit. On macOS, when using system-level spectrum capture for the first time, you need to authorize EchoMusic in "System Settings → Privacy & Security → Screen & System Audio Recording"; in development mode, you may also need to authorize Terminal, Electron, or the current launch process.
-
-Building the system audio capture module on Linux requires ALSA development libraries:
-
-```bash
-# Debian/Ubuntu
-sudo apt install libasound2-dev
-```
+`echo-ffmpeg-player` has built-in real-time spectrum analysis, with spectrum data output directly through the playback engine. The playback engine supports audio device switching and exclusive output mode.
 
 ## Start Dev Server
 
@@ -124,11 +128,10 @@ In development mode, the Electron main process automatically launches the local 
 
 ### Linux Distribution Packaging
 
-If a distribution package uses the system Electron to launch EchoMusic (e.g., Arch/Manjaro's `electron42 /usr/lib/echo-music/app.asar`), the entry script must preload the system FFmpeg/libav libraries before starting Electron. Otherwise, Electron's built-in stripped `libffmpeg.so` may conflict with system `libmpv`, causing HTTP audio streams to fail.
+If a distribution package uses the system Electron to launch EchoMusic (e.g., Arch/Manjaro's `electron42 /usr/lib/echo-music/app.asar`), the entry script should use the project-provided `build/linux-system-electron-wrapper.sh` template for compatibility.
 
 You can directly install and use:
 
-- `build/linux-libmpv-env.sh`: shared libmpv environment fix script
 - `build/linux-system-electron-wrapper.sh`: system Electron entry wrapper template
 
 The same wrapper is automatically installed during the `afterPack` phase of `electron-builder` builds.

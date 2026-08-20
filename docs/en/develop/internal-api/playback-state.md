@@ -100,6 +100,6 @@ console.log(result.data);
 ## 📂 Related Documents
 
 - [Internal API Overview →](./) — Quick overview of the four modules
-- [Audio Engine →](audio-engine) — Full mpv engine control
+- [Audio Engine →](audio-engine) — Full FFmpeg engine control
 - [Window & Interaction Management →](window-management) — Window component management
 - [System Features Integration →](system-features) — Shortcuts, updates, logging, etc.

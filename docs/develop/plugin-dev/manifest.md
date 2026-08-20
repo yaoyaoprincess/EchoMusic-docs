@@ -27,14 +27,13 @@ outline: [2, 4]
     "audioSource": false,
     "audioSpectrum": true,
     "kugouApi": false,
+    "kugouVerification": false,
     "localFiles": true,
     "lyricEffects": false,
     "lyrics": true,
     "process": false,
+    "webServer": false,
     "sqlite": false
-  },
-  "permissions": {
-    "http": ["https://api.my-service.com/*"]
   },
   "requires": {
     "echoMusicVersion": ">=2.2.6-beta.9 <3"
@@ -251,6 +250,7 @@ outline: [2, 4]
   "audioSource": false,
   "audioSpectrum": true,
   "kugouApi": false,
+  "kugouVerification": false,
   "localFiles": true,
   "lyricEffects": false,
   "lyrics": true,
@@ -305,6 +305,20 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 | 授予 | `ctx.kugou` |
 
 调用**酷狗音乐 API** 进行搜索、获取歌曲详情、获取播放链接等。
+
+#### kugouVerification
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.kugouVerification.request(challenge)` |
+
+处理酷狗安全验证挑战。当酷狗需要滑块/验证码等验证时，插件可替代宿主接管验证流程。
+
+```js
+// 需要使用 kugouVerification 能力
+const result = await ctx.kugouVerification.request({ challenge: "..." });
+// result: { ok: true, eventId: "..." } 或 { ok: false, error: "...", canceled: true }
+```
 
 #### localFiles
 
@@ -370,28 +384,6 @@ await db.run("CREATE TABLE IF NOT EXISTS songs (id TEXT PRIMARY KEY, title TEXT)
 await db.run("INSERT OR REPLACE INTO songs (id, title) VALUES (?, ?)", ["1", "My Song"]);
 const row = await db.get("SELECT * FROM songs WHERE id = ?", ["1"]);
 ```
-
----
-
-## permissions（网络权限）
-
-> 从 v2.2.7 起支持
-
-声明插件需要的网络访问权限。EchoMusic 会在启用前展示给用户确认。
-
-```json
-"permissions": {
-  "http": ["https://api.example.com/*", "https://*.music-service.com/*"]
-}
-```
-
-| 字段 | 类型 | 必选 | 说明 |
-|------|------|:--:|------|
-| `http` | `string[]` | ❌ | 允许访问的 HTTP(S) URL 模式，支持通配符 `*` |
-
-- 每个条目是 URL [match pattern](https://developer.chrome.com/docs/extensions/develop/concepts/match-patterns) 格式
-- 如果不声明这项，插件的 `fetch()` 请求不会被阻断，但规范上建议按最小权限声明
-- 如果插件需要进行身份认证跳转（如 OAuth），需要将认证服务的域名也加入列表
 
 ---
 

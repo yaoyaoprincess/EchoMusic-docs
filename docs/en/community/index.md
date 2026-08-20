@@ -55,7 +55,7 @@ This project is inspired by the following excellent open-source projects:
 
 ## License
 
-EchoMusic is released under the **MIT License**. This project uses [mpv](https://mpv.io/) as the audio playback engine (LGPL-2.1+ / GPL-2.0+), loaded via dynamic linking.
+EchoMusic is released under the **GNU GPL v3.0**.
 
 ::: warning Important
 EchoMusic is an open-source project and completely free. If you see someone selling it, be aware and avoid being scammed.

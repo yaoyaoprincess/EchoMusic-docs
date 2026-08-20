@@ -53,7 +53,7 @@ ctx
 └── 📋 插件管理          → 生命周期 / 市场 / 安装 / 故障上报
 ```
 
-> 完整的插件 API 速查请见 [API 总览 →](./context-api)。内部 API（mpv 引擎/桌面歌词等）详见 [内部 API 参考 →](../internal-api/)。
+> 完整的插件 API 速查请见 [API 总览 →](./context-api)。内部 API（FFmpeg 引擎/桌面歌词等）详见 [内部 API 参考 →](../internal-api/)。
 
 ### 多窗口模型
 
@@ -137,10 +137,6 @@ EchoMusic 有三个独立的渲染窗口，**彼此不共享 JS 内存**：
 | `process` | `ctx.process.launch()` — 启动插件目录内的程序 |
 
 > 遵循**最小权限原则**：只声明插件实际需要的 capability。
-
-### 网络安全
-
-从 v2.2.7 起，manifest 支持 `permissions.http` 声明插件的网络访问范围，帮助用户了解插件的联网行为。
 
 ## 开发环境要求
 

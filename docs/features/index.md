@@ -208,7 +208,7 @@ macOS MPNowPlayingInfoCenter / Windows SMTC / Linux MPRIS 原生系统媒体控�
 
 ### 🧩 插件系统
 
-类 VS Code 的高自由度插件扩展。在线浏览安装、一键更新、18 款社区插件覆盖美化/歌词/音频/效率。自定义页面、注入样式、创建浮窗、接管音源——让 EchoMusic 无限扩展。
+类 VS Code 的高自由度插件扩展。在线浏览安装、一键更新、30 款社区插件覆盖美化/歌词/音频/效率。自定义页面、注入样式、创建浮窗、接管音源——让 EchoMusic 无限扩展。
 
 [了解更多 →](/guide/plugins/)
 
@@ -220,7 +220,7 @@ macOS MPNowPlayingInfoCenter / Windows SMTC / Linux MPRIS 原生系统媒体控�
 
 | 特性 | 说明 |
 |------|------|
-| 音频引擎 | libmpv，通过 Rust NAPI 进程内嵌入，零延迟直接函数调用 |
+| 音频引擎 | FFmpeg + SoundTouch，Rust NAPI 进程内嵌入，零延迟直接函数调用 |
 | 音质支持 | Hi-Res、SQ(flac)、HQ(320kbps)、标准(128kbps) |
 | 音效模式 | 钢琴、人声、伴奏、骨笛、尤克里里、唢呐、DJ、蝰蛇母带、蝰蛇全景声、蝰蛇超清、空间音效(IR) |
 | 播放格式 | 标准音频 + LRC/YRC 逐字歌词解析 |

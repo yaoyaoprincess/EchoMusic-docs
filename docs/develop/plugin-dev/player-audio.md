@@ -7,7 +7,7 @@ outline: [2, 4]
 
 插件可以与 EchoMusic 的播放系统深度集成。本文档涵盖播放控制、播放队列、自定义音源、歌词系统和音频频谱。
 
-> ℹ️ mpv 引擎高级控制（EQ/空间音效/IR/设备/渐变/引擎事件等）属于内部 API，不在插件范围内。核心开发参考请见 [内部 API 参考 →](../internal-api/audio-engine)。
+> ℹ️ FFmpeg 引擎高级控制（EQ/空间音效/IR/设备/渐变/引擎事件等）属于内部 API，不在插件范围内。核心开发参考请见 [内部 API 参考 →](../internal-api/audio-engine)。
 
 ---
 
@@ -21,10 +21,13 @@ outline: [2, 4]
 |------|:--:|------|
 | `currentTrack` | `computed` | 当前正在播放的歌曲对象 |
 | `currentTrackId` | `computed` | 当前歌曲 ID |
-| `currentTime` | `computed` | 当前播放进度（秒） |
+| `currentTime` | `computed` | 当前播放进度（秒），播放引擎最近推送的离散值 |
 | `duration` | `computed` | 歌曲总时长（秒） |
 | `isPlaying` | `computed` | 是否正在播放 |
-| `playbackRate` | `computed` | 播放速率（0.5 / 0.75 / 1.0 / 1.25 / 1.5） |
+| `isLoading` | `computed` | 是否加载中 |
+| `playbackState` | `computed` | 播放展示状态：`loading` / `playing` / `paused` / `ended` / `error` |
+| `playbackTargetTrackId` | `computed` | 播放器目标歌曲 ID（即将播放的歌曲） |
+| `playbackRate` | `computed` | 播放速率（0.5-3.0） |
 | `volume` | `computed` | 音量（0-100） |
 | `playMode` | `computed` | 播放模式 |
 
@@ -69,6 +72,7 @@ export function activate(ctx) {
 | `setAudioQuality(q)` | 设置音频品质 |
 | `setAudioEffect(e)` | 设置音效 |
 | `playTrack(track)` | 播放指定歌曲 |
+| `playSong(songId, opts?)` | 通过 ID 播放歌曲（可选覆盖队列） |
 | `playNext()` | 播放下一首（跳过队列） |
 | `playLast()` | 播放上一首 |
 | `replaceQueueAndPlay(items)` | 替换队列并播放 |
@@ -274,4 +278,4 @@ ctx.player.audioSource.register({
 | [文件存储与数据 →](./filesystem-storage) | 文件系统、KV 存储、外观订阅 |
 | [窗口与系统 →](./windows-system) | 浮窗、Now Playing、进程、图标 |
 | [API 总览 →](./context-api) | ctx 完整插件 API 速查 |
-| [内部 API 参考 →](../internal-api/) | 内部 API（mpv 引擎/桌面歌词等） |
+| [内部 API 参考 →](../internal-api/) | 内部 API（FFmpeg 引擎/桌面歌词等） |

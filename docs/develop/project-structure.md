@@ -30,7 +30,7 @@ EchoMusic/
 │   ├── preload.ts              # 预加载脚本
 │   └── updater.ts              # 自动更新逻辑
 ├── native/                     # Rust 原生模块（napi-rs）
-│   ├── echo-mpv-player/        # libmpv 播放引擎封装
+│   ├── echo-ffmpeg-player/     # FFmpeg + SoundTouch 播放引擎
 │   │   ├── src/
 │   │   │   ├── lib.rs          # 模块入口
 │   │   │   ├── player.rs       # 播放器核心逻辑
@@ -44,7 +44,7 @@ EchoMusic/
 │   │   │   ├── windows.rs      # Windows 实现
 │   │   │   └── linux.rs        # Linux 实现
 │   │   └── Cargo.toml
-│   └── echo-storage/           # SQLite 本地存储
+│   └── echo-sqlite-store/      # SQLite 本地存储
 │       ├── src/
 │       │   ├── lib.rs
 │       │   ├── db.rs           # 数据库操作
@@ -123,7 +123,7 @@ EchoMusic/
 ├── electron-builder.yml        # Electron Builder 配置
 ├── tsconfig.json               # TypeScript 配置
 ├── tailwind.config.ts          # Tailwind CSS 配置
-├── LICENSE                     # MIT 许可证
+├── LICENSE                     # GPL v3.0 许可证
 └── README.md                   # 项目 README
 ```
 

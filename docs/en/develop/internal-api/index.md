@@ -11,7 +11,7 @@ EchoMusic's internal APIs cover core modules including the audio engine, window 
 
 | Module | Description | Entry |
 |------|------|:--:|
-| 🎵 Audio Engine | mpv engine: EQ, spatial audio, IR convolution, device control, event listening | [→](audio-engine) |
+| 🎵 Audio Engine | FFmpeg engine: EQ, spatial audio, IR convolution, device control, event listening | [→](audio-engine) |
 | 📡 Playback State & Persistence | Playback events, queue persistence, local API server, HTTP request proxy | [→](playback-state) |
 | 🖥️ Window & Interaction Management | Desktop lyrics, Mini Player, window control, system tray | [→](window-management) |
 | ⚙️ System Features Integration | Shortcuts, power management, app updates, logging, audio effects management | [→](system-features) |
@@ -22,7 +22,7 @@ EchoMusic's internal APIs cover core modules including the audio engine, window 
 
 ### 🎵 Audio Engine (`ctx.audio`)
 
-The complete operational surface for the underlying libmpv engine. 18-band parametric equalizer, spatial audio presets, IR impulse response convolution, audio device switching, volume fade, loudness normalization, MKV track selection, engine lifecycle management, and more.
+The complete operational surface for the underlying FFmpeg + SoundTouch engine. 10-band parametric equalizer, spatial audio presets, IR impulse response convolution, audio device switching, volume fade, loudness normalization, engine lifecycle management, and more.
 
 ### 📡 Playback State & Persistence (`ctx.events` / `ctx.storage` / `ctx.apiServer` / `ctx.api`)
 

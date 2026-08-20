@@ -21,7 +21,7 @@ graph TD
     C -->|HTTP/IPC| E
     D -->|NAPI| A
     E -->|HTTP| F[Kugou Music API]
-    D --> G[libmpv]
+    D --> G[FFmpeg + SoundTouch]
     D --> H[OS Media API]
     D --> I[SQLite]
 ```
@@ -57,8 +57,8 @@ sequenceDiagram
     participant Pinia as Pinia Store
     participant Server as Node.js Server
     participant API as Kugou API
-    participant Rust as Rust Addon
-    participant MPV as libmpv
+    participant Rust as echo-ffmpeg-player
+    participant FFmpeg as FFmpeg + SoundTouch
 
     UI->>Pinia: User clicks play
     Pinia->>Server: HTTP request (get audio source)
@@ -66,19 +66,20 @@ sequenceDiagram
     API-->>Server: Return audio URL
     Server-->>Pinia: Return playback info
     Pinia->>Server: Notify main process via IPC
-    Server->>Rust: Call echo-mpv-player
-    Rust->>MPV: libmpv API call
-    MPV-->>Rust: Playback status callback
+    Server->>Rust: Call echo-ffmpeg-player
+    Rust->>FFmpeg: FFmpeg decode → SoundTouch process
+    FFmpeg-->>Rust: Playback status callback
     Rust-->>UI: Update playback status
 ```
 
 ### Core Player Architecture
 
-`echo-mpv-player` is the core wrapper of the playback engine:
+`echo-ffmpeg-player` is the core wrapper of the playback engine:
 
-- Directly calls the libmpv C API
-- Supports crossfade, EQ equalizer
-- Volume normalization (LUFS standardization)
+- Embeds FFmpeg decoding + SoundTouch audio processing
+- Supports crossfade, 10-band EQ, volume normalization
+- Speed control, device switching, exclusive output
+- Real-time spectrum analysis, DSP audio effect filter chain
 - Playback event callbacks (progress, status changes, etc.)
 
 ## Data Flow
@@ -94,7 +95,7 @@ Uses Pinia for global state management, with `pinia-plugin-persistedstate` for s
 | `settingsStore` | Application settings, preferences |
 | `searchStore` | Search keywords and results |
 
-State is persisted locally via SQLite (`echo-storage`).
+State is persisted locally via SQLite (`echo-sqlite-store`).
 
 ### Network Requests
 
@@ -104,13 +105,13 @@ graph LR
     B -->|HTTPS| C[Kugou Music API]
     B -->|HTTPS| D[Kugou CDN]
     C -->|JSON| B
-    D -->|Audio Stream| E[libmpv]
+    D -->|Audio Stream| E[echo-ffmpeg-player]
 ```
 
 1. UI sends requests to the built-in Node.js Server
 2. Server calls Kugou Music's public API
 3. Server processes data and returns it to the UI
-4. Audio stream is directly passed to libmpv for decoding and playback
+4. Audio stream is passed to echo-ffmpeg-player (FFmpeg decode + SoundTouch process) for playback
 
 ## System Integration Architecture
 

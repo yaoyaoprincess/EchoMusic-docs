@@ -314,6 +314,35 @@ console.log(row.row?.title); // "My Song"
 
 ---
 
+## Kugou API
+
+> Requires capability: `kugouApi: true`
+
+`ctx.kugou` provides access to EchoMusic's built-in Kugou Music API. APIs use lazy loading and are called on demand.
+
+| Namespace | Example |
+|-----------|---------|
+| `ctx.kugou.music` | `ctx.kugou.music.getSongUrl(hash)` |
+| `ctx.kugou.user` | `ctx.kugou.user.getUserDetail()` |
+| `ctx.kugou.playlist` | `ctx.kugou.playlist.getUserPlaylists()` |
+| `ctx.kugou.video` | `ctx.kugou.video.getVideoDetail(id)` |
+| `ctx.kugou.search` | `ctx.kugou.search.search(keyword)` |
+| `ctx.kugou.artist` | `ctx.kugou.artist.getArtistDetail(id)` |
+| `ctx.kugou.album` | `ctx.kugou.album.getAlbumDetail(id)` |
+| `ctx.kugou.comment` | `ctx.kugou.comment.getMusicComments(mixSongId)` |
+
+> ⚠️ Plugins only pass business parameters (`hash`, `id`, etc.) and never sensitive credentials (`token`, `dfid`, `mid`). The main process automatically injects the current login session.
+
+## Kugou Verification
+
+> Requires capability: `kugouVerification: true`
+
+| API | Description |
+|-----|------|
+| `ctx.kugouVerification.request(challenge)` | Handle Kugou security verification challenges (slider, captcha). Returns `{ ok: true, eventId }` or `{ ok: false, error, canceled? }` |
+
+---
+
 ## Next Steps
 
 | Document | Content |

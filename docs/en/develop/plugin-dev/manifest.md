@@ -27,6 +27,7 @@ outline: [2, 4]
     "audioSource": false,
     "audioSpectrum": true,
     "kugouApi": false,
+    "kugouVerification": false,
     "localFiles": true,
     "lyricEffects": false,
     "lyrics": true,
@@ -249,6 +250,7 @@ Plugin access to sensitive APIs uses **explicit declaration**. Only declare the 
   "audioSource": false,
   "audioSpectrum": true,
   "kugouApi": false,
+  "kugouVerification": false,
   "localFiles": true,
   "lyricEffects": false,
   "lyrics": true,
@@ -303,6 +305,14 @@ ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
 | Grants | `ctx.kugou` |
 
 Call the **Kugou Music API** for searching, fetching song details, retrieving playback URLs, etc.
+
+#### kugouVerification
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.kugouVerification.request(challenge)` |
+
+Handle **Kugou security verification challenges** (slider, captcha, etc.). Returns `{ ok: true, eventId }` on success or `{ ok: false, error, canceled? }` on failure.
 
 #### localFiles
 

@@ -134,6 +134,6 @@ ctx.ui.addPlayerButton({
 ## 📂 Related Documents
 
 - [Internal API Overview →](./) — Quick overview of the four modules
-- [Audio Engine →](audio-engine) — Full mpv engine control
+- [Audio Engine →](audio-engine) — Full FFmpeg engine control
 - [Playback State & Persistence →](playback-state) — Playback events & queue persistence
 - [Window & Interaction Management →](window-management) — Window component management

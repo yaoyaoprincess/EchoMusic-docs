@@ -20,10 +20,10 @@ Welcome to the EchoMusic development documentation. This section is for develope
 | Routing | Vue Router |
 | Package Manager | pnpm 9+ |
 | Backend Service | Node.js (built-in local server, in-process invocation) |
-| Audio Engine | libmpv (embedded via Rust NAPI addon in-process, zero-latency direct function calls) |
+| Audio Engine | echo-ffmpeg-player (embedded FFmpeg decoding + SoundTouch via Rust NAPI in-process) |
 | Native Extensions | napi-rs (Rust → Node.js native modules) |
-| Local Storage | SQLite (via echo-storage addon) |
-| License | MIT |
+| Local Storage | SQLite (via echo-sqlite-store addon) |
+| License | GPL v3.0 |
 
 ## Core Architecture
 
@@ -53,9 +53,9 @@ EchoMusic uses Electron's classic dual-process architecture with Rust NAPI nativ
 
 | Module | Function | Technology |
 |------|------|------|
-| `echo-mpv-player` | libmpv playback engine wrapper with fade, advanced EQ, loudness normalization, optimized spatial audio, real-time spectrum analysis | Rust + libmpv |
+| `echo-ffmpeg-player` | FFmpeg + SoundTouch playback engine wrapper with fade, EQ, loudness normalization, speed control, device switching, exclusive output, real-time spectrum | Rust + FFmpeg |
 | `echo-media-controls` | System media control integration (macOS / Windows / Linux native APIs) | Rust + OS API |
-| `echo-storage` | SQLite local persistence for settings, playback queue, and state snapshots | Rust + rusqlite |
+| `echo-sqlite-store` | SQLite local persistence for settings, playback queue, and state snapshots | Rust + rusqlite |
 
 ## Document Index
 

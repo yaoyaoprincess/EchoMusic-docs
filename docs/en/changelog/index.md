@@ -11,6 +11,424 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
+## [2.3.1-beta.15] - 2026-08-17
+
+### Added
+
+- Added a toggle to disable default browser key behaviors (space, arrow keys, page-up/down scrolling and activation)
+
+### Improved
+
+- Improved VHE performance by reducing high-sample-rate overhead through tiered partitioned convolution
+
+### Fixed
+
+- Fixed an issue where setting the pause shortcut to Space prevented typing a space in input fields
+- Fixed an issue where arrow-key switching failed when the playback queue drawer reached the leftmost or rightmost queue
+
+## [2.3.1-beta.14] - 2026-08-16
+
+### Improved
+
+- Improved desktop lyric scaling and lock interaction on macOS/Linux, as well as playback and lyric data sync performance
+- Extended VHE sample-rate support so non-44.1/48 kHz audio also applies headphone spatial processing, with tiered partitioned convolution to reduce high-sample-rate overhead
+
+### Fixed
+
+- Fixed an issue where dragging the desktop lyric window on Windows slowly enlarged it, the scaling hotzone sat outside the window, and the background disappeared during scaling
+- Fixed desktop lyric lock state desync, single-character word-level lyrics failing to highlight, and failed enable-state rollback
+
+## [2.3.1-beta.13] - 2026-08-16
+
+### Improved
+
+- Extended VHE sample-rate support so non-44.1/48 kHz audio also applies headphone spatial processing
+
+### Fixed
+
+- Corrected song quality level mapping, removed the erroneous DSD tier, and moved Viper Mastering into the quality selector
+
+## [2.3.1-beta.12] - 2026-08-15
+
+### Fixed
+
+- Fixed the recently-played statistics page not filling the available width on large screens
+
+## [2.3.1-beta.11] - 2026-08-15
+
+### Improved
+
+- Improved VPF parameter effect processing, calibrating the full-chain output of EQ, VHE, soundstage, dynamics, bass, clarity, reverb and limiting
+
+### Fixed
+
+- Fixed an issue where music kept playing without sound after Windows sleep/hibernation wake
+
+## [2.3.1-beta.10] - 2026-08-15
+
+### Added
+
+- Added the Effect Community for browsing, downloading and using parameter effects, convolution effects and combo effects online
+
+### Improved
+
+- Spatial audio now uses unified full-convolution output, and EQ was adjusted to standard 10-band center frequencies with re-tuned built-in curves
+- Improved Personal FM, persisting recommendation mode and recommendation pool options
+
+## [2.3.1-beta.9] - 2026-08-14
+
+### Added
+
+- Added the Effect Community for browsing, downloading and using community spatial effects online
+
+### Improved
+
+- Improved dialog interaction and styling with unified layer management, popup animations, and adjusted intro dialog width
+
+### Fixed
+
+- Fixed an issue where overlapping dialogs became unresponsive
+
+## [2.3.1-beta.8] - 2026-08-14
+
+### Added
+
+- Added QQ QR-code login
+
+### Improved
+
+- Improved login method switching and Kugou API network request stability
+- Improved app state persistence encapsulation with unified storage key management and cleanup
+
+## [2.3.1-beta.7] - 2026-08-13
+
+### Improved
+
+- Improved audio output device switching and exception recovery logic
+- Improved delayed release of audio devices when not playing, accommodating Bluetooth multipoint switching
+
+### Fixed
+
+- Fixed an issue where the old output thread did not fully exit when switching devices, potentially causing dual-device output, speed-ups or stuttering
+- Fixed an issue where playback progress stopped updating after track switch or source reload
+
+## [2.3.1-beta.6] - 2026-08-13
+
+### Fixed
+
+- Fixed an issue where paged lists like "My Favorites" could be cleared after repeated refresh or API failure
+
+## [2.3.1-beta.5] - 2026-08-13
+
+### Improved
+
+- Improved native audio playback network stream recovery and seek stability
+
+### Fixed
+
+- Fixed sound stuttering when playing music on some devices
+- Fixed an issue where paged lists like "My Favorites" could repeatedly reload and briefly show empty data during rapid refresh
+
+## [2.3.1-beta.4] - 2026-08-12
+
+### Fixed
+
+- Fixed an issue where some audio backends could repeatedly buffer-recover after underrun, causing sound stuttering
+
+## [2.3.1-beta.3] - 2026-08-12
+
+### Improved
+
+- Improved Mini mode initialization to avoid re-entering the main player init flow when switching windows
+- Improved desktop lyric second-line display logic: translation/transliteration shown first, next-line preview only when neither is shown
+
+### Fixed
+
+- Fixed an issue where switching to Mini mode during Personal FM playback could stop desktop lyric progress
+
+## [2.3.1-beta.2] - 2026-08-12
+
+### Added
+
+- Added Windows taskbar playback progress display
+- Added login device management in the profile center to view and remove non-local devices
+- Added a device identity reset entry to clear local `guid`, `mid`, `dfid` and regenerate on restart
+
+### Improved
+
+- Improved the boundary between login state and device identity; logout and session expiry no longer clear the local device identity
+
+### Fixed
+
+- Fixed an issue where the login device list could not mark "this device" when the local `mid` was not yet synced
+- Fixed an issue where the native engine's volume equalization could cause sudden volume fluctuations
+- Fixed an issue where audio device monitoring on Linux could exhaust PulseAudio/PipeWire connections
+
+## [2.3.1-beta.1] - 2026-08-12
+
+### Added
+
+- Added plugin desktop lyric and Mini player snapshot subscription APIs
+
+### Improved
+
+- Improved the music-age calculation in the profile
+
+### Fixed
+
+- Fixed an issue where audio device monitoring on Linux could continuously create PulseAudio client connections, exhausting pipewire-pulse connections and affecting other apps
+- Fixed an issue where "My Favorites" could retain stale favorites/follows/videos after login state change or account switch
+- Fixed an issue where enabling desktop lyrics and then switching to Mini mode could stop lyric progress
+
+## [2.3.0] - 2026-08-11
+
+### Fixed
+
+- Fixed an issue where repeatedly clicking "Play All" could trigger duplicate loading and freeze playback
+
+## [2.2.9] - 2026-08-11
+
+### Added
+
+- Added a toggle for the unlock button display when desktop lyrics are locked; when disabled, unlock via the tray menu
+
+## [2.2.9-beta.30] - 2026-08-10
+
+### Added
+
+- Added the Tasks module
+
+## [2.2.9-beta.29] - 2026-08-05
+
+### Added
+
+- Added Linux PulseAudio/PipeWire output device support, allowing selection of audio server devices like Bluetooth headphones on Linux
+
+### Improved
+
+- Improved native engine output device hot-switch and disconnect handling, supporting auto-recovery or immediate pause per settings
+- Improved native engine playback clock, prioritizing backend live-delay correction of the audible position
+- Improved native engine sample rate, channel, output format and device buffer negotiation to reduce output jitter when switching between different sample rates
+
+### Fixed
+
+- Fixed an issue where some devices could exhibit speed-up-like playback, stuttering, or stop streaming after output underrun
+- Fixed an issue where Windows WASAPI could not auto-recover after output device failure or audio service restart
+
+## [2.2.9-beta.28] - 2026-08-04
+
+### Fixed
+
+- Fixed an issue where cloud-drive fallback playback and library quality fetch failures lacked clear prompts or left stale prompts
+
+## [2.2.9-beta.27] - 2026-08-03
+
+### Added
+
+- Added automatic cloud-drive file fallback when the library source is unavailable
+
+### Improved
+
+- Improved cloud-source playback strategy: reuse the library playback chain by default, fall back to cloud files only when unavailable
+- Improved music cloud drive list default ordering, prioritizing recently added files
+- Improved cloud playback quality entry, supporting temporary switching between cloud files and library quality for the current song
+
+### Fixed
+
+- Fixed an issue where the cloud quality list could stay stuck loading during track switches
+- Fixed an issue where effect presets could still be toggled but not take effect when actually playing cloud files
+- Fixed an issue where missing loudness parameters during cloud file playback could break volume equalization
+
+## [2.2.9-beta.26] - 2026-08-03
+
+### Added
+
+- Added "prefer cloud drive files" setting: when sound effects are disabled and a matched cloud drive file exists, the cloud source is prioritized
+
+### Improved
+
+- Improved player audio source status display: shows `CLD` badge on the quality entry when playing from cloud drive
+
+### Fixed
+
+- Fixed issue where sound effect presets could still be toggled but not applied when playing cloud drive files
+- Fixed issue where clicking a track in the playback queue drawer could activate the wrong queue
+
+## [2.2.9-beta.25] - 2026-08-03
+
+### Added
+
+- Added cloud drive file deletion
+- Added seek forward / backward application and global shortcut settings
+- Added plugin system-level global shortcut registration API, allowing plugins to respond to shortcuts when EchoMusic is in background
+
+### Improved
+
+- Refactored renderer process plugin runtime: split into context, business API, host API, service, UI, shortcuts, theme, and module loader modules
+
+## [2.2.9-beta.24] - 2026-08-03
+
+> Hotfix for issues introduced in beta.23.
+
+### Fixed
+
+- Fixed several stability issues introduced in beta.23
+
+## [2.2.9-beta.23] - 2026-08-02
+
+### Added
+
+- Added plugin local audio metadata reading API, allowing local library plugins to read title, artist, album, and duration
+- Added basic local audio file scanning capability for future local music library and plugin local media reuse
+
+### Improved
+
+- Improved cloud drive upload library matching and association logic
+- Improved cloud drive upload flow: no longer reads full file content during selection phase; on-demand read with per-window isolated temporary whitelist
+- Unified local audio extension list: cloud drive upload and plugin file scanning derive from the same local playback format list
+- Optimized plugin file API: file enumeration, read, write, and audio metadata reading now use async IPC
+
+### Fixed
+
+- Fixed issue where some search result track IDs were mapped incorrectly
+
+## [2.2.9-beta.22] - 2026-08-01
+
+### Added
+
+- Added music cloud drive upload
+
+## [2.2.9-beta.21] - 2026-08-01
+
+### Added
+
+- Added top gradient color toggle
+- Added option to disable theme color source
+
+## [2.2.9-beta.20] - 2026-08-01
+
+### Improved
+
+- Improved page loading experience with unified skeleton screen component, replacing some full-page loading indicators
+- Improved loading placeholder behavior for homepage recommendations, Personal FM, search, details page, plugin marketplace, lyric source selection, and add-to-playlist scenarios
+
+## [2.2.9-beta.19] - 2026-07-31
+
+### Added
+
+- Added plugin theme icon cover API, generating theme-color icon covers consistent with the built-in details page
+
+### Improved
+
+- Improved online update installation flow
+
+### Fixed
+
+- Fixed issue where clicking "Install Now" after Windows online update download could be unresponsive
+
+## [2.2.9-beta.18] - 2026-07-31
+
+### Added
+
+- Added purchased music list with two categories: purchased singles and purchased albums
+
+## [2.2.9-beta.17] - 2026-07-29
+
+### Fixed
+
+- Fixed issue where switching the system default output device on Windows could still output from the old device when "System Default" was selected
+
+## [2.2.9-beta.16] - 2026-07-29
+
+> Hotfix for issues introduced in beta.15.
+
+### Fixed
+
+- Fixed several stability issues introduced in beta.15
+
+## [2.2.9-beta.15] - 2026-07-29
+
+### Fixed
+
+- Fixed issue where users could not select an account during verification code login when multiple Kugou accounts shared the same phone number
+
+## [2.2.9-beta.14] - 2026-07-27
+
+### Improved
+
+- Improved native playback engine buffer recovery strategy, limiting recovery wait threshold to actual cache capacity
+- Improved native playback engine parameter updates (speed, EQ, loudness, spatial effects) during playback to reduce unnecessary audio filter rebuilds
+- Improved native playback engine exclusive output fallback logic when exclusive audio device fails to start
+- Improved native playback engine seek retry logic, reducing probability of decoder restart when rapidly dragging the progress bar
+
+### Fixed
+
+- Fixed issue where buffer recovery threshold could exceed actual cache capacity under weak network or slow source conditions
+- Fixed issue where native playback engine could directly interrupt playback when some exclusive audio devices failed to start
+- Fixed issue where switching some DSP parameters during playback might not fully sync to running filters
+
+## [2.2.9-beta.13] - 2026-07-26
+
+### Added
+
+- Added text selection and copy capability on comment pages
+- Added "Copy Song Info" option in track right-click menu
+
+### Fixed
+
+- Fixed issue where trailing characters of some Japanese word-by-word lyrics could be incorrectly deleted
+
+## [2.2.9-beta.12] - 2026-07-26
+
+### Fixed
+
+- Fixed issue where playback state and track info could become out of sync after a track change failure
+
+## [2.2.9-beta.11] - 2026-07-24
+
+> First official pre-release shipping the `echo-ffmpeg-player` native playback engine. This version includes all changes from beta.10.
+
+### Added
+
+- Added macOS / Windows system media control seek forward/backward semantics; Linux continues using MPRIS relative Seek
+- Added 4-channel true-stereo spatial audio IR support
+- Added plugin playback display state API
+- Added gapless playback
+- Added in-engine spectrum analysis
+- Added player buffer recovery wait setting
+- Added unified playback clock snapshot: plugin `nowPlaying`, lyrics, and desktop lyrics snapshots can now obtain playback clock anchors
+- Added `echo-ffmpeg-player` native playback engine using embedded FFmpeg decoding and native audio output to replace the old playback pipeline
+- Added third-party dependency and license notice document `THIRD_PARTY_NOTICES.md`
+
+### Improved
+
+- Optimized Electron icon and tray refresh to reduce memory usage
+- Optimized image list loading to reduce image decoding and GPU texture usage
+- Optimized desktop lyrics filtering logic
+- Optimized preferences entry: macOS native menu now includes Preferences item; Windows/Linux support window-level `Ctrl+,` to open settings
+- Optimized desktop lyrics transition animation speed
+- Optimized timeline synchronization for page lyrics, desktop lyrics, and mini player lyrics, using unified playback clock snapshot for re-anchoring
+- Converged output device protection to a native-event-based "Pause on device disconnect" toggle, disabled by default
+- Optimized player state machine
+- Optimized track change interaction responsiveness
+- Removed `echo-spectrum-capture` native audio capture spectrum output module
+- Project license changed to GNU GPL v3.0
+
+### Fixed
+
+- Fixed issue where native playback engine buffer recovery and resample output were unstable under network fluctuation
+- Fixed issue where dragging the progress bar to the beginning could cause the progress display to freeze
+- Fixed issue where desktop lyrics filtering could desync line index and word-by-word progress
+- Fixed issue where word-by-word lyric progress could disappear after pausing desktop lyrics
+- Fixed issue where desktop lyrics could gradually drift ahead during prolonged playback
+- Fixed issue where the previous lyric line could occasionally flicker when page lyrics switched lines
+- Fixed issue where the main window size could progressively enlarge on Windows after app updates, shutdown, restart, or logout
+- Fixed issue where Windows SMTC did not respond to third-party media panel playback progress adjustment requests
+- Fixed issue where spatial audio Dry/Wet mix formula was inaccurate, causing wet signal loudness to be too high after superposition
+- Fixed issue where some EQ bands could retain stale values when a short array was passed to EQ settings
+- Fixed issue where Electron could crash on startup on Windows 11 due to inability to open the `nul` device
+- Fixed CI build pipeline
+
 ## [2.2.9-beta.10] - 2026-07-23
 
 ### New

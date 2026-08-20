@@ -278,7 +278,7 @@ EchoMusic's backend service (`server/`) encapsulates these API calls:
 2. **Cookie management**: Post-login cookies are managed by the server to maintain session state
 3. **Error handling**: Unified error code handling, returning frontend-friendly error messages
 4. **Caching**: Popular data uses in-memory caching to reduce API call frequency
-5. **Streaming**: Audio source URLs are passed directly to libmpv without going through the frontend
+5. **Streaming**: Audio source URLs are passed directly to echo-ffmpeg-player without going through the frontend
 
 ## Disclaimer
 

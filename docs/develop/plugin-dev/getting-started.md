@@ -170,7 +170,7 @@ export function activate(ctx) {
 
 ```
 hello-echo/
-  manifest.json      ← 插件描述、版本、权限声明
+  manifest.json      ← 插件描述、版本声明
   index.js           ← 插件入口（ESM）
 ```
 

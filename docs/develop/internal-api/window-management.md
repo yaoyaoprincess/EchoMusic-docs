@@ -86,6 +86,6 @@ ctx.windowControl("fullscreen"); // 全屏
 ## 📂 相关文档
 
 - [内部 API 概览 →](./) — 四大模块速览
-- [音频引擎 →](audio-engine) — mpv 引擎完整控制
+- [音频引擎 →](audio-engine) — FFmpeg 引擎完整控制
 - [播放状态与持久化 →](playback-state) — 播放事件与队列持久化
 - [系统功能集成 →](system-features) — 快捷键、更新、日志等

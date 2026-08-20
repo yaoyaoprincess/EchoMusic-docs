@@ -7,7 +7,7 @@ outline: [2, 4]
 
 `ctx` 对象是插件的核心入口。本文档按模块列出所有插件可用的 API 速查表，每个 API 标注了所属的详情文档以便深入了解。
 
-> ℹ️ 本文档以 [EchoMusicPlugins 仓库](https://github.com/hoowhoami/EchoMusicPlugins) 官方文档为准。内部 API（mpv 引擎、桌面歌词、Mini 播放器等）不在插件范围内，详见 [内部 API 参考 →](../internal-api/)。
+> ℹ️ 本文档以 [EchoMusicPlugins 仓库](https://github.com/hoowhoami/EchoMusicPlugins) 官方文档为准。内部 API（FFmpeg 引擎、桌面歌词、Mini 播放器等）不在插件范围内，详见 [内部 API 参考 →](../internal-api/)。
 
 ---
 
@@ -125,7 +125,7 @@ outline: [2, 4]
 | `ctx.lyrics.command(cmd)` | 发送歌词命令 | [播放器](./player-audio#获取订阅歌词快照) |
 | `ctx.lyricEffects.register(opts)` | 注册歌词动效（需 `lyricEffects: true`） | [播放器](./player-audio#歌词视觉效果) |
 
-> ℹ️ mpv 引擎高级控制（EQ/空间音效/IR/设备/渐变等）属于内部 API，不在插件范围内。详见 [内部 API 参考 →](../internal-api/audio-engine)。
+> ℹ️ FFmpeg 引擎高级控制（EQ/空间音效/IR/设备/渐变等）属于内部 API，不在插件范围内。详见 [内部 API 参考 →](../internal-api/audio-engine)。
 
 ## 🌐 本地 HTTP 服务
 
@@ -362,6 +362,14 @@ ctx.theme.accentGradient.clear();
 
 > ⚠️ 插件仅传业务参数（`hash`、`id` 等），不传敏感凭证（token、dfid、mid）。主进程自动注入当前登录态。
 
+## 🔐 酷狗安全验证
+
+> 需要 capability：`kugouVerification: true`
+
+| API | 说明 |
+|-----|------|
+| `ctx.kugouVerification.request(challenge)` | 处理酷狗安全验证挑战，返回 `{ ok: true, eventId }` 或 `{ ok: false, error, canceled? }` |
+
 ---
 
 ## ⚡ 原生 API
@@ -410,4 +418,4 @@ ctx.electron.platform  // "win32" | "darwin" | "linux"
 | [音频频谱 →](./audio-spectrum) | 实时 FFT 频谱数据 |
 | [窗口与系统 →](./windows-system) | 浮窗、Now Playing、进程、图标 |
 | [发布与分发 →](./publishing) | 插件源、市场、故障管理 |
-| [内部 API 参考 →](../internal-api/) | 不暴露给插件的内部 API（mpv 引擎等） |
+| [内部 API 参考 →](../internal-api/) | 不暴露给插件的内部 API（FFmpeg 引擎等） |

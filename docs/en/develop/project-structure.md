@@ -30,7 +30,7 @@ EchoMusic/
 │   ├── preload.ts              # Preload script
 │   └── updater.ts              # Auto-update logic
 ├── native/                     # Rust native modules (napi-rs)
-│   ├── echo-mpv-player/        # libmpv playback engine wrapper
+│   ├── echo-ffmpeg-player/     # FFmpeg + SoundTouch playback engine
 │   │   ├── src/
 │   │   │   ├── lib.rs          # Module entry
 │   │   │   ├── player.rs       # Player core logic
@@ -44,7 +44,7 @@ EchoMusic/
 │   │   │   ├── windows.rs      # Windows implementation
 │   │   │   └── linux.rs        # Linux implementation
 │   │   └── Cargo.toml
-│   └── echo-storage/           # SQLite local storage
+│   └── echo-sqlite-store/      # SQLite local storage
 │       ├── src/
 │       │   ├── lib.rs
 │       │   ├── db.rs           # Database operations
@@ -123,7 +123,7 @@ EchoMusic/
 ├── electron-builder.yml        # Electron Builder configuration
 ├── tsconfig.json               # TypeScript configuration
 ├── tailwind.config.ts          # Tailwind CSS configuration
-├── LICENSE                     # MIT License
+├── LICENSE                     # GPL v3.0 License
 └── README.md                   # Project README
 ```
 

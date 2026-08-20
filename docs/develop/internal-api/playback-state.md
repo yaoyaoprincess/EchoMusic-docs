@@ -11,7 +11,7 @@ outline: [2, 4]
 
 ## 核心事件（ctx.events）
 
-主要播放器核心事件订阅（区别于 `ctx.audio.on*` mpv 引擎事件）。
+主要播放器核心事件订阅（区别于 `ctx.audio.on*` FFmpeg 引擎事件）。
 
 | API | 回调参数 | 说明 |
 |-----|----------|------|
@@ -100,6 +100,6 @@ console.log(result.data);
 ## 📂 相关文档
 
 - [内部 API 概览 →](./) — 四大模块速览
-- [音频引擎 →](audio-engine) — mpv 引擎完整控制
+- [音频引擎 →](audio-engine) — FFmpeg 引擎完整控制
 - [窗口与交互管理 →](window-management) — 窗口组件管理
 - [系统功能集成 →](system-features) — 快捷键、更新、日志等

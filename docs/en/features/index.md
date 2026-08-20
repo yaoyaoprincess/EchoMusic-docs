@@ -202,7 +202,7 @@ VS Code-style high-freedom plugin extension. Browse and install from online plug
 
 | Feature | Details |
 |------|------|
-| Audio Engine | libmpv, embedded in-process via Rust NAPI — zero-latency direct function calls |
+| Audio Engine | FFmpeg + SoundTouch, embedded in-process via Rust NAPI — vendored FFmpeg decoding + real-time DSP |
 | Audio Quality | Hi-Res, SQ(flac), HQ(320kbps), Standard(128kbps) |
 | Sound Effects | Piano, Vocal, Instrumental, Bone Flute, Ukulele, Suona, DJ, Viper Master, Viper Surround, Viper Ultra Clear, Spatial Audio (IR) |
 | Playback Formats | Standard audio + LRC/YRC word-level lyrics parsing |

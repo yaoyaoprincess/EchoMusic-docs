@@ -5,18 +5,18 @@ outline: [2, 4]
 
 # 🎵 音频引擎（ctx.audio）
 
-EchoMusic 底层使用 **libmpv** 作为音频引擎，通过 `ctx.audio` 在同一渲染进程中控制。
+EchoMusic 底层使用 **FFmpeg + SoundTouch** 作为音频引擎（通过 `echo-ffmpeg-player` Rust NAPI 原生模块），内嵌 FFmpeg 解码与 SoundTouch 变速处理，无需外部 FFmpeg 可执行文件。`ctx.audio` 在渲染进程中提供引擎控制接口。
 
 ---
 
 ## 均衡器（EQ）
 
-18 段参数化均衡器，每段独立控制增益（-12 ~ +12 dB）。
+10 段参数化均衡器，每段独立控制增益（-12 ~ +12 dB），带自动增益补偿。
 
 ```js
 ctx.audio.setEqualizer([
-  0,   // 31 Hz
-  2,   // 62 Hz
+  0,   // 31.5 Hz
+  2,   // 63 Hz
   3,   // 125 Hz
   1,   // 250 Hz
   0,   // 500 Hz
@@ -28,7 +28,7 @@ ctx.audio.setEqualizer([
 ]);
 ```
 
-EQ 频段：`32 / 64 / 125 / 250 / 500 / 1k / 2k / 4k / 8k / 16k` Hz
+EQ 频段：`31.5 / 63 / 125 / 250 / 500 / 1k / 2k / 4k / 8k / 16k` Hz（31Hz - 16kHz 标准倍频程）
 
 ---
 
@@ -118,7 +118,7 @@ ctx.audio.setNormalizationGain(-3.5); // dB
 
 | API | 说明 |
 |-----|------|
-| `available()` | 检查 mpv 引擎是否可用 |
+| `available()` | 检查 FFmpeg 引擎是否可用 |
 | `restart()` | 重启播放引擎 |
 | `getState()` | 获取引擎内部状态 |
 
@@ -132,7 +132,7 @@ ctx.audio.setNormalizationGain(-3.5); // dB
 | `onDurationChange(fn)` | `(duration: number)` | 歌曲时长变化 |
 | `onStateChange(fn)` | `({playing?, paused?})` | 播放/暂停状态变化 |
 | `onPlaybackEnd(fn)` | `(reason: string)` | 播放结束 ("eof" / "stop" / "error") |
-| `onError(fn)` | `(message: string)` | mpv 引擎错误 |
+| `onError(fn)` | `(message: string)` | FFmpeg 引擎错误 |
 | `onAudioDeviceListChanged(fn)` | `(devices[])` | 设备列表变化（拔插耳机） |
 | `onImpulseResponseDisabled(fn)` | `({path?, reason?})` | IR 被自动禁用通知 |
 

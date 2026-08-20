@@ -55,7 +55,7 @@ EchoMusic 项目在 GitHub 上开源，欢迎参与贡献和反馈：
 
 ## 开源与许可
 
-EchoMusic 基于 **MIT License** 协议发布。本项目使用 [mpv](https://mpv.io/) 作为音频播放引擎（LGPL-2.1+ / GPL-2.0+），通过动态链接方式加载。
+EchoMusic 基于 **GNU GPL v3.0** 协议发布。
 
 ::: warning 重要
 EchoMusic 是开源项目，完全免费使用。如果你看到有人售卖 EchoMusic，请注意辨别，避免上当受骗。

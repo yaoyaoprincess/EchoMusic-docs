@@ -379,7 +379,6 @@ npm install -D esbuild
 - [ ] `id` 唯一，无冲突
 - [ ] `version` 符合 semver 规范
 - [ ] `capabilities` 遵循最小权限原则
-- [ ] `permissions.http` 声明了网络访问范围（如适用）
 - [ ] 入口文件无 bare import（不直接 `import from 'vue'`）
 - [ ] `requires.echoMusicVersion` 版本范围合理
 - [ ] 在 EchoMusic 中实测通过

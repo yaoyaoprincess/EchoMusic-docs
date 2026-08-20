@@ -7,7 +7,7 @@ outline: [2, 4]
 
 > Requires capability: `audioSpectrum: true`
 
-`ctx.audio.spectrum` provides access to EchoMusic's real-time audio spectrum data. The underlying `echo-spectrum-capture` native addon captures FFT data from the system audio output.
+`ctx.audio.spectrum` provides access to EchoMusic's real-time audio spectrum data. The underlying `echo-ffmpeg-player` playback engine provides built-in spectrum analysis, outputting FFT data directly from the playback pipeline.
 
 ## API Overview
 

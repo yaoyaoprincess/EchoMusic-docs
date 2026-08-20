@@ -21,7 +21,7 @@ graph TD
     C -->|HTTP/IPC| E
     D -->|NAPI| A
     E -->|HTTP| F[酷狗音乐 API]
-    D --> G[libmpv]
+    D --> G[FFmpeg + SoundTouch]
     D --> H[OS Media API]
     D --> I[SQLite]
 ```
@@ -57,8 +57,8 @@ sequenceDiagram
     participant Pinia as Pinia Store
     participant Server as Node.js Server
     participant API as 酷狗 API
-    participant Rust as Rust Addon
-    participant MPV as libmpv
+    participant Rust as echo-ffmpeg-player
+    participant FFmpeg as FFmpeg + SoundTouch
 
     UI->>Pinia: 用户点击播放
     Pinia->>Server: HTTP 请求（获取音源）
@@ -66,19 +66,20 @@ sequenceDiagram
     API-->>Server: 返回音源 URL
     Server-->>Pinia: 返回播放信息
     Pinia->>Server: 通过 IPC 通知主进程
-    Server->>Rust: 调用 echo-mpv-player
-    Rust->>MPV: libmpv API 调用
-    MPV-->>Rust: 播放状态回调
+    Server->>Rust: 调用 echo-ffmpeg-player
+    Rust->>FFmpeg: FFmpeg 解码 → SoundTouch 处理
+    FFmpeg-->>Rust: 播放状态回调
     Rust-->>UI: 更新播放状态
 ```
 
 ### 核心播放器架构
 
-`echo-mpv-player` 是播放引擎的核心封装：
+`echo-ffmpeg-player` 是播放引擎的核心封装：
 
-- 直接调用 libmpv C API
-- 支持淡入淡出、EQ 均衡器
-- 音量均衡（LUFS 标准化）
+- 内嵌 FFmpeg 解码 + SoundTouch 音频处理
+- 支持淡入淡出、10 段 EQ、音量均衡
+- 倍速播放、设备切换、独占输出
+- 实时频谱分析、音效 DSP 滤镜链
 - 播放事件回调（进度、状态变化等）
 
 ## 数据流
@@ -94,7 +95,7 @@ sequenceDiagram
 | `settingsStore` | 应用设置、偏好配置 |
 | `searchStore` | 搜索关键词与结果 |
 
-状态通过 SQLite（`echo-storage`）实现本地持久化。
+状态通过 SQLite（`echo-sqlite-store`）实现本地持久化。
 
 ### 网络请求
 
@@ -104,13 +105,13 @@ graph LR
     B -->|HTTPS| C[酷狗音乐 API]
     B -->|HTTPS| D[酷狗 CDN]
     C -->|JSON| B
-    D -->|音频流| E[libmpv]
+    D -->|音频流| E[echo-ffmpeg-player]
 ```
 
 1. UI 发起请求到内置 Node.js Server
 2. Server 调用酷狗音乐公开 API
 3. Server 处理数据并返回给 UI
-4. 音频流直接传递给 libmpv 解码播放
+4. 音频流传递给 echo-ffmpeg-player（FFmpeg 解码 + SoundTouch 处理）播放
 
 ## 系统集成架构
 

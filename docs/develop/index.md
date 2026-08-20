@@ -20,14 +20,14 @@ title: 开发指南
 | 路由 | Vue Router |
 | 包管理 | pnpm 9+ |
 | 后端服务 | Node.js（内置本地服务，进程内直接调用） |
-| 音频引擎 | libmpv（通过 Rust NAPI addon 进程内嵌入，零延迟直接函数调用） |
+| 音频引擎 | echo-ffmpeg-player（内嵌 FFmpeg 解码 + SoundTouch，通过 Rust NAPI 进程内嵌入） |
 | 原生扩展 | napi-rs（Rust → Node.js 原生模块） |
-| 本地存储 | SQLite（通过 echo-storage addon） |
-| 许可证 | MIT |
+| 本地存储 | SQLite（通过 echo-sqlite-store addon） |
+| 许可证 | GPL v3.0 |
 
 ## 核心架构
 
-EchoMusic 采用 Electron 经典的双进程架构，通过 Rust NAPI 原生扩展实现高性能音频播放：
+EchoMusic 采用 Electron 经典的双进程架构，通过 Rust NAPI 原生扩展（napi-rs）实现高性能音频播放：
 
 ```
 ┌─────────────────────────────────────────┐
@@ -53,9 +53,9 @@ EchoMusic 采用 Electron 经典的双进程架构，通过 Rust NAPI 原生扩�
 
 | 模块 | 功能 | 技术 |
 |------|------|------|
-| `echo-mpv-player` | libmpv 播放引擎封装，支持淡入淡出、高级 EQ、音量均衡、优化的空间音效、实时频谱分析 | Rust + libmpv |
+| `echo-ffmpeg-player` | FFmpeg + SoundTouch 播放引擎封装，支持淡入淡出、EQ、音量均衡、倍速播放、设备切换、独占输出、实时频谱 | Rust + FFmpeg |
 | `echo-media-controls` | 系统媒体控制集成（macOS / Windows / Linux 原生 API） | Rust + OS API |
-| `echo-storage` | SQLite 本地持久化存储，负责设置、播放队列与状态快照 | Rust + rusqlite |
+| `echo-sqlite-store` | SQLite 本地持久化存储，负责设置、播放队列与状态快照 | Rust + rusqlite |
 
 ## 文档索引
 
@@ -66,4 +66,4 @@ EchoMusic 采用 Electron 经典的双进程架构，通过 Rust NAPI 原生扩�
 - [编译构建](/develop/build) — 多平台打包构建
 - [贡献指南](/develop/contributing) — 参与项目贡献
 - [酷狗 API 参考](/develop/api) — 酷狗音乐公开 API 说明
-- [内部 API 参考](/develop/internal-api/) — 主应用内部 API（mpv 引擎、桌面歌词等）
+- [内部 API 参考](/develop/internal-api/) — 主应用内部 API（FFmpeg 引擎、桌面歌词等）

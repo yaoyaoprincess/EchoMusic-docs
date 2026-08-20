@@ -15,25 +15,36 @@ title: 本地开发环境
 | Node.js | 18+ | JavaScript 运行时 |
 | pnpm | 9+ | 包管理器 |
 | Rust | 1.70+ | 编译原生模块需要 |
-| mpv / libmpv | — | 音频播放引擎 |
+| FFmpeg 开发库 | — | 音频解码库（运行时不需要外部 ffmpeg 可执行文件） |
+| LLVM / libclang（仅 Windows） | — | 编译 echo-ffmpeg-player 需要 |
 
-### 安装 mpv / libmpv
+### 安装 FFmpeg 开发库
 
 **macOS**：
 
 ```bash
-brew install mpv
+brew install ffmpeg
 ```
 
 **Linux（Debian/Ubuntu）**：
 
 ```bash
-sudo apt install libmpv-dev
+sudo apt install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev
 ```
 
 **Windows**：
 
-自行下载 `libmpv-2.dll` 放到 `build\mpv` 目录。
+需要安装 LLVM 和 libclang 以编译 echo-ffmpeg-player：
+
+```powershell
+winget install LLVM.LLVM
+```
+
+同时设置环境变量：
+
+```powershell
+$env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
+```
 
 ## 克隆项目
 
@@ -76,37 +87,30 @@ printf '%s' './electron' > path.txt
 如果启动时出现缺少 `.node` 文件的错误：
 
 ```
-Error: Cannot find module '.../echo-mpv-player/echo-mpv-player.node'
-[error] [MpvController] Failed to load echo-mpv-player addon
+Error: Cannot find module '.../echo-ffmpeg-player/echo-ffmpeg-player.node'
+[error] [FfmpegController] Failed to load echo-ffmpeg-player addon
 ```
 
 需要手动编译 Rust 原生模块（`.node` 文件在 `.gitignore` 中被排除）。推荐使用各 addon 自带的 napi-rs 构建脚本生成平台对应的 `.node`：
 
 ```bash
-# 编译 echo-mpv-player
-cd native/echo-mpv-player
-npm install
-npm run build
+# 编译 echo-ffmpeg-player
+cd native/echo-ffmpeg-player
+pnpm install --ignore-workspace
+pnpm exec napi build --release --no-const-enum
 
 cd ../echo-media-controls
 npm install
 npm run build
 
-cd ../echo-storage
+cd ../echo-sqlite-store
 npm install
 npm run build
 
 cd ../..
 ```
 
-`echo-mpv-player` 集成了实时频谱分析功能，可选地支持系统音频捕获：Windows 使用 WASAPI loopback，Linux 使用 ALSA monitor，macOS 使用 ScreenCaptureKit。macOS 首次使用系统级频谱捕获时，需要在「系统设置 → 隐私与安全性 → 屏幕与系统音频录制」中授权 EchoMusic；开发模式下也可能需要授权 Terminal、Electron 或当前启动进程。
-
-Linux 构建系统音频捕获模块需要 ALSA 开发库：
-
-```bash
-# Debian/Ubuntu
-sudo apt install libasound2-dev
-```
+`echo-ffmpeg-player` 内建实时频谱分析能力，频谱数据通过播放引擎直接输出。播放引擎支持音频设备切换和独占输出模式。
 
 ## 启动开发服务器
 
@@ -124,14 +128,25 @@ pnpm dev
 
 ### Linux 发行版打包说明
 
-如果发行版包使用系统 Electron 启动 EchoMusic（例如 Arch/Manjaro 的 `electron42 /usr/lib/echo-music/app.asar`），入口脚本必须在启动 Electron 前预加载系统 FFmpeg/libav 库，否则 Electron 内置裁剪版 `libffmpeg.so` 可能与系统 `libmpv` 发生符号冲突，导致 HTTP 音频流无法播放。
+如果发行版包使用系统 Electron 启动 EchoMusic（例如 Arch/Manjaro 的 `electron42 /usr/lib/echo-music/app.asar`），入口脚本必须通过兼容方式处理原生模块加载，建议使用项目提供的 `build/linux-system-electron-wrapper.sh` 模板。
 
 可直接安装并使用：
 
-- `build/linux-libmpv-env.sh`：共享的 libmpv 环境修复脚本
 - `build/linux-system-electron-wrapper.sh`：系统 Electron 启动入口模板
 
 `electron-builder` 产物会在 `afterPack` 阶段自动安装同一套 wrapper。
+
+## 内存诊断
+
+开发模式下可通过环境变量启用内存诊断：
+
+```bash
+# Windows PowerShell
+$env:ECHOMUSIC_MEMORY_DIAGNOSTICS = "1"
+pnpm dev
+```
+
+日志文件位于 `~/Library/Logs/EchoMusic/echo-music-YYYY-MM-DD.log`。
 
 ## 开发调试
 

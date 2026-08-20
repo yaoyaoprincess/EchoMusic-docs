@@ -86,6 +86,6 @@ ctx.windowControl("fullscreen"); // Fullscreen
 ## 📂 Related Documents
 
 - [Internal API Overview →](./) — Quick overview of the four modules
-- [Audio Engine →](audio-engine) — Full mpv engine control
+- [Audio Engine →](audio-engine) — Full FFmpeg engine control
 - [Playback State & Persistence →](playback-state) — Playback events & queue persistence
 - [System Features Integration →](system-features) — Shortcuts, updates, logging, etc.

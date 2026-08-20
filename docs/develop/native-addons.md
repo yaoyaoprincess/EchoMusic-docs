@@ -13,13 +13,13 @@ EchoMusic 使用 Rust 编写原生扩展，通过 [napi-rs](https://napi.rs/) �
 | **零延迟调用** | 进程内直接函数调用，无 IPC 开销 |
 | **高性能** | Rust 编译为原生机器码，执行效率接近 C/C++ |
 | **内存安全** | Rust 的所有权系统保证内存安全，无 GC 停顿 |
-| **丰富生态** | 通过 FFI 可调用 C 库（如 libmpv） |
+| **丰富生态** | 通过 FFI 可调用 C 库（如 FFmpeg） |
 
 ## 模块概览
 
-### echo-mpv-player — 播放引擎
+### echo-ffmpeg-player — 播放引擎
 
-封装 libmpv 播放器，提供完整音频播放能力。
+封装 FFmpeg + SoundTouch 原生播放引擎，提供完整音频播放能力。
 
 **核心功能**：
 
@@ -29,8 +29,11 @@ EchoMusic 使用 Rust 编写原生扩展，通过 [napi-rs](https://napi.rs/) �
 | 音量控制 | 音量调节、静音 |
 | 倍速播放 | 0.5x - 2.0x 倍速 |
 | 淡入淡出 | 平滑的切歌过渡 |
-| EQ 均衡器 | 10 段图形化 EQ |
+| EQ 均衡器 | 10 段参数化 EQ（60Hz-16kHz） |
 | 音量均衡 | 基于 LUFS 的响度标准化 |
+| 空间音效 | FFT-based 卷积混响（可导入自定义 IR） |
+| 设备管理 | 音频设备切换、独占输出 |
+| 频谱分析 | 引擎内置实时频谱 |
 | 事件回调 | 播放进度、状态变化等回调 |
 
 **依赖**：
@@ -39,15 +42,15 @@ EchoMusic 使用 Rust 编写原生扩展，通过 [napi-rs](https://napi.rs/) �
 [dependencies]
 napi = "2"
 napi-derive = "2"
-# libmpv 通过 FFI 绑定调用
+# FFmpeg 通过 vendored ffmpeg-audio + soundtouch-rs 集成
 ```
 
 **调用方式**：
 
 ```typescript
-import { MpvPlayer } from 'echo-mpv-player'
+import { FfmpegPlayer } from 'echo-ffmpeg-player'
 
-const player = new MpvPlayer()
+const player = new FfmpegPlayer()
 player.load('https://example.com/song.mp3')
 player.play()
 player.setVolume(80)
@@ -86,7 +89,7 @@ controls.on('next', () => { /* 下一首 */ })
 controls.on('previous', () => { /* 上一首 */ })
 ```
 
-### echo-storage — 本地存储
+### echo-sqlite-store — 本地存储
 
 基于 SQLite 的轻量级本地持久化存储。
 
@@ -103,7 +106,7 @@ controls.on('previous', () => { /* 上一首 */ })
 **调用方式**：
 
 ```typescript
-import { Storage } from 'echo-storage'
+import { Storage } from 'echo-sqlite-store'
 
 const db = new Storage()
 await db.open('echo-music.db')
@@ -162,5 +165,6 @@ cargo build --release
 ## 参考资源
 
 - [napi-rs 官方文档](https://napi.rs/)
-- [mpv 官方文档](https://mpv.io/manual/stable/)
+- [FFmpeg 官方文档](https://ffmpeg.org/documentation.html)
+- [SoundTouch 音频处理库](https://www.surina.net/soundtouch/)
 - [MPRIS 规范](https://specifications.freedesktop.org/mpris-spec/latest/)

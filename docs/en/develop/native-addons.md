@@ -13,13 +13,13 @@ EchoMusic uses Rust to write native extensions, compiled into Node.js-callable n
 | **Zero-latency calls** | Direct in-process function calls, no IPC overhead |
 | **High performance** | Rust compiles to native machine code, performance near C/C++ |
 | **Memory safety** | Rust's ownership system guarantees memory safety, no GC pauses |
-| **Rich ecosystem** | FFI enables calling C libraries (e.g., libmpv) |
+| **Rich ecosystem** | FFI enables calling C libraries (e.g., FFmpeg) |
 
 ## Module Overview
 
-### echo-mpv-player — Playback Engine
+### echo-ffmpeg-player — Playback Engine
 
-Wraps the libmpv player, providing complete audio playback capabilities.
+Wraps the FFmpeg + SoundTouch native playback engine, providing complete audio playback capabilities.
 
 **Core Features**:
 
@@ -29,8 +29,11 @@ Wraps the libmpv player, providing complete audio playback capabilities.
 | Volume control | Volume adjustment, mute |
 | Speed control | 0.5x - 2.0x playback speed |
 | Crossfade | Smooth track transitions |
-| EQ equalizer | 10-band graphic EQ |
+| EQ equalizer | 10-band parametric EQ (60Hz-16kHz) |
 | Volume normalization | LUFS-based loudness normalization |
+| Spatial audio | FFT-based convolution reverb (custom IR import supported) |
+| Device management | Audio device switching, exclusive output |
+| Spectrum analysis | Built-in real-time spectrum |
 | Event callbacks | Playback progress, status change callbacks |
 
 **Dependencies**:
@@ -39,15 +42,15 @@ Wraps the libmpv player, providing complete audio playback capabilities.
 [dependencies]
 napi = "2"
 napi-derive = "2"
-# libmpv called via FFI bindings
+# FFmpeg integrated via vendored ffmpeg-audio + soundtouch-rs
 ```
 
 **Usage**:
 
 ```typescript
-import { MpvPlayer } from 'echo-mpv-player'
+import { FfmpegPlayer } from 'echo-ffmpeg-player'
 
-const player = new MpvPlayer()
+const player = new FfmpegPlayer()
 player.load('https://example.com/song.mp3')
 player.play()
 player.setVolume(80)
@@ -86,7 +89,7 @@ controls.on('next', () => { /* next */ })
 controls.on('previous', () => { /* previous */ })
 ```
 
-### echo-storage — Local Storage
+### echo-sqlite-store — Local Storage
 
 Lightweight local persistent storage based on SQLite.
 
@@ -103,7 +106,7 @@ Lightweight local persistent storage based on SQLite.
 **Usage**:
 
 ```typescript
-import { Storage } from 'echo-storage'
+import { Storage } from 'echo-sqlite-store'
 
 const db = new Storage()
 await db.open('echo-music.db')
@@ -162,5 +165,6 @@ cargo build --release
 ## References
 
 - [napi-rs Official Documentation](https://napi.rs/)
-- [mpv Official Documentation](https://mpv.io/manual/stable/)
+- [FFmpeg Official Documentation](https://ffmpeg.org/documentation.html)
+- [SoundTouch Audio Processing Library](https://www.surina.net/soundtouch/)
 - [MPRIS Specification](https://specifications.freedesktop.org/mpris-spec/latest/)

@@ -7,7 +7,7 @@ outline: [2, 4]
 
 > 需要 capability：`audioSpectrum: true`
 
-`ctx.audio.spectrum` 提供对 EchoMusic 实时音频频谱数据的访问。底层由 `echo-spectrum-capture` native addon 驱动，从系统音频输出捕获 FFT 数据。
+`ctx.audio.spectrum` 提供对 EchoMusic 实时音频频谱数据的访问。底层由 `echo-ffmpeg-player` 播放引擎内置的频谱分析驱动，从播放管线直接获取 FFT 数据。
 
 ## API 概览
 
