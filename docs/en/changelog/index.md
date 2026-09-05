@@ -11,6 +11,12 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
+
+
+> **🔔 New versions detected: 2.3.1-beta.24**
+> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.
+>
+
 ## [2.3.1-beta.15] - 2026-08-17
 
 ### Added
