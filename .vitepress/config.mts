@@ -49,7 +49,6 @@ export default defineConfig({
               { text: '插件开发', link: '/develop/plugin-dev/' },
             ]
           },
-          { text: '社区', link: '/community/' },
           { text: '更新日志', link: '/changelog/' },
           {
             text: 'GitHub',
@@ -104,7 +103,7 @@ export default defineConfig({
           ],
           '/develop/': [
             {
-              text: '🛠️ 开发文档',
+              text: '🛠️ 主程序开发',
               collapsed: false,
               items: [
                 { text: '📋 开发概览', link: '/develop/' },
@@ -124,7 +123,7 @@ export default defineConfig({
                     { text: '原生模块', link: '/develop/native-addons' },
                     { text: '编译构建', link: '/develop/build' },
                     { text: '贡献指南', link: '/develop/contributing' },
-                    { text: '酷狗 API 参考', link: '/develop/api' },
+                    { text: '酷狗 API 参考', link: '/develop/kugou-api' },
                   ]
                 },
                 {
@@ -138,22 +137,22 @@ export default defineConfig({
                     { text: '系统功能集成', link: '/develop/internal-api/system-features' },
                   ]
                 },
-                {
-                  text: '🔌 插件开发',
-                  collapsed: false,
-                  items: [
-                    { text: '概览', link: '/develop/plugin-dev/' },
-                    { text: '快速开始', link: '/develop/plugin-dev/getting-started' },
-                    { text: 'Manifest 配置', link: '/develop/plugin-dev/manifest' },
-                    { text: 'API 总览', link: '/develop/plugin-dev/context-api' },
-                    { text: 'UI 扩展', link: '/develop/plugin-dev/ui-extension' },
-                    { text: '播放器与音频引擎', link: '/develop/plugin-dev/player-audio' },
-                    { text: '音频频谱', link: '/develop/plugin-dev/audio-spectrum' },
-                    { text: '文件存储与数据', link: '/develop/plugin-dev/filesystem-storage' },
-                    { text: '窗口与系统', link: '/develop/plugin-dev/windows-system' },
-                    { text: '发布与分发', link: '/develop/plugin-dev/publishing' },
-                  ]
-                },
+              ]
+            },
+            {
+              text: '🔌 插件开发',
+              collapsed: false,
+              items: [
+                { text: '概览', link: '/develop/plugin-dev/' },
+                { text: '快速开始', link: '/develop/plugin-dev/getting-started' },
+                { text: 'Manifest 配置', link: '/develop/plugin-dev/manifest' },
+                { text: 'API 总览', link: '/develop/plugin-dev/context-api' },
+                { text: 'UI 扩展', link: '/develop/plugin-dev/ui-extension' },
+                { text: '播放器与音频引擎', link: '/develop/plugin-dev/player-audio' },
+                { text: '音频频谱', link: '/develop/plugin-dev/audio-spectrum' },
+                { text: '文件存储与数据', link: '/develop/plugin-dev/filesystem-storage' },
+                { text: '窗口与系统', link: '/develop/plugin-dev/windows-system' },
+                { text: '发布与分发', link: '/develop/plugin-dev/publishing' },
               ]
             },
           ],
@@ -169,24 +168,6 @@ export default defineConfig({
                 { text: '🔧 功能使用', link: '/faq/features' },
                 { text: '🔄 更新与反馈', link: '/faq/updates' },
                 { text: '📱 平台限制', link: '/faq/platform' },
-              ]
-            },
-          ],
-          '/features/': [
-            {
-              text: '✨ 功能特性',
-              collapsed: false,
-              items: [
-                { text: '功能一览', link: '/features/' },
-              ]
-            },
-          ],
-          '/community/': [
-            {
-              text: '🌐 社区',
-              collapsed: false,
-              items: [
-                { text: '社区首页', link: '/community/' },
               ]
             },
           ],
@@ -241,7 +222,6 @@ export default defineConfig({
               { text: 'Plugin Dev', link: '/en/develop/plugin-dev/' },
             ]
           },
-          { text: 'Community', link: '/en/community/' },
           { text: 'Changelog', link: '/en/changelog/' },
           {
             text: 'GitHub',
@@ -296,7 +276,7 @@ export default defineConfig({
           ],
           '/en/develop/': [
             {
-              text: '🛠️ Development',
+              text: '🛠️ Core Development',
               collapsed: false,
               items: [
                 { text: '📋 Overview', link: '/en/develop/' },
@@ -316,7 +296,7 @@ export default defineConfig({
                     { text: 'Native Addons', link: '/en/develop/native-addons' },
                     { text: 'Build', link: '/en/develop/build' },
                     { text: 'Contributing', link: '/en/develop/contributing' },
-                    { text: 'Kugou API Reference', link: '/en/develop/api' },
+                    { text: 'Kugou API Reference', link: '/en/develop/kugou-api' },
                   ]
                 },
                 {
@@ -330,22 +310,22 @@ export default defineConfig({
                     { text: 'System Features', link: '/en/develop/internal-api/system-features' },
                   ]
                 },
-                {
-                  text: '🔌 Plugin Dev',
-                  collapsed: false,
-                  items: [
-                    { text: 'Overview', link: '/en/develop/plugin-dev/' },
-                    { text: 'Getting Started', link: '/en/develop/plugin-dev/getting-started' },
-                    { text: 'Manifest', link: '/en/develop/plugin-dev/manifest' },
-                    { text: 'API Reference', link: '/en/develop/plugin-dev/context-api' },
-                    { text: 'UI Extension', link: '/en/develop/plugin-dev/ui-extension' },
-                    { text: 'Player & Audio', link: '/en/develop/plugin-dev/player-audio' },
-                    { text: 'Audio Spectrum', link: '/en/develop/plugin-dev/audio-spectrum' },
-                    { text: 'Filesystem & Storage', link: '/en/develop/plugin-dev/filesystem-storage' },
-                    { text: 'Windows & System', link: '/en/develop/plugin-dev/windows-system' },
-                    { text: 'Publishing', link: '/en/develop/plugin-dev/publishing' },
-                  ]
-                },
+              ]
+            },
+            {
+              text: '🔌 Plugin Dev',
+              collapsed: false,
+              items: [
+                { text: 'Overview', link: '/en/develop/plugin-dev/' },
+                { text: 'Getting Started', link: '/en/develop/plugin-dev/getting-started' },
+                { text: 'Manifest', link: '/en/develop/plugin-dev/manifest' },
+                { text: 'API Reference', link: '/en/develop/plugin-dev/context-api' },
+                { text: 'UI Extension', link: '/en/develop/plugin-dev/ui-extension' },
+                { text: 'Player & Audio', link: '/en/develop/plugin-dev/player-audio' },
+                { text: 'Audio Spectrum', link: '/en/develop/plugin-dev/audio-spectrum' },
+                { text: 'Filesystem & Storage', link: '/en/develop/plugin-dev/filesystem-storage' },
+                { text: 'Windows & System', link: '/en/develop/plugin-dev/windows-system' },
+                { text: 'Publishing', link: '/en/develop/plugin-dev/publishing' },
               ]
             },
           ],
@@ -361,24 +341,6 @@ export default defineConfig({
                 { text: '🔧 Feature Usage', link: '/en/faq/features' },
                 { text: '🔄 Updates & Feedback', link: '/en/faq/updates' },
                 { text: '📱 Platform Limitations', link: '/en/faq/platform' },
-              ]
-            },
-          ],
-          '/en/features/': [
-            {
-              text: '✨ Features',
-              collapsed: false,
-              items: [
-                { text: 'Overview', link: '/en/features/' },
-              ]
-            },
-          ],
-          '/en/community/': [
-            {
-              text: '🌐 Community',
-              collapsed: false,
-              items: [
-                { text: 'Community', link: '/en/community/' },
               ]
             },
           ],

@@ -57,6 +57,16 @@ EchoMusic uses Electron's classic dual-process architecture with Rust NAPI nativ
 | `echo-media-controls` | System media control integration (macOS / Windows / Linux native APIs) | Rust + OS API |
 | `echo-sqlite-store` | SQLite local persistence for settings, playback queue, and state snapshots | Rust + rusqlite |
 
+## Technical Highlights
+
+| Feature | Description |
+|------|------|
+| Audio Engine | FFmpeg + SoundTouch, embedded in-process via Rust NAPI, zero-latency direct function calls |
+| Audio Quality | Hi-Res, SQ(flac), HQ(320kbps), Standard(128kbps) |
+| Sound Effects | Piano, Vocals, Accompaniment, Bone Flute, Ukulele, Suona, DJ, Viper Master, Viper Surround, Viper Ultra, Spatial Audio(IR) |
+| Playback Formats | Standard audio + LRC/YRC word-by-word lyrics parsing |
+| Platform Output | macOS (dmg/zip), Windows (exe/portable), Linux (deb/rpm/AppImage/tar.gz) |
+
 ## Document Index
 
 - [Architecture](/en/develop/architecture) — In-depth architecture design
@@ -65,4 +75,4 @@ EchoMusic uses Electron's classic dual-process architecture with Rust NAPI nativ
 - [Native Addons](/en/develop/native-addons) — Rust NAPI native extension development
 - [Build & Package](/en/develop/build) — Multi-platform build packaging
 - [Contributing](/en/develop/contributing) — How to contribute
-- [Kugou API Reference](/en/develop/api) — Kugou Music public API documentation
+- [Kugou API Reference](/en/develop/kugou-api) — Kugou Music public API documentation

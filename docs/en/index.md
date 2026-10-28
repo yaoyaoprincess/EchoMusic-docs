@@ -13,32 +13,45 @@ hero:
       text: Get Started
       link: /en/guide/getting-started
     - theme: alt
-      text: Features
-      link: /en/features/
+      text: User Guide
+      link: /en/guide/
     - theme: alt
       text: Development
       link: /en/develop/
-      
+
 features:
-  - title: Data Security
-    details: The foundation of everything. Direct connection to official servers — no third parties involved, ensuring user privacy and data are never leaked.
-  - title: Advanced Playback
-    details: The most essential function of a player. Queue management, mode switching, volume control, progress scrubbing — everything that defines the core listening experience.
-  - title: Multi-Dimensional Search
-    details: The key entry point for finding music. Comprehensive search across songs, artists, albums, and playlists to quickly locate your target content.
-  - title: Music Recommendations
-    details: The value of passive music discovery. Expands your music library through recommendation mechanisms, increasing engagement.
-  - title: Lyrics System
-    details: Significantly enhances immersion and sing-along experience. LRC parsing, scrolling sync, full-screen/desktop lyrics are standout features.
-  - title: Cross-Platform & System Integration
-    details: Coverage and convenience. Full support for the three major desktop systems, combined with tray features, global shortcuts, and more for enhanced usability and native feel.
+  - title: 🔒 Data Security
+    details: Direct connection to official servers — no third parties involved, your login info, listening history, and favorites stay in your own hands
+  - title: 🎵 Advanced Playback
+    details: Queue management, mode switching, variable speed, crossfade — a professional-grade listening experience
+  - title: 🔍 Multi-Dimensional Search
+    details: Comprehensive search across songs, artists, albums, and playlists to quickly locate your target content
+  - title: 📝 Lyrics System
+    details: LRC/YRC word-by-word lyrics, precise scrolling sync, full-screen & desktop lyrics overlay
+  - title: 🎚️ Audio Enhancement
+    details: 10-band EQ, loudness normalization, Viper Master/Surround/Ultra effects, Hi-Res/SQ/HQ/Standard quality tiers
+  - title: 🎧 Personal FM
+    details: Smart personalized radio that continuously optimizes recommendations based on your taste
+  - title: 🎤 Music Recognition
+    details: Microphone and system-audio capture to quickly identify songs playing around you
+  - title: 🧩 Plugin System
+    details: VS Code-like high-freedom extensions, 30 community plugins covering themes/lyrics/audio/efficiency
+  - title: 🖥️ Cross-Platform
+    details: Full support for macOS, Windows, and Linux, with tray features and global shortcuts
 ---
 
-## Get More Support
+## 🧭 Quick Entry
 
-- Visit the [GitHub repository](https://github.com/hoowhoami/EchoMusic) to report issues or contribute code
-- Join the user community for help
-  - QQ:[1036693403](https://qm.qq.com/q/8Dq6fkSN4A)
+- [📖 User Guide](/en/guide/) — From download to advanced features, one-stop for regular users
+- [🔌 Plugin Dev](/en/develop/plugin-dev/) — Develop plugins for EchoMusic and extend the possibilities
+- [🛠️ Development](/en/develop/) — Understand the architecture, contribute, and build
+- [❓ FAQ](/en/faq/) — Check here first if you run into problems
+
+## 🌐 Community & Support
+
+- **QQ Group**: [1036693403](https://qm.qq.com/q/8Dq6fkSN4A) — Primary channel
+- **Telegram**: [Join Group](https://t.me/+H9vpkAJrDlViZjU1) — International users
+- **GitHub**: [EchoMusic](https://github.com/hoowhoami/EchoMusic) · [Plugins](https://github.com/hoowhoami/EchoMusicPlugins) · [Docs](https://github.com/yaoyaoprincess/EchoMusic-docs)
 
 <style scoped>
 #star-canvas {

@@ -43,4 +43,4 @@ EchoMusic 内部 API 覆盖音频引擎、窗口管理、系统集成、播放�
 - [插件 API 总览 →](../plugin-dev/context-api) — 插件可用的正式 API
 - [项目架构 →](../architecture) — EchoMusic 整体架构
 - [项目结构 →](../project-structure) — 完整目录结构
-- [KuGou API 参考 →](../api) — 酷狗音乐公开 API
+- [KuGou API 参考 →](../kugou-api) — 酷狗音乐公开 API

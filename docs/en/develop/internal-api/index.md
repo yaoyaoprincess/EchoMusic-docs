@@ -43,4 +43,4 @@ Global shortcut registration and listening, system suspend/resume response, auto
 - [Plugin API Overview →](../plugin-dev/context-api) — Official APIs available to plugins
 - [Project Architecture →](../architecture) — EchoMusic overall architecture
 - [Project Structure →](../project-structure) — Complete directory structure
-- [KuGou API Reference →](../api) — KuGou Music public API
+- [Kugou API Reference →](../kugou-api) — Kugou Music public API

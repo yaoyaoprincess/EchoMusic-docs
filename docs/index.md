@@ -13,32 +13,45 @@ hero:
       text: 快速开始
       link: /guide/getting-started
     - theme: alt
-      text: 功能介绍
-      link: /features/
+      text: 使用指南
+      link: /guide/
     - theme: alt
       text: 开发文档
       link: /develop/
-      
+
 features:
-  - title: 数据安全
-    details: 基础保障，所有功能的前提。官方直连、不经第三方，确保用户隐私与数据不被泄露
-  - title: 进阶播放能力
-    details: 播放器最本质的功能。队列管理、模式切换、音量调节、进度拖动等决定了核心听歌体验
-  - title: 多维探索与搜索
-    details: 用户主动找歌的关键入口。支持歌曲、歌手、专辑、歌单全方位搜索，快速定位目标内容
-  - title: 音乐推荐
-    details: 被动发现音乐的价值。基于推荐机制拓展用户曲库，提升使用黏性
-  - title: 歌词系统
-    details: 显著增强沉浸感与跟唱体验。LRC解析、滚动同步、全屏/桌面歌词是特色亮点，但非基础必须
-  - title: 跨平台与系统集成
-    details: 覆盖范围与便捷性补充。完整适配三大桌面系统，配合托盘、全局快捷键等，提升易用性与原生感
+  - title: 🔒 数据安全
+    details: 官方服务器直连，所有数据不经过第三方服务器，你的登录信息、听歌记录、收藏列表都掌握在自己手中
+  - title: 🎵 进阶播放
+    details: 队列管理、模式切换、倍速播放、淡入淡出切歌，专业级播放体验
+  - title: 🔍 多维搜索
+    details: 歌曲、歌手、专辑、歌单全方位搜索，快速定位目标内容
+  - title: 📝 歌词系统
+    details: LRC/YRC 逐字歌词、精准滚动同步，全屏歌词与桌面歌词悬浮窗
+  - title: 🎚️ 音频增强
+    details: 10 段 EQ 均衡器、音量均衡、蝰蛇母带/全景声/超清等音效，Hi-Res/SQ/HQ/标准多档音质
+  - title: 🎧 私人 FM
+    details: 智能推荐个性化电台，根据你的听歌偏好持续优化推荐
+  - title: 🎤 听歌识曲
+    details: 支持麦克风和系统音频捕获，快速识别正在播放的歌曲
+  - title: 🧩 插件系统
+    details: 类 VS Code 的高自由度扩展，30 款社区插件覆盖美化/歌词/音频/效率
+  - title: 🖥️ 跨平台
+    details: 完整适配 macOS、Windows 与 Linux 三大桌面系统，配合托盘与全局快捷键
 ---
 
-## 获取更多支持
+## 🧭 快速入口
 
-- 访问[GitHub仓库](https://github.com/hoowhoami/EchoMusic)提交问题或贡献代码
-- 加入用户交流群获取帮助
-  - QQ：[1036693403](https://qm.qq.com/q/8Dq6fkSN4A)
+- [📖 使用指南](/guide/) — 从下载安装到高级功能，普通用户一站式上手
+- [🔌 插件开发](/develop/plugin-dev/) — 为 EchoMusic 开发插件，扩展无限可能
+- [🛠️ 开发文档](/develop/) — 了解架构、参与贡献、编译构建
+- [❓ 常见问题](/faq/) — 遇到问题先来这里看看
+
+## 🌐 社区与支持
+
+- **QQ 群**：[1036693403](https://qm.qq.com/q/8Dq6fkSN4A) — 主要交流渠道
+- **Telegram**：[加入群组](https://t.me/+H9vpkAJrDlViZjU1) — 国际用户交流
+- **GitHub**：[EchoMusic](https://github.com/hoowhoami/EchoMusic) · [插件仓库](https://github.com/hoowhoami/EchoMusicPlugins) · [文档仓库](https://github.com/yaoyaoprincess/EchoMusic-docs)
 
 <style scoped>
 #star-canvas {

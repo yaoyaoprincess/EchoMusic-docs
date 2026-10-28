@@ -57,6 +57,16 @@ EchoMusic 采用 Electron 经典的双进程架构，通过 Rust NAPI 原生扩�
 | `echo-media-controls` | 系统媒体控制集成（macOS / Windows / Linux 原生 API） | Rust + OS API |
 | `echo-sqlite-store` | SQLite 本地持久化存储，负责设置、播放队列与状态快照 | Rust + rusqlite |
 
+## 技术亮点
+
+| 特性 | 说明 |
+|------|------|
+| 音频引擎 | FFmpeg + SoundTouch，Rust NAPI 进程内嵌入，零延迟直接函数调用 |
+| 音质支持 | Hi-Res、SQ(flac)、HQ(320kbps)、标准(128kbps) |
+| 音效模式 | 钢琴、人声、伴奏、骨笛、尤克里里、唢呐、DJ、蝰蛇母带、蝰蛇全景声、蝰蛇超清、空间音效(IR) |
+| 播放格式 | 标准音频 + LRC/YRC 逐字歌词解析 |
+| 平台输出 | macOS (dmg/zip)、Windows (exe/便携版)、Linux (deb/rpm/AppImage/tar.gz) |
+
 ## 文档索引
 
 - [项目架构](/develop/architecture) — 深入了解整体架构设计
@@ -65,5 +75,5 @@ EchoMusic 采用 Electron 经典的双进程架构，通过 Rust NAPI 原生扩�
 - [原生模块](/develop/native-addons) — Rust NAPI 原生扩展开发
 - [编译构建](/develop/build) — 多平台打包构建
 - [贡献指南](/develop/contributing) — 参与项目贡献
-- [酷狗 API 参考](/develop/api) — 酷狗音乐公开 API 说明
+- [酷狗 API 参考](/develop/kugou-api) — 酷狗音乐公开 API 说明
 - [内部 API 参考](/develop/internal-api/) — 主应用内部 API（FFmpeg 引擎、桌面歌词等）
