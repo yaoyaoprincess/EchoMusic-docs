@@ -4,34 +4,50 @@ title: Playback & Quality
 
 # 🎵 Playback & Quality
 
-### Can't Play Songs
+### Playback fails with "no available audio source" {#no-audio-source}
 
-1. Check your network connection
-2. Verify you're logged in correctly
-3. Try switching audio quality (some qualities may require VIP)
+1. Confirm you have a VIP membership — see [Account & Membership](/en/faq/account); without one you can still preview in SD quality
+2. Enable **Smart Compatibility Mode** in **Settings → Playback**
+3. Disable your proxy, or choose **Direct connection** in **Settings → Network** and apply
+4. Update to the latest version (you can enable **Check for pre-release versions** to get fixes earlier)
+5. If nothing helps, export the logs in settings and send them to the group owner
+
+::: warning
+Songs that are unlicensed or have been removed from the library cannot be fixed by any of the steps above.
+:::
+
+### Songs won't play {#cannot-play}
+
+Check in order:
+
+1. Your network connection
+2. Your login state
+3. Try switching the audio quality
 4. Restart the app
 
-### Playback Failed: "Temporarily Unable to Get Available Audio Source"
+### How do I listen to Viper Mastering / Viper Ultra / Viper Spatial audio? {#viper-audio}
 
-1. Check if you have a VIP membership
-2. If not, you can manually sign in on the **Kugou Concept Edition** mobile app to claim VIP
-3. Alternatively, search GitHub for automated sign-in tools
+Viper quality tiers require a **Kugou SVIP** membership (this is different from the Concept Edition VIP). If you already have SVIP, enable **Viper quality** in **Settings → Playback**.
 
-### Stuttering or Intermittent Playback
+### A song skips to the next one before it finishes {#auto-skip}
 
-1. Lower the audio quality (Settings → Quality → Standard)
-2. Check network stability and speed
-3. Close other apps using network bandwidth
+Adjust the **Song Transition** settings in **Settings → Playback**. See the [Playback guide](/en/guide/playback) for details.
 
-### Can't Switch Audio Quality
+### I can't switch the audio quality {#quality-switch}
 
-Some songs may only offer specific quality tiers:
+Some songs only offer specific quality tiers:
 
-- Hi-Res and SQ require a VIP account
+- Hi-Res and SQ require a VIP membership
 - Older songs may only have standard quality
 
-### Lyrics Out of Sync
+### Playback stutters or buffers {#stutter}
+
+1. Lower the audio quality
+2. Check your network stability and speed
+3. Close other programs that consume bandwidth
+
+### Lyrics are out of sync {#lyrics-sync}
 
 1. Try switching the lyrics source (if multiple versions are available)
-2. Adjust the lyrics delay in lyrics settings
-3. Some songs may not have precise word-level lyrics and fall back to LRC
+2. Adjust the lyrics delay in the lyrics settings
+3. Songs without word-by-word lyrics fall back to standard LRC sync

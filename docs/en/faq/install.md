@@ -4,55 +4,65 @@ title: Installation & Startup
 
 # 🚀 Installation & Startup
 
-### macOS: "Cannot Verify Developer"
+### How do I download EchoMusic? {#download}
 
-This is macOS's security mechanism and doesn't affect normal usage. Solutions:
+Download from [GitHub Releases](https://github.com/hoowhoami/EchoMusic/releases) or the QQ group files:
+
+| System | Package |
+|--------|---------|
+| Windows | `Windows-Setup-x64` |
+| macOS (Intel) | `mac-x64` |
+| macOS (Apple Silicon) | `macOS-arm64` |
+
+> The group files only host the Windows package. For macOS and Linux, download from GitHub Releases.
+
+### Windows says "Windows protected your PC" {#windows-smartscreen}
+
+This is SmartScreen blocking an app from an unverified publisher. Click **More info** → **Run anyway**.
+
+### No main program after installing on Windows, only an uninstaller {#wrong-arch}
+
+You installed the wrong-architecture installer. Check your system architecture and re-download the matching package; if you are unsure, use the **x64 installer**.
+
+### macOS says the developer cannot be verified {#macos-gatekeeper}
+
+This is Gatekeeper protecting you from apps by unidentified developers. Either fix it from the Terminal:
 
 ```bash
-# Method 1: Run in Terminal
 xattr -cr /Applications/EchoMusic.app
-
-# Method 2: System Settings
-# System Settings → Privacy & Security → Click "Open Anyway"
 ```
 
-### Windows: "Windows Protected Your PC"
+Or open **System Settings → Privacy & Security**, find the blocked EchoMusic prompt and click **Open Anyway**.
 
-Click "More info" → "Run anyway".
+### Linux AppImage won't run {#appimage}
 
-### Windows: Only Uninstaller Present After Installation, No Main Program
-
-You installed an architecture-mismatched package. If you don't know your PC's architecture, use the **x64 installer** (available in the group files).
-
-### Linux: AppImage Won't Run
-
-Ensure it has executable permissions:
+Grant it executable permission first:
 
 ```bash
 chmod +x EchoMusic-*.AppImage
 ./EchoMusic-*.AppImage
 ```
 
-### App Crashes on Launch
+### The app crashes right after launch {#crash-on-start}
 
-1. Check if your system meets the minimum requirements
-2. Try running with administrator/root privileges
-3. Check if security software is blocking it
+1. Check that your system meets the minimum requirements
+2. Try running with administrator (Windows) or root (Linux/macOS) privileges
+3. Check whether security software is blocking the app
 
-### "Playback Engine Initialization Failed"
+### "Playback engine initialization failed" or "Device registration failed" on startup {#engine-init-fail}
 
-Please update to the latest version. If you're already on the latest version, contact the developer.
+1. Disable your proxy — in **Settings → Network** choose **Direct connection** and apply
+2. Whitelist EchoMusic in your security software (Windows Defender, App Control, etc.)
+3. Switch to a different network (e.g. a mobile hotspot) and retry
+4. If the engine fails to initialize, update to the latest version first
+5. If none of this helps, click **Enter Anyway** on the dialog to get into the app, export the logs in settings and send them for feedback
 
-### "Device Registration Failed"
+### How do I start via command line to capture logs? {#console-log}
 
-1. Check your network environment
-2. Disable any proxy/accelerator and retry
-3. If it still doesn't work, try switching to a different network (e.g., mobile hotspot)
+Run the following command in the app's installation directory:
 
-### App Won't Start or Fails to Launch
-
-Run the following command in the program's root directory, then take a screenshot of the terminal output and share it in the community group:
-
-```bash
+```powershell
 .\EchoMusic.exe --console
 ```
+
+The terminal prints the runtime logs — take a screenshot and share it when reporting a problem.

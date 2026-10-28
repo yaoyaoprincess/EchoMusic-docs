@@ -4,25 +4,37 @@ title: Feature Usage
 
 # 🔧 Feature Usage
 
-### Music Recognition Not Working
+### Can I download music? {#download-music}
 
-- **Microphone mode**: Ensure microphone permission is granted and the environment isn't too noisy
-- **System audio mode**: Ensure audio is actually playing on your system
+**No.** EchoMusic explicitly will never support downloading music files. Please look for other channels yourself.
 
-### Personal FM Recommendations Inaccurate
+### How do I add local music? {#local-music}
 
-FM recommendations are based on your listening history and feedback:
+Install the **Echo Local Simple** or **Local Music** plugin from the **Online Plugins** tab in the plugin manager. See the [Plugins guide](/en/guide/plugins/) for details.
 
-1. Use the "Like" and "Dislike" buttons more often
+### How do I listen to songs / versions / qualities not in the Kugou library? {#cloud-drive}
+
+Pick the approach that fits your situation:
+
+1. **Music cloud drive** (requires multi-device sync on your account): upload your own audio files to the cloud drive — if automatic matching is inaccurate, use matched upload. Pair it with the **Cloud Priority** plugin so playback automatically prefers your cloud files.
+2. **Missing metadata**: embed tags with a tool like MusicTag before uploading; newer versions automatically read file metadata.
+3. **No multi-device sync**: use the local music plugin instead.
+
+### Music recognition doesn't work {#music-recognition}
+
+- **Microphone mode**: make sure the microphone permission is granted
+- **System audio mode**: make sure audio is actually playing on your system
+
+### Personal FM recommendations are off {#personal-fm}
+
+Recommendations are based on your listening history and feedback:
+
+1. Use the **Like** / **Dislike** buttons more often
 2. It takes some listening accumulation for recommendations to become accurate
-3. Listen to diverse music to enrich recommendation dimensions
+3. Listen to diverse music to enrich the recommendation dimensions
 
-### Favorited Songs Disappeared
+### My favorited songs are gone {#favorites-lost}
 
-1. Confirm you're logged into the correct account
-2. Favorites data is stored locally — switching devices won't sync
-3. If you cleared app data, favorites are lost
-
-### Can I Download Music?
-
-**No.** EchoMusic does not provide music file download functionality, nor does it cache audio files locally.
+1. Confirm you are logged into the correct account
+2. Favorites are stored locally — they do not sync across devices
+3. If you cleared the app data, your favorites are lost

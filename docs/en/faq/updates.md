@@ -4,20 +4,31 @@ title: Updates & Feedback
 
 # 🔄 Updates & Feedback
 
-### How to Check for Updates
+### How do I check for updates? {#check-update}
 
-EchoMusic automatically checks for updates on launch. You can also check manually: **Settings → About → Check for Updates**.
+EchoMusic checks for updates automatically on launch. You can also check manually in **Settings → About → Check for updates**. To try new features earlier, enable **Check for pre-release versions**.
 
-### Slow Download Speed / Can't Get Latest Version / Plugin System Won't Load Latest Plugins
+### Auto-update fails or downloads slowly {#update-slow}
 
-Configure a GitHub acceleration proxy in **Settings → Experimental Features → GitHub Acceleration Settings** (see group announcement for details).
+::: warning
+The old path **Settings → Experimental → GitHub acceleration** is deprecated.
+:::
 
-### How to Report Issues
+In newer versions, configure it in **Settings → Network → GitHub acceleration address**: fill in a public-service acceleration site address from the group announcement, then check for updates again.
 
-- [GitHub Issues](https://github.com/hoowhoami/EchoMusic/issues) — Report bugs or suggest features
-- QQ Group: 1036693403
+### I see net::ERR_CONNECTION XXX {#err-connection}
+
+This is a network connectivity issue. Try:
+
+1. Fill in a public-service acceleration site address from the group announcement in **Settings → Network → GitHub acceleration address**
+2. Disable your proxy, or choose **Direct connection** in **Settings → Network** and apply
+
+### How do I report a problem? {#feedback}
+
+- [GitHub Issues](https://github.com/hoowhoami/EchoMusic/issues) — report bugs or suggest features
+- QQ Group: **1036693403**
 - Telegram: [@EchoMusicGroup](https://t.me/+H9vpkAJrDlViZjU1)
 
-### How to Contribute
+### How do I contribute code? {#contributing}
 
-Please read the [Contributing Guide](/en/develop/contributing). Pull Requests are welcome!
+Read the [Contributing Guide](/en/develop/contributing). Pull Requests are welcome!

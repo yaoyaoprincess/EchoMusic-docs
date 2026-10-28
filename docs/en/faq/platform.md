@@ -4,10 +4,10 @@ title: Platform Limitations
 
 # 📱 Platform Limitations
 
-### Mobile Support?
+### Is there a mobile version? {#mobile}
 
-No. EchoMusic is designed exclusively for desktop and will not support Android/iOS or other mobile platforms.
+No. EchoMusic does not support Android or iOS. On mobile, we recommend the official Kugou Concept Edition app (https://download.kugou.com).
 
-### Will There Be Mobile/Car/TV Clients?
+### Will there be mobile / car / TV versions? {#other-platforms}
 
-EchoMusic is designed exclusively for desktop. There are no plans to support other platforms.
+EchoMusic is designed exclusively for desktop. There are no plans for mobile, in-car or TV versions.

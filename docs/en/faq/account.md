@@ -4,24 +4,46 @@ title: Account & Membership
 
 # 👤 Account & Membership
 
-### Is It Free?
+### Do I need to pay? {#free}
 
-**Yes.** EchoMusic is completely free and open source. If you obtained it through a paid channel, you've been scammed.
+**No.** EchoMusic is completely free and open source. If you obtained it through a paid channel, you were scammed.
 
-### Creating/Favoriting Playlists Fails After Login
+### How do I claim Kugou Concept Edition VIP? {#get-vip}
 
-Please check whether your account is a **Kugou Concept Edition account**. If not, register a Kugou Concept Edition account and log in again.
+The official way: open the **Kugou Concept Edition** mobile app and sign in manually every day to claim VIP.
 
-### Does the App Support VIP Claim?
+The community also has third-party auto check-in tools (plugins/scripts). They are unofficial, carry account risks, and can stop working at any time. This site does not host tutorials for them — evaluate them yourself and check the group announcement.
 
-No. You can manually sign in on the Kugou Concept Edition mobile app to claim VIP, or search for related tools.
+> **Disclaimer**: The methods above are collected from community channels and are unrelated to this project. Use them at your own risk.
 
-### Account Security
+### Can I listen without a VIP? {#listen-without-vip}
+
+Yes, newer releases support this:
+
+1. Non-VIP accounts can preview songs in free **SD quality**
+2. As a fallback, enable the **"Try MV audio"** toggle in **Settings → Playback**
+
+Higher quality tiers still require a VIP.
+
+### VIP claim fails or VIP songs won't play {#vip-verify}
+
+Your account needs to be re-verified:
+
+1. On the mobile app, log out and log back in
+2. On the desktop app, log out and clear the app data
+3. On the desktop app, log in again and confirm the login on the mobile app
+
+### Creating playlists or saving favorites fails {#playlist-fail}
+
+1. Log in again by scanning the QR code with the **Kugou Concept Edition** mobile app
+2. Make sure your account is a **Kugou Concept Edition** account — Kugou accounts and Concept Edition accounts are two separate systems
+
+### How do I log out or switch accounts? {#switch-account}
+
+Go to **Settings → Account → Log out**, then log in with another account.
+
+### Is my account safe? {#account-safety}
 
 - EchoMusic connects directly to Kugou's official servers
 - Account data never passes through third parties
-- We recommend using a strong password to protect your Kugou account
-
-### How to Log Out / Switch Accounts
-
-Go to **Settings → Account** and select log out, then log in with another account.
+- We still recommend using a strong password to protect your Kugou account
