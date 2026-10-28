@@ -87,28 +87,22 @@ const owner = 'hoowhoami';
 const repo = 'EchoMusic';
 const releasesUrl = `https://github.com/${owner}/${repo}/releases`;
 
-// ================= 镜像列表（请确保语法正确） =================
+// ================= 镜像列表 =================
+// 镜像为第三方 GHProxy 实例，可能随时失效（2026-10 实测已移除 mirror.ghproxy.com、gh.api.99988866.xyz、gh.bugdey.us.kg 三个失效源）
 const defaultMirrors = [
-  { name: 'GHProxy.net', url: 'https://ghproxy.net/' },
-  { name: 'Mirror GHProxy', url: 'https://mirror.ghproxy.com/' },
-  { name: 'GH.api.99988866.xyz', url: 'https://gh.api.99988866.xyz/' }
+  { name: 'GHProxy.net', url: 'https://ghproxy.net/' }
 ];
-// 如果你有自定义镜像，可以取消注释并修改下面的数组
-// const customMirrorsList = [
-//   { name: 'MyMirror', url: 'https://my-mirror.com/' }
-// ];
-// 合并镜像列表：默认 + 自定义
- const customMirrorsList = [
-   { name: 'MyMirror', url: 'https://my-mirror.com/' },
-   { name: 'GHProxy1', url: 'https://gh.felicity.ac.cn/' },
-   { name: 'GHProxy2', url: 'https://gh.bugdey.us.kg/' },
-   { name: 'GHProxy3', url: 'https://github.dpik.top/' },
-   { name: 'GHProxy4', url: 'https://gh.acmsz.top/' },
-   { name: 'GHProxy5', url: 'https://fastgit.cc/' },
-   { name: 'GHProxy6', url: 'https://github.cnmclash.de5.net/' }
- ];
+// 站点内置的扩展镜像列表，与 defaultMirrors 一起参与测速
+const customMirrorsList = [
+  { name: 'GHProxy1', url: 'https://gh.felicity.ac.cn/' },
+  { name: 'GHProxy2', url: 'https://github.dpik.top/' },
+  { name: 'GHProxy3', url: 'https://gh.acmsz.top/' },
+  { name: 'GHProxy4', url: 'https://fastgit.cc/' },
+  { name: 'GHProxy5', url: 'https://github.cnmclash.de5.net/' }
+];
 
-const allMirrors = [...defaultMirrors, ...props.customMirrors];
+// 合并镜像列表：默认镜像 + 内置扩展镜像 + 外部传入的自定义镜像
+const allMirrors = [...defaultMirrors, ...customMirrorsList, ...props.customMirrors];
 
 // ================= 缓存 Key =================
 const CACHE_KEY = 'vitepress_download_cache';
@@ -243,10 +237,8 @@ async function fetchAllReleases(os, arch, osDisplay, archDisplay) {
 async function selectBestMirror(mirrorList) {
   if (!mirrorList || mirrorList.length === 0) return '';
   
-  // 用于测试的固定小文件（GitHub 上的一个几十 KB 的图标，确保所有镜像都能访问）
-  const testFilePath = 'https://raw.githubusercontent.com/hoowhoami/EchoMusic/main/README.md'; // 替换为你仓库中的一个小文件
-  // 或者使用 GitHub 官方小文件：
-  // const testFilePath = 'https://github.com/favicon.ico';
+  // 用于测速的固定小文件（本仓库 README.md，各镜像代理该地址以测试连通性与速度）
+  const testFilePath = 'https://raw.githubusercontent.com/hoowhoami/EchoMusic/main/README.md';
   
   const timeout = 10000; // 10秒超时
   const results = [];
