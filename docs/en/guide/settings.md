@@ -38,6 +38,14 @@ Customize the application font:
 - Adjust font size
 - Preview takes effect in real time
 
+### Theme Center & Layout Editing
+
+v2.3.2 adds a unified Theme Center and a brand-new sidebar layout; both the sidebar and the player bar support layout editing, so you can adjust the interface structure to your liking.
+
+### Transparent Background & Frosted Glass
+
+v2.3.1 adds a transparent app background and frosted glass effects, with adjustable opacity and base color; the transparent window edges get a fine stroke adapted to light/dark themes.
+
 ## Shortcuts
 
 ### Global Shortcuts
@@ -60,7 +68,9 @@ Global shortcuts work even when the app is in the background:
 | Play / Pause | `Space` |
 | Close Dialog | `Esc` |
 
-Customize shortcuts in **Settings → Shortcuts**.
+Customize shortcuts in **Settings → Shortcuts**; press `Esc` while configuring to clear a shortcut instead of recording it.
+
+Added in v2.3.1: a toggle to disable default browser key behaviors, turning off browser defaults such as Space, arrow keys and page-up/down scrolling and activation.
 
 ## System Tray
 
@@ -77,6 +87,7 @@ EchoMusic supports minimizing to the system tray for background playback:
 | Quit | Fully exit the app |
 
 - Supports **Mini Mode**: shrink the player to a compact mini window via title bar button
+- On macOS (added in v2.3.2), separate toggles can hide the Dock and menu bar icons while the app runs in the background
 
 Adjust tray behavior in **Settings → System**.
 
@@ -88,6 +99,20 @@ Adjust tray behavior in **Settings → System**.
 | Start minimized | Minimize to tray on launch |
 | Auto update | Automatically check and download new versions in the background |
 | Silent update | Auto-install on next launch after download |
+
+## Network Settings
+
+v2.3.1 adds standalone network settings with several proxy configuration modes:
+
+| Mode | Description |
+|------|------|
+| Follow system | Use the system proxy settings |
+| Forced direct connection | Bypass proxies and connect directly |
+| WPAD auto-detection | Detect the proxy via the Web Proxy Auto-Discovery protocol |
+| PAC script | Configure the proxy with a PAC script |
+| Manual proxy | Enter the proxy server and credentials manually |
+
+The global proxy uniformly covers the Kugou API, covers, audio direct links, updates, plugins and other app network requests.
 
 ## Data Management
 
@@ -112,6 +137,10 @@ Clear data in **Settings → Data**:
 - Search history
 - Cache data
 
+### Backup & Restore
+
+v2.3.1 adds backup and restore for app settings, plugins and plugin data, letting you quickly restore your configuration after switching devices or reinstalling.
+
 ## Playback Settings
 
 | Setting | Description |
@@ -119,6 +148,13 @@ Clear data in **Settings → Data**:
 | Crossfade duration | Transition effect duration when switching tracks (0-5 seconds) |
 | Default volume | Volume level on startup |
 | Auto-resume playback | Continue playing from where you left off on startup |
+| MV audio fallback | Falls back to audio playback when the MV video source is unavailable (added in v2.3.2, disabled by default) |
+
+## Account Management
+
+- v2.3.2 adds multi-account switching management, supporting multiple accounts with quick switching
+- The profile center supports viewing and editing your profile and avatar (added in v2.3.1)
+- v2.3.1 adds login device management in the profile center: view the current account's logged-in devices and remove non-local devices
 
 ## About
 

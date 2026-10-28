@@ -53,6 +53,8 @@ Explore complete music albums:
    - Complete track list
    - Release information
 
+Added in v2.3.2-beta.4: animated album covers, with lyrics cover mode and muted looping display on album details, falling back to static covers when unavailable.
+
 ## Playlists
 
 A vast collection of playlists for every occasion:
@@ -75,4 +77,5 @@ EchoMusic continuously optimizes recommendations based on your listening history
 
 - The more you listen, the more accurate the recommendations
 - Recommendations appear in "Recommended Playlists" on the home page
+- View and configure your "Listening Preferences" in the profile center to better match your taste (added in v2.3.2-beta.4)
 - Personal FM provides a more immersive recommendation experience — see [Personal FM](/en/guide/personal-fm)

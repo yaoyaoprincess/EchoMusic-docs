@@ -44,6 +44,8 @@ The play queue manages your current and upcoming song list.
 | Clear queue | Click the **Clear** button at the bottom of the queue |
 | Reorder | Drag songs in the queue to rearrange |
 
+Since v2.3.2, "Add to" supports multi-select playlists and lists, so you can add a song to multiple playlists at once.
+
 ::: tip
 The play queue is saved locally and will be restored when you restart the app.
 :::
@@ -72,6 +74,8 @@ Use cases:
 - **1.25x - 1.5x**: Quick browsing of songs
 - **2.0x**: Fast skimming
 
+Since v2.3.1, the native playback engine uses a spectral phase-vocoder time-stretch algorithm, supporting a 0.1x-5x speed range with automatic optimal engine selection for better quality at extreme speeds.
+
 ## Crossfade
 
 EchoMusic supports smooth crossfade transitions:
@@ -79,6 +83,26 @@ EchoMusic supports smooth crossfade transitions:
 - When switching tracks, the current song fades out while the next fades in
 - Creates a natural transition, reducing jarring cuts
 - Adjust crossfade duration in [Audio Settings](/en/guide/audio)
+
+## Song Transition
+
+Added in v2.3.2-beta.4: song transitions smoothly bridge track changes to reduce abruptness, and can be enabled and configured in settings. Song transitions also work in shuffle and single-track loop modes.
+
+## Sleep Timer
+
+Added in v2.3.2-beta.4: set a countdown timer that automatically stops playback when time is up — handy for listening before sleep.
+
+## Network Casting
+
+Added in v2.3.2: discover and connect to DLNA / AirPlay devices, casting your music to smart speakers, TVs and other devices on the same local network:
+
+1. Open the cast popup to discover DLNA / AirPlay devices on the local network
+2. Select a target device to connect
+3. The local play queue and casting state are preserved while casting
+
+## Listen Together
+
+Added in v2.3.1: listen to music together with friends in real time.
 
 ## Mini Mode
 

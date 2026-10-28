@@ -66,8 +66,15 @@ sudo rpm -i EchoMusic-*.rpm
 ## First Launch
 
 1. Launch EchoMusic
-2. On first launch, you'll see the login page — log in with your Kugou account
+2. On first launch you'll see the login page, supporting the following sign-in methods:
+   - **Account & password login** (added in v2.2.7): log in directly with your Kugou account and password
+   - **QR code login**: scan the QR code with the Kugou Concept Edition App
+   - **QQ QR-code login** (added in v2.3.1): sign in quickly by scanning with QQ
 3. Once logged in, start exploring the world of music
+
+### Account Verification
+
+v2.2.7 adds an account verification flow. If you're asked to verify your identity while using the app (frequent device switching, remote login, etc.), just follow the on-screen instructions to continue.
 
 ::: tip
 EchoMusic connects directly to Kugou's official servers. Your data never passes through any third party. Your account information is secure.

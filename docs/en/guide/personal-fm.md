@@ -21,6 +21,8 @@ Personal FM is like a personal music radio station:
 2. The FM player automatically starts playing recommended songs
 3. Enjoy a continuous stream of music
 
+Added in v2.3.2: a "Radio" mode; your recommendation mode and pool choices are remembered and restored on your next visit.
+
 ## Controls
 
 In FM mode, you can provide feedback on the currently playing song:

@@ -47,6 +47,15 @@ See what other listeners think about the song and discover more stories behind i
 | Newest Comments | Reverse chronological order |
 | Thread Jump | Click comment floor number to jump to that conversation |
 | Interactions | Like comments you find interesting |
+| Posting Comments | Share your thoughts on songs, playlists and albums (added in v2.3.2-beta.4) |
+
+### Posting Comments
+
+Added in v2.3.2-beta.4:
+
+- Post comments on songs, playlists and albums
+- View threaded (floor) replies to a comment
+- Reply to a specific comment
 
 ### Comment Sorting
 

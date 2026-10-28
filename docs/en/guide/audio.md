@@ -22,6 +22,10 @@ EchoMusic supports multiple quality tiers, selectable on the playback page:
 Higher quality requires faster network speeds and more data. We recommend HQ or SQ quality when connected to Wi-Fi.
 :::
 
+::: info Viper Quality
+After the quality level mapping fix in v2.3.1, Viper Mastering was moved into the quality selector, and v2.3.2 added 3 new Viper quality tiers, available directly in the quality menu on the playback page.
+:::
+
 ## EQ Equalizer
 
 EchoMusic features a built-in 10-band graphic equalizer for precise frequency control.
@@ -72,6 +76,8 @@ EchoMusic includes 9 built-in sound effect modes for different listening experie
 | **Viper Surround** | Spatial surround sound effect |
 | **Viper Ultra Clear** | High-definition audio restoration |
 
+v2.3.2 adds a "Beat Alignment" toggle for Rhythm Fusion, disabled by default.
+
 ### Spatial Audio
 
 EchoMusic supports spatial audio rendering via IR (impulse response) audio files:
@@ -91,12 +97,25 @@ You can search for or record your own IR files online. EchoMusic renders them in
 
 Click the sound effect button on the playback page to switch.
 
+### Effect Marketplace & Effect Engines
+
+v2.3.1 adds artist effects, headphone effects and an effect marketplace, supporting online browsing, downloading and use of parameter effects, convolution effects and combo effects:
+
+- **Effect Marketplace**: browse and download effects online, including parameter effects, convolution effects and combo effects
+- **Artist effects / Headphone effects**: the headphone spatial processing (VHE) applies at the audio's current sample rate and uses tiered partitioned convolution to reduce high-sample-rate overhead
+- **Hot-pluggable DSP modules**: effect engines can be dynamically loaded and unloaded; compatible third-party effect engines can be imported, enabled and switched in "Settings → Effect Management"
+
+::: tip
+When switching between speakers/headphones, the effect panel preserves the same engine's info, preset list and current effect marker, avoiding panel flickering.
+:::
+
 ## Volume Normalization
 
 Based on LUFS (Loudness Units relative to Full Scale) loudness normalization:
 
 - Automatically adjusts different songs to similar loudness levels
 - Prevents sudden volume jumps when switching tracks
+- Supports attenuating high-loudness sources by up to -40 dB
 - Enable in **Settings → Audio**
 
 ## Audio Devices

@@ -38,12 +38,17 @@ Float lyrics anywhere on your desktop without disrupting other tasks:
 
 1. Enable "Desktop Lyrics" in Settings
 2. The lyrics floating window stays always on top
-3. Drag to reposition
-4. Adjustable font size and color
+3. Drag to reposition, with scaling and locking support
+4. Adjustable font size and color, or let the lyrics color follow the album cover
+5. Click the settings button on the floating window to open lyrics settings directly
 
 ::: tip
 Desktop lyrics are perfect for when you're working or browsing the web — always visible.
 :::
+
+### Taskbar Lyrics
+
+Added in v2.3.2 on Windows: lyrics are displayed directly on the taskbar, switching with a two-line upward scroll animation and paired with the taskbar cover preview — you can see the current lyrics at any time without a floating overlay.
 
 ## Lyrics Settings
 
@@ -54,9 +59,15 @@ Go to **Settings → Lyrics** to adjust:
 | Font size | Adjust lyrics display font size |
 | Alignment | Left / Center alignment |
 | Delay | Fine-tune lyrics-to-music sync timing |
+| Global lyric time offset | Calibrate the time offset of the play page, desktop lyrics, Mini lyrics and taskbar lyrics together (added in v2.3.2) |
+| Simplified/Traditional conversion | Convert lyrics between Original, Simplified, Traditional, Variant Traditional, Taiwan Standard and Hong Kong Traditional (added in v2.3.2) |
 | Desktop lyrics color | Customize desktop lyrics text color |
 | Desktop lyrics background | Toggle background box for desktop lyrics |
 | Full-screen lyrics background | Choose background effect for full-screen lyrics |
+
+::: tip
+Since v2.3.2, lyrics settings consolidate the general, play page and desktop lyrics configurations, with general settings such as translation, transliteration, fine-tune step and lyrics filter managed in one place.
+:::
 
 ## Lyrics Selection
 
@@ -65,6 +76,11 @@ When a song has multiple versions of lyrics available (different languages, tran
 1. Click the **Lyrics Selection** button on the lyrics page
 2. Choose your preferred version from the available lyrics list
 3. The display switches immediately after selection
+
+Enhanced in v2.3.2:
+
+- The dialog supports manual search — edit the song title and artist to look up lyrics
+- The selected version is remembered for the current song
 
 ## Lyrics Filtering
 
@@ -86,6 +102,15 @@ Some songs support translated lyrics display:
 - When a song has translated lyrics, they're shown below the original text
 - Can be toggled on/off in lyrics settings
 - Supports multilingual translations (when provided by the song)
+- Added in v2.3.1: transliteration phonetic annotation display, with phonetic annotations for transliterated lyrics
+
+## Lyrics Skins
+
+Added in v2.3.2: skin switching for page lyrics, letting you change the style of the playback page lyrics. When a skin does not set its own colors, the unified play page lyrics color is used.
+
+## Lyrics Danmaku
+
+Added in v2.3.2-beta.4: danmaku (bullet comment) display and posting on the lyrics page and MVs — view and send danmaku while listening or watching MVs.
 
 ## Shortcuts
 
