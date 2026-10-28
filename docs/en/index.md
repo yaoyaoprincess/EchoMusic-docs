@@ -35,7 +35,7 @@ features:
   - title: 🎤 Music Recognition
     details: Microphone and system-audio capture to quickly identify songs playing around you
   - title: 🧩 Plugin System
-    details: VS Code-like high-freedom extensions, 30 community plugins covering themes/lyrics/audio/efficiency
+    details: VS Code-like high-freedom extensions, 46 community plugins covering themes/lyrics/audio/efficiency
   - title: 🖥️ Cross-Platform
     details: Full support for macOS, Windows, and Linux, with tray features and global shortcuts
 ---

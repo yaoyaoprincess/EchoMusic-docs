@@ -84,7 +84,7 @@ View song info and playback details, browse reviews, jump to comment floors.
 
 ### 🧩 Plugin System
 
-VS Code-like high-freedom extensions, 30 community plugins covering themes/lyrics/audio/efficiency.
+VS Code-like high-freedom extensions, 46 community plugins covering themes/lyrics/audio/efficiency.
 
 [Learn more →](/en/guide/plugins/)
 

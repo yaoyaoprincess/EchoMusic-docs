@@ -35,7 +35,7 @@ features:
   - title: 🎤 听歌识曲
     details: 支持麦克风和系统音频捕获，快速识别正在播放的歌曲
   - title: 🧩 插件系统
-    details: 类 VS Code 的高自由度扩展，30 款社区插件覆盖美化/歌词/音频/效率
+    details: 类 VS Code 的高自由度扩展，46 款社区插件覆盖美化/歌词/音频/效率
   - title: 🖥️ 跨平台
     details: 完整适配 macOS、Windows 与 Linux 三大桌面系统，配合托盘与全局快捷键
 ---
