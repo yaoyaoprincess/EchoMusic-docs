@@ -28,6 +28,8 @@ my-plugin.zip
 
 在线插件源让用户能在 EchoMusic 的插件管理页中**浏览、一键安装和自动更新**插件。
 
+> 📊 插件安装后的热度统计由 EchoMusic 自动完成，开发者无需接入，详见[热度与统计](./marketplace-stats)。
+
 ### 工作原理
 
 ```
@@ -149,90 +151,108 @@ your-name/my-echo-plugins/       ← 插件源仓库
 
 ---
 
-## 插件市场编程式 API
+## 插件管理编程式 API
 
-除了 UI 上的"添加插件源"，插件还可以通过 `ctx.plugins.marketplace` 以编程方式管理插件源和安装插件。这对"插件管理器插件"等工具类插件非常有用。
+除了 UI 上的「添加插件源」，插件还可以通过 **`ctx.electron.plugins`** 以编程方式管理插件源、安装/卸载插件。
 
-### 源管理
+> ⚠️ 这组 API 挂在 `ctx.electron.plugins`（即宿主 preload 暴露的 `window.electron.plugins`）下，**不是** `ctx.plugins`——ctx 顶层没有 `plugins` 成员。它们属于宿主管理面 API：调用会直接影响用户的插件列表（安装、卸载、启停），请只在明确的管理类插件（如插件管理器）中使用，并在 UI 上向用户明示正在执行的操作。
+
+### 源管理（electron.plugins.marketplace）
 
 | API | 说明 |
 |-----|------|
-| `ctx.plugins.marketplace.listSources()` | 列出所有已添加的插件源 |
-| `ctx.plugins.marketplace.addSource(input, options?)` | 添加一个插件源（input: `{ url, name? }`） |
-| `ctx.plugins.marketplace.patchSource(sourceId, patch)` | 修改插件源的配置 |
-| `ctx.plugins.marketplace.removeSource(sourceId)` | 移除一个插件源 |
+| `ctx.electron.plugins.marketplace.listSources()` | 列出所有已添加的插件源，返回 `{ sources }` |
+| `ctx.electron.plugins.marketplace.addSource(input, options?)` | 添加一个插件源，`input` 为 `{ url, name?, enabled? }` |
+| `ctx.electron.plugins.marketplace.patchSource(sourceId, patch)` | 修改插件源配置，`patch` 为 `{ name?, enabled? }` |
+| `ctx.electron.plugins.marketplace.removeSource(sourceId)` | 移除一个插件源 |
+| `ctx.electron.plugins.marketplace.list(options?)` | 浏览所有源中的可用插件，返回 `{ ok, sources, plugins, fetchedAt }` |
+| `ctx.electron.plugins.marketplace.install(sourceId, pluginId, options?)` | 从指定源安装插件 |
 
 ```js
-// 添加插件源
-await ctx.plugins.marketplace.addSource({
+// 添加插件源（enabled: false 时添加但不立即启用）
+await ctx.electron.plugins.marketplace.addSource({
   url: "https://github.com/hoowhoami/EchoMusicPlugins",
   name: "EchoMusic 官方插件",
+  enabled: true,
 });
 
 // 列出当前的插件源
-const sources = await ctx.plugins.marketplace.listSources();
+const { sources } = await ctx.electron.plugins.marketplace.listSources();
 console.log(sources);
 
 // 修改插件源名称
-await ctx.plugins.marketplace.patchSource("source-id", {
+await ctx.electron.plugins.marketplace.patchSource("source-id", {
   name: "更新后的名称",
 });
 ```
 
 ### 浏览与安装
 
-| API | 说明 |
-|-----|------|
-| `ctx.plugins.marketplace.list(options?)` | 浏览所有已添加源中的可用插件 |
-| `ctx.plugins.marketplace.install(sourceId, pluginId, options?)` | 从指定源安装插件 |
-
 ```js
 // 获取所有可用插件
-const result = await ctx.plugins.marketplace.list();
-// result.plugins 是 { sourceId, pluginId, manifest, ... } 列表
+const result = await ctx.electron.plugins.marketplace.list();
+// result.plugins 是 PluginMarketplacePlugin 列表（含 sourceId、manifest、stats、compatibility 等）
 
 // 在线安装插件
-const installResult = await ctx.plugins.marketplace.install(
+const installResult = await ctx.electron.plugins.marketplace.install(
   "source-id",
   "my-plugin",
-  { force: true }   // force: true 会覆盖本地已有版本
+  {
+    githubProxyUrl: "https://ghproxy.example/", // 可选：GitHub 加速代理
+    enableAfterInstall: true,                   // 可选：安装后立即启用
+  },
 );
+if (installResult.ok) {
+  console.log("已安装:", installResult.plugin.name, "是否更新:", installResult.updated);
+}
 ```
+
+`install` 的选项（`PluginMarketplaceInstallOptions`）：
+
+| 选项 | 类型 | 说明 |
+|------|------|------|
+| `githubProxyUrl` | `string` | 本次安装使用的 GitHub 加速代理地址 |
+| `enableAfterInstall` | `boolean` | 安装完成后是否自动启用该插件 |
+
+> 没有 `force` 之类的强制覆盖选项：对已存在的插件重复安装会走宿主的更新流程（版本比较 + 事务式替换），失败时回滚。
 
 ---
 
-## 插件管理 API
+## 本地安装与卸载
 
 ### 本地安装
 
 | API | 说明 |
 |-----|------|
-| `ctx.plugins.installLocal(paths, options?)` | 从本地路径（文件/文件夹）安装插件 |
+| `ctx.electron.plugins.installLocal(paths, options?)` | 从本地路径（ZIP 文件/文件夹）安装插件，`options` 为 `{ enableAfterInstall?, expectedPluginId? }` |
+| `ctx.electron.plugins.getDroppedFilePaths(files)` | 把拖拽事件的 `File[]` 转换为本地绝对路径数组 |
 
 ```js
 // 安装从文件管理器拖入的插件
-const paths = ctx.plugins.getDroppedFilePaths(event.dataTransfer.files);
-const result = await ctx.plugins.installLocal(paths);
+const paths = ctx.electron.plugins.getDroppedFilePaths(event.dataTransfer.files);
+const result = await ctx.electron.plugins.installLocal(paths);
+console.log(`安装 ${result.installed} 个，失败 ${result.failed} 个`);
 ```
 
 ### 卸载
 
 | API | 说明 |
 |-----|------|
-| `ctx.plugins.uninstall(pluginId)` | 卸载指定插件，删除插件目录并清除 KV 数据 |
+| `ctx.electron.plugins.uninstall(pluginId, options?)` | 卸载指定插件（插件目录、KV 数据与 SQLite 始终删除）；`options.removeData` 为 `true` 时额外删除插件私有 data/cache 目录中的文件 |
+
+```js
+await ctx.electron.plugins.uninstall("my-plugin", { removeData: true });
+```
 
 ---
 
-## 安全模式与故障管理
-
-### 安全模式
-
-当插件出现未捕获异常时，EchoMusic 会触发安全保护机制。
+## 启停与安全模式
 
 | API | 说明 |
 |-----|------|
-| `ctx.plugins.setSafeMode(enabled)` | 全局开关安全模式（true 时禁用所有插件） |
-| `ctx.plugins.setEnabled(pluginId, enabled)` | 启用/禁用指定插件 |
+| `ctx.electron.plugins.setEnabled(pluginId, enabled)` | 启用/禁用指定插件 |
+| `ctx.electron.plugins.setSafeMode(enabled)` | 全局开关安全模式（true 时禁用所有插件） |
+| `ctx.electron.plugins.reloadRuntimes()` | 向所有窗口广播插件运行时重载 |
 
 ### 故障上报
 
@@ -240,22 +260,24 @@ const result = await ctx.plugins.installLocal(paths);
 
 | API | 说明 |
 |-----|------|
-| `ctx.plugins.reportFailure(failure)` | 上报故障记录 |
-| `ctx.plugins.clearFailure(pluginId?)` | 清除故障记录（不传参数清除所有） |
-| `ctx.plugins.markStartup(pluginIds)` | 标记启动期间活动的插件 |
-| `ctx.plugins.setActiveSession(pluginIds)` | 标记当前会话的活动插件 |
-| `ctx.plugins.clearStartup()` | 清除启动标记 |
+| `reportFailure(failure)` | 上报故障记录，`failure` 为 `{ pluginId?, pluginIds?, reason, message, createdAt? }` |
+| `clearFailure(pluginId?)` | 清除故障记录（不传参数清除所有） |
+| `markStartup(pluginIds)` | 标记启动期间活动的插件 |
+| `setActiveSession(pluginIds)` | 标记当前会话的活动插件 |
+| `clearStartup()` | 清除启动标记 |
+
+`reason` 取值：`"activation-error"`（激活失败）、`"runtime-error"`（运行时错误）、`"render-process-gone"`（渲染进程崩溃）、`"unresponsive"`（无响应）。
 
 ```js
 // 上报故障
-ctx.plugins.reportFailure({
+ctx.electron.plugins.reportFailure({
   pluginId: ctx.manifest.id,
-  error: "插件初始化时网络请求失败",
-  safeMode: false,   // 是否建议进入安全模式
+  reason: "runtime-error",
+  message: "插件初始化时网络请求失败",
 });
 
 // 清除此插件的历史故障记录
-ctx.plugins.clearFailure(ctx.manifest.id);
+ctx.electron.plugins.clearFailure(ctx.manifest.id);
 ```
 
 > 如果某个启用了的插件在一个**启动会话**中多次崩溃，EchoMusic 会自动建议用户禁用该插件。
@@ -364,10 +386,8 @@ npm install -D esbuild
 关于 `contributes.windows` 浮窗配置（已在 [Manifest 配置参考](./manifest#contributeswindows) 中详述），以下是额外提示：
 
 - 浮窗由 **Electron 主进程** 创建，与插件 JS 运行在不同的进程中
-- 浮窗内的 HTML 可以使用 `<script>` 标签，但无法直接访问 `ctx`
-- 如需浮窗与主窗口通信，需要通过宿主提供的 `window.electronAPI` 桥接
-- 浮窗内的 `ctx` 通过 window API 同步注入，浮窗也有自己的 `activate(ctx)` 调用
-- 详细文档见 [窗口与系统 →](./windows-system) 和 [EchoMusicPlugins 浮窗文档](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md)
+- 浮窗入口脚本通过宿主的浮窗加载器执行，并获得**独立的浮窗上下文**（`activateWindow(ctx)` / `activate(ctx)` / 默认函数），只提供窗口渲染所需的 API 子集
+- 详细文档见 [窗口与系统 →](./windows-system) 和 [EchoMusicPlugins 浮窗文档](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/floating-windows.md)
 
 ---
 
@@ -390,5 +410,6 @@ npm install -D esbuild
 
 - [API 总览 →](./context-api) — 完整 ctx API 参考
 - [窗口与系统 →](./windows-system) — 浮窗、桌面歌词、Mini 播放器管理
+- [📊 热度与统计 →](./marketplace-stats) — 热度口径与统计查询接口
 - [插件开发概览 →](./) — 返回总览
 - [EchoMusicPlugins 仓库 →](https://github.com/hoowhoami/EchoMusicPlugins) — 官方插件示例

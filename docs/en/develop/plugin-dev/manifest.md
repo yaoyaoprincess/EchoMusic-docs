@@ -19,33 +19,27 @@ outline: [2, 4]
   "icon": "icon.svg",
   "main": "index.js",
   "style": "style.css",
+  "tags": ["tool"],
   "runtime": {
     "miniPlayer": false,
     "desktopLyric": true
   },
   "capabilities": {
-    "audioSource": false,
     "audioSpectrum": true,
-    "kugouApi": false,
-    "kugouVerification": false,
-    "localFiles": true,
-    "lyricEffects": false,
     "lyrics": true,
-    "process": false,
-    "webServer": false,
-    "sqlite": false
+    "localFiles": true
   },
   "requires": {
-    "echoMusicVersion": ">=2.2.6-beta.9 <3"
+    "echoMusicVersion": ">=2.3.2 <3"
   },
   "contributes": {
     "windows": [
       {
         "id": "my-float",
-        "label": "My Floating Window",
-        "url": "float.html",
-        "transparent": true,
-        "alwaysOnTop": true
+        "title": "My Floating Window",
+        "main": "float.js",
+        "defaultWidth": 360,
+        "defaultHeight": 200
       }
     ]
   }
@@ -149,6 +143,36 @@ Plugin author name, displayed in the plugin manager.
 
 ---
 
+### tags
+
+| Property | Value |
+|----------|-------|
+| Type | `string[]` |
+| Required | ❌ |
+
+Plugin tags array, usable for categorization or filtering (the `tags` field in `echo-plugins.json` is used for registry catalog organization).
+
+```json
+"tags": ["lyrics", "tool"]
+```
+
+---
+
+### downloadUrl
+
+| Property | Value |
+|----------|-------|
+| Type | `string` |
+| Required | ❌ |
+
+Direct download URL of the plugin package (optional). When omitted, online registries download from the plugin source repository path.
+
+```json
+"downloadUrl": "https://example.com/releases/my-plugin-1.2.3.zip"
+```
+
+---
+
 ### icon
 
 | Property | Value |
@@ -226,7 +250,7 @@ Controls which windows the plugin loads in.
 | Field | Type | Default | Description |
 |-------|------|:---:|------|
 | `miniPlayer` | `boolean` | `false` | Whether to load in the Mini Player window |
-| `desktopLyric` | `boolean` | `false` | Whether to load in the Desktop Lyric window. When changing desktop lyric layout, effects, or size, also use `ctx.lyricEffects.register({ scope: &quot;desktop&quot; })` and `ctx.desktopLyric`. |
+| `desktopLyric` | `boolean` | `false` | Whether to load in the Desktop Lyric window. When changing desktop lyric layout, effects, or size, also use `ctx.lyricEffects.register({ scope: "desktop" })` and `ctx.desktopLyric`. |
 
 ### Use Cases
 
@@ -249,14 +273,21 @@ Plugin access to sensitive APIs uses **explicit declaration**. Only declare the 
 "capabilities": {
   "audioSource": false,
   "audioSpectrum": true,
+  "backups": false,
+  "downloads": false,
   "kugouApi": false,
   "kugouVerification": false,
   "localFiles": true,
   "lyricEffects": false,
   "lyrics": true,
+  "lyricsPage": false,
   "process": false,
-  "webServer": false,
-  "sqlite": false
+  "serverIntercept": false,
+  "sqlite": false,
+  "tcp": false,
+  "theme": false,
+  "unrestrictedNetwork": false,
+  "webServer": false
 }
 ```
 
@@ -273,11 +304,12 @@ Take over audio source resolution for specific platforms or songs. Enable this w
 ```js
 // Requires audioSource capability
 ctx.player.audioSource.register({
-  platform: "my-platform",
-  async resolve(songId) {
-    const response = await fetch(`https://api.example.com/song/${songId}`);
+  id: "my-platform-resolver",
+  position: "after-catalog", // fallback level; legacy plugins default to before-catalog
+  async resolve({ track, quality }) {
+    const response = await fetch(`https://api.example.com/song/${track.id}`);
     const data = await response.json();
-    return { url: data.streamUrl };
+    return data.streamUrl; // return a URL string, or a Partial<ResolvedAudioSource> object
   },
 });
 ```
@@ -292,9 +324,9 @@ Read or subscribe to **real-time audio spectrum data**. Useful for visualizer pl
 
 ```js
 // Requires audioSpectrum capability
-ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
-  // data is a Float32Array containing frequency domain data
-  drawVisualizer(data);
+ctx.audio.spectrum.subscribe({ fps: 30, binCount: 48 }, (frame) => {
+  // frame.bins holds the spectrum data array; frame.waveform is optional waveform data
+  drawVisualizer(frame.bins);
 });
 ```
 
@@ -379,6 +411,62 @@ await db.run("INSERT OR REPLACE INTO songs (id, title) VALUES (?, ?)", ["1", "My
 const row = await db.get("SELECT * FROM songs WHERE id = ?", ["1"]);
 ```
 
+#### backups
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.backups` |
+
+Create and restore **app backups**, or register your plugin's storage backend as a backup provider. See [Backups →](./backups).
+
+#### downloads
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.net.download` / `ctx.net.downloads` |
+
+Use the host **download engine** for resumable downloads (progress subscription, pause/resume, sha256 verification). See [Network & Downloads →](./network).
+
+#### lyricsPage
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.ui.lyricsPage` |
+
+Register **custom lyrics pages and skins** (`register/usePage/useSkin/openSkins`). See [Lyrics Page Skin →](./lyrics-page).
+
+#### theme
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.theme.register` |
+
+Register a **full app theme** (light/dark variants, color tokens, background and decorations). See [the theme section](./filesystem-storage#themes).
+
+#### tcp
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.net.tcp.connect` |
+
+Open **raw TCP connections** (read/write, timeout and keep-alive options, connection limit of 16). See [Network & Downloads →](./network#tcp-client).
+
+#### unrestrictedNetwork
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.net.request` |
+
+Perform **main-process network requests** (bypasses renderer CORS, supports custom TLS/timeout/redirect policies). See [Network & Downloads →](./network).
+
+#### serverIntercept
+
+| Property | Value |
+|----------|-------|
+| Grants | `ctx.server.intercept` |
+
+**Intercept requests the app sends to its API server** (read, modify, mock, or forward). See [Server Intercept →](./server-intercept).
+
 ---
 
 ## requires
@@ -424,15 +512,22 @@ Declares static resources the plugin contributes to the host application. Curren
   "windows": [
     {
       "id": "my-float",
-      "label": "My Floating Window",
-      "url": "float.html",
+      "title": "My Floating Window",
+      "main": "float.js",
+      "style": "float.css",
+      "defaultWidth": 360,
+      "defaultHeight": 200,
+      "minWidth": 240,
+      "minHeight": 120,
+      "position": "top-center",
       "transparent": true,
       "alwaysOnTop": true,
       "skipTaskbar": true,
+      "resizable": false,
+      "movable": true,
       "rememberBounds": true,
-      "allowOutsideWorkArea": true,
-      "width": 360,
-      "height": 200
+      "allowOutsideWorkArea": false,
+      "acceptFirstMouse": false
     }
   ]
 }
@@ -440,18 +535,26 @@ Declares static resources the plugin contributes to the host application. Curren
 
 | Parameter | Type | Default | Description |
 |-----------|------|:---:|------|
-| `id` | `string` | — | Unique window identifier |
-| `label` | `string` | — | Window title |
-| `url` | `string` | — | Window HTML file (relative to plugin directory) |
-| `transparent` | `boolean` | `false` | Enable transparent background |
-| `alwaysOnTop` | `boolean` | `false` | Keep window on top |
-| `skipTaskbar` | `boolean` | `false` | Don't show in taskbar |
-| `rememberBounds` | `boolean` | `false` | Remember window position and size |
+| `id` | `string` | — | Unique window identifier (required, unique within the plugin) |
+| `title` | `string` | `"{plugin name} - {window id}"` | Window title |
+| `main` | `string` | — | **Floating window entry JS file** (required, relative to the plugin directory). Floating windows have no separate HTML — the entry script runs in the floating window environment provided by the host |
+| `style` | `string` | — | Floating window stylesheet (relative to the plugin directory, `.css` only) |
+| `type` | `string` | `"floating"` | Window type; currently only `"floating"` |
+| `defaultWidth` | `number` | `420` | Default width (px) |
+| `defaultHeight` | `number` | `72` | Default height (px), commonly used by taskbar-lyric-style horizontal strips |
+| `minWidth` / `minHeight` | `number` | derived | Minimum size |
+| `maxWidth` / `maxHeight` | `number` | derived | Maximum size |
+| `position` | `string` | `"top-center"` | Initial position: `"top-center"` or `"center"` |
+| `transparent` | `boolean` | `true` | Enable transparent background |
+| `alwaysOnTop` | `boolean` | `true` | Keep window on top |
+| `skipTaskbar` | `boolean` | `true` | Don't show in taskbar |
+| `resizable` | `boolean` | `false` | Allow drag-resizing |
+| `movable` | `boolean` | `true` | Allow drag-moving |
+| `rememberBounds` | `boolean` | `true` | Remember window position and size |
 | `allowOutsideWorkArea` | `boolean` | `false` | Allow positioning outside the monitor work area |
-| `width` | `number` | — | Default width (px) |
-| `height` | `number` | — | Default height (px) |
+| `acceptFirstMouse` | `boolean` | `false` | Pass the first click through on window activation |
 
-> Floating windows are created by the Electron main process as independent BrowserWindows. See [Publishing & Distribution →](./publishing) and the [EchoMusicPlugins Windows Docs](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md) for details.
+> ⚠️ The floating window entry is a **JS file** (`main`), not HTML — the `url`, `label`, `width`, and `height` fields from older docs are obsolete. Floating windows run in a **dedicated plugin window context** with a different API surface than the main window. See [Windows & System →](./windows-system#floating-window-context) and the [EchoMusicPlugins Floating Window Docs](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/floating-windows.md).
 
 ---
 

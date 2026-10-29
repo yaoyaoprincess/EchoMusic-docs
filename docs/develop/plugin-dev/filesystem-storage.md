@@ -21,13 +21,16 @@ outline: [2, 4]
 
 | 方法 | 说明 | 返回 |
 |------|------|------|
-| `listFiles(directory, opts?)` | 扫描目录，支持 `recursive`、`kinds`、`extensions`、`limit`、`maxDepth`、`includeHidden` | `Promise<{ok, files[]}>` |
+| `listFiles(directory, opts?)` | 扫描目录，支持 `recursive`、`kinds`、`extensions`、`limit`、`maxDepth`、`includeHidden`；目录可传路径或 `DirectoryRef` | `Promise<{ok, files[]}>` |
 | `listImageFiles(directory, opts?)` | 扫描图片文件 | `Promise<{ok, files[]}>` |
-| `readTextFile(path, opts?)` | 读取文本文件，默认最大 1 MB | `Promise<{ok, text}>` |
-| `readFileBytes(path, opts?)` | 读取二进制文件，默认最大 1 MB | `Promise<{ok, data}>` |
+| `readTextFile(path, opts?)` | 读取文本文件，默认最大 1 MB；路径可传路径或 `FileRef` | `Promise<{ok, text}>` |
+| `readFileBytes(path, opts?)` | 读取二进制文件，默认最大 1 MB；路径可传路径或 `FileRef` | `Promise<{ok, data}>` |
+| `readAudioMetadata(path)` | 读取音频文件的标题、时长、封面等元数据；路径可传路径或 `FileRef` | `Promise<{ok, metadata}>` |
 | `writeFile(path, data, opts?)` | 写入文件到插件目录，最大 8 MB | `Promise<{ok, path}>` |
 | `deleteFile(path)` | 删除插件目录内文件 | `Promise<{ok}>` |
 | `getFileUrl(path)` | 获取文件的 `file://` 播放 URL | `Promise<{ok, url}>` |
+
+除上述「裸路径」接口外，还有一组基于**授权引用**的文件与目录 API，见下一节「授权文件与目录」。
 
 ### 扫描本地音乐目录
 
@@ -88,14 +91,136 @@ await ctx.fs.deleteFile("old-cache.json");
 
 ---
 
+## 授权文件与目录
+
+插件目录之外的大文件（视频、歌词库、导出目录等）不应使用裸路径访问。宿主提供基于**授权引用**的文件 API：用户通过系统选择器授权目录或文件后，插件拿到引用（`DirectoryRef` / `FileRef`），之后所有操作都通过引用 id + 相对路径完成，不拼接裸路径。
+
+> 需要 capability：`localFiles: true`。首次选择只打开系统选择器，选择成功后宿主登记授权，不增加额外确认弹窗。用户可以在插件管理页的「已授权文件与目录」中查看和撤销所有授权。
+
+### 申请授权
+
+```js
+// 申请目录授权
+const selection = await ctx.fs.requestDirectory({
+  access: "read-write",        // "read" | "read-write"
+  purpose: "保存插件资源",      // 展示给用户的用途说明
+  persist: true,               // 默认 true；false 只在本次主进程会话有效
+});
+if (selection.ok && !selection.canceled) {
+  const directory = selection.directory; // DirectoryRef
+  console.log("授权目录:", directory.name, directory.displayPath);
+}
+
+// 申请文件授权
+const picked = await ctx.fs.requestFiles({
+  purpose: "作为视频主题背景",
+  persist: true,
+  multiple: false,
+  filters: [{ name: "视频", extensions: ["mp4", "webm", "mov", "m4v"] }],
+});
+if (picked.ok && !picked.canceled) {
+  const file = picked.files[0]; // FileRef
+}
+```
+
+`requestDirectory` / `requestFiles` 返回结果对象：`{ ok: true, canceled: true }` 或 `{ ok: true, canceled: false, directory }` / `{ ok: true, canceled: false, files: FileRef[] }`；失败时 `{ ok: false, error }`。
+
+### 引用结构
+
+```ts
+interface DirectoryRef {
+  id: string;
+  name: string;
+  access: "read" | "read-write";
+  kind: "user" | "data" | "cache";
+  available: boolean;
+  displayPath?: string;   // 仅用于显示
+}
+
+type FileRef =
+  | { kind: "directory-file"; directoryId: string; relativePath: string }
+  | { kind: "selected-file"; fileId: string };
+```
+
+相对路径不接受越界、绝对路径、符号链接、Windows 设备名等无法安全落盘的路径。插件应持久化 `DirectoryRef.id` 与文件相对路径，下次启动直接构造 `FileRef` 使用。
+
+### 授权管理
+
+| API | 说明 |
+|-----|------|
+| `listDirectoryGrants()` | 列出已登记的目录授权（含不可用/已撤销项；不含单个文件授权） |
+| `reauthorizeDirectoryGrant(id, request)` | 重新打开选择器为该授权续期；同一目录保留 id，选了别的目录会得到新 id |
+| `revokeDirectoryGrant(id)` | 撤销目录授权（保留实际文件；中断相关传输并关闭媒体租约） |
+| `revokeFileGrant(id)` | 撤销单个文件授权 |
+
+以上方法失败时**抛出**带 `code` / `message` / `retryable` 的错误（与 `request*` 的结果对象约定不同）。
+
+### 私有目录与文件操作
+
+```js
+// 宿主自动创建的插件私有目录，不打开选择器，也不列入授权管理窗口
+const dataDir = await ctx.fs.getPrivateDirectory({ kind: "data" });  // 或 "cache"
+const video = { kind: "directory-file", directoryId: dataDir.id, relativePath: "videos/bg.mp4" };
+
+// 引用上的文件操作
+const stat = await ctx.fs.stat(video);        // { file, name, size, modifiedAt, directory }
+await ctx.fs.mkdir({ kind: "directory-file", directoryId: dataDir.id, relativePath: "videos" });
+
+// 大文件流式复制（无 8 MB 上限），返回与下载任务相同的句柄
+const task = await ctx.fs.copyFile(sourceFileRef, { directoryId: dataDir.id, relativePath: "copy.mp4" }, {
+  conflict: "rename",   // "fail"（默认） | "rename" | "replace"
+});
+await task.wait();
+
+// 打开媒体租约：把文件变成可直接给 <video>/<audio>/<img> 使用的 URL
+const lease = await ctx.fs.openMedia(video);
+videoElement.src = lease.url;
+// 组件卸载或切换资源时释放
+// videoElement.pause(); videoElement.removeAttribute("src"); videoElement.load();
+lease.release();
+```
+
+| API | 说明 |
+|-----|------|
+| `getPrivateDirectory({ kind })` | 获取本安装身份的私有目录，`kind` 为 `"data"` 或 `"cache"` |
+| `stat(file)` | 读取文件名、大小、修改时间、是否目录 |
+| `mkdir(file)` | 在授权目录内创建子目录（含父目录） |
+| `copyFile(source, target, { conflict? })` | 主进程流式复制，返回可 `wait()`/`subscribe()` 的任务句柄 |
+| `openMedia(file)` | 创建媒体租约 `{ id, url, release() }`；URL 是短期租约，不要持久化 |
+
+> ⚠️ 媒体 URL 是**当前插件上下文的短期租约**：禁用、安全模式或更新会关闭旧上下文的租约。每次启动应先用 `stat()` 检查本地文件，存在就重新 `openMedia()`，把媒体 URL 只保存在内存中。
+
+### 读取音频元数据
+
+```js
+// 裸路径重载
+const meta = await ctx.fs.readAudioMetadata("D:\\Music\\song.flac");
+if (meta.ok) {
+  console.log(meta.title, meta.kind, meta.relativePath);
+}
+
+// FileRef 重载（抛出带 code 的错误）
+try {
+  const meta = await ctx.fs.readAudioMetadata(fileRef);
+  console.log(meta.title);
+} catch (error) {
+  console.error(error.code, error.message);
+}
+```
+
+元数据解析依赖宿主版本，依赖此 API 的插件应通过 `requires.echoMusicVersion` 声明版本门槛。
+
+---
+
 ## KV 存储
 
 `ctx.storage` 提供按插件隔离的持久化键值存储。
 
 | API | 说明 | 返回 |
 |-----|------|------|
-| `get(key)` | 读取键值 | `Promise<any>` |
+| `get(key)` | 读取键值 | `Promise<any>`（不存在时为 `null`） |
 | `set(key, value)` | 写入键值 | `Promise<void>` |
+| `delete(key)` | 删除键值 | `Promise<void>` |
 
 ### 基本用法
 
@@ -106,9 +231,12 @@ export async function activate(ctx) {
   await ctx.storage.set("playbackSpeed", 1.25);
   await ctx.storage.set("recentSearches", ["周杰伦", "Taylor Swift"]);
 
-  // 读取设置（不存在时返回 undefined）
+  // 读取设置（不存在时返回 null）
   const theme = (await ctx.storage.get("theme")) || "light";
   const recent = await ctx.storage.get("recentSearches");
+
+  // 删除不再需要的键
+  await ctx.storage.delete("recentSearches");
 
   console.log("主题：", theme);        // "dark"
   console.log("最近搜索：", recent);    // ["周杰伦", "Taylor Swift"]
@@ -263,10 +391,11 @@ await ctx.sqlite.deleteDatabase("cache");
 ```js
 const snapshot = await ctx.appearance.getSnapshot();
 // {
-//   themeColor: "#FF6B6B",        // 主题色
-//   darkMode: true,               // 是否深色模式
-//   fontFamily: "Microsoft YaHei", // 字体
-//   fontSize: 14,                 // 字号
+//   accentColor: "#31cfa1",          // 主题色
+//   isDark: true,                    // 是否深色模式
+//   fontFamily: "Microsoft YaHei",   // 全局字体（可能缺省）
+//   colors: { ... },                 // 主题色板（可能缺省）
+//   floatingSurfaceFrosted: true,    // 悬浮表面是否毛玻璃（可能缺省）
 // }
 ```
 
@@ -274,11 +403,11 @@ const snapshot = await ctx.appearance.getSnapshot();
 
 ```js
 export async function activate(ctx) {
-  function applyTheme({ themeColor, darkMode }) {
-    document.documentElement.style.setProperty("--plugin-accent", themeColor);
+  function applyTheme({ accentColor, isDark }) {
+    document.documentElement.style.setProperty("--plugin-accent", accentColor);
     document.documentElement.style.setProperty(
       "--plugin-bg",
-      darkMode ? "#1a1a1a" : "#ffffff"
+      isDark ? "#1a1a1a" : "#ffffff"
     );
   }
 

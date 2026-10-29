@@ -7,254 +7,290 @@ outline: [2, 4]
 
 > Requires capability: `audioSpectrum: true`
 
-`ctx.audio.spectrum` provides access to EchoMusic's real-time audio spectrum data. The underlying `echo-ffmpeg-player` playback engine provides built-in spectrum analysis, outputting FFT data directly from the playback pipeline.
+`ctx.audio.spectrum` provides access to EchoMusic's real-time audio spectrum data. Spectrum analysis is performed by the playback engine (the Rust native module `echo-audio-player`) directly inside the playback pipeline. The host merges all subscribers' options into a single engine configuration and broadcasts frames, so plugins share one data stream.
+
+> ℹ️ For a complete example, see the [spectrum-visualizer](https://github.com/hoowhoami/EchoMusicPlugins/tree/main/spectrum-visualizer) plugin in the official plugin repository.
 
 ## API Overview
 
 | API | Description | Returns |
 |-----|------|------|
-| `getStatus()` | Get spectrum capture status | `Promise<AudioSpectrumStatus>` |
+| `getStatus()` | Get spectrum engine status | `Promise<AudioSpectrumStatus>` |
 | `getSnapshot()` | Get current single-frame spectrum data | `Promise<AudioSpectrumFrame \| null>` |
-| `subscribe(options, handler, meta?)` | Subscribe to real-time spectrum stream | `() => void` (cancellation function) |
+| `subscribe(options, handler)` | Subscribe to real-time spectrum stream | `() => void` (dispose function) |
+
+Every spectrum API requires `capabilities.audioSpectrum: true` in the manifest, otherwise it throws a "plugin does not declare the audio spectrum capability" error.
 
 ---
 
 ## getStatus()
 
-Get the current state of the spectrum capture engine.
+Get the current status of the spectrum engine:
 
 ```js
 const status = await ctx.audio.spectrum.getStatus();
 // {
-//   capturing: true,      // Whether currently capturing
-//   sampleRate: 44100,    // Current sample rate
-//   fftSize: 2048,        // Current FFT window size
-//   subscriptions: 2,     // Active subscription count
+//   available: true,        // whether the spectrum API is available
+//   running: true,          // whether frames are being captured and broadcast
+//   provider: "player",     // data source
+//   reason: undefined,      // why it is not running
+//   subscriberCount: 2,     // current subscriber count
 // }
 ```
 
 | Field | Type | Description |
 |------|------|------|
-| `capturing` | `boolean` | Whether spectrum capture is active |
-| `sampleRate` | `number` | Audio sample rate (Hz) |
-| `fftSize` | `number` | FFT transform window size |
-| `subscriptions` | `number` | Current active subscription count |
+| `available` | `boolean` | Whether the spectrum API is available (`false` on older hosts) |
+| `running` | `boolean` | Whether capture is active |
+| `provider` | `"player" \| "unavailable"` | Spectrum data source; currently always the playback engine |
+| `reason` | `string?` | Why it is not running, e.g. `"订阅者均已暂停"` (all subscribers paused), `"播放引擎未初始化"` (playback engine not initialized) |
+| `subscriberCount` | `number?` | Current subscriber count |
+
+Common reasons for `running: false`: no active subscribers, all subscribers paused (page hidden / window hidden), or the playback engine has not been initialized.
 
 ---
 
 ## getSnapshot()
 
-Get a single instantaneous frame of spectrum data. Returns `null` if capture is not started.
+Get one immediate frame of spectrum data. Returns `null` when no frame is available.
 
 ```js
 const frame = await ctx.audio.spectrum.getSnapshot();
 if (frame) {
-  // frame.frequencyData: Float32Array — frequency domain data
-  // frame.timeData: Float32Array      — time domain data
-  // frame.sampleRate: number          — sample rate
-  console.log("Frequency data length:", frame.frequencyData.length);
+  console.log("bin count:", frame.bins.length, "RMS:", frame.rms);
 }
 ```
 
-**Use case:** When you only need occasional spectrum readings (e.g., making screenshots) rather than continuous real-time updates.
+**Use case**: occasionally reading spectrum data (e.g. a cover that pulses with the beat) instead of continuous rendering. For continuous rendering use `subscribe()`.
 
 ---
 
 ## subscribe(options, handler)
 
-Subscribe to real-time spectrum data. `handler` is called whenever a new spectrum frame is captured.
+Subscribe to the real-time spectrum stream. The host pushes new frames at the merged frame rate and calls `handler` once per frame.
 
-### Parameters
+```js
+const dispose = ctx.audio.spectrum.subscribe(
+  { fps: 30, binCount: 64, includeWaveform: true },
+  (frame) => {
+    drawBars(frame.bins);
+    drawWave(frame.waveform);
+  },
+);
 
-| Parameter | Type | Required | Description |
-|------|------|:--:|------|
-| `options.fftSize` | `number` | ❌ | FFT window size (32-32768, must be power of 2), default 2048 |
-| `options.smoothingTimeConstant` | `number` | ❌ | Smoothing coefficient (0-1), default 0.8. Lower = faster response |
-| `options.interval` | `number` | ❌ | Minimum data push interval (ms), default 50 |
-| `handler` | `(frame) => void` | ✅ | Spectrum data callback |
-| `meta.pluginId` | `string` | ❌ | Subscriber identifier, auto-filled with current plugin ID |
+// Call the dispose function to stop
+dispose();
+```
 
-### Spectrum Frame Structure (AudioSpectrumFrame)
+### Subscription options (AudioSpectrumOptions)
+
+| Option | Type | Range | Default | Description |
+|------|------|------|------|------|
+| `fps` | `number` | 1–60 | 30 | Target frame rate |
+| `binCount` | `number` | 8–512 | 128 | Number of frequency bins (`bins` array length) |
+| `fftSize` | `number` | — | 2048 | FFT window size; fixed by the host, no need to set |
+| `smoothing` | `number` | 0–0.95 | 0.65 | Spectrum smoothing factor; lower is faster but more jittery |
+| `minFrequency` | `number` | 1–20000 | 20 | Lower bound of the analysis band (Hz) |
+| `maxFrequency` | `number` | 2–24000 | 20000 | Upper bound of the analysis band (Hz) |
+| `scale` | `"linear" \| "log" \| "mel"` | — | `"log"` | Frequency axis scale; the host currently always merges to log scale |
+| `includeWaveform` | `boolean` | — | `false` | Whether to include time-domain waveform data (`frame.waveform`) |
+
+### Multi-subscriber option merging
+
+All active subscribers share one spectrum stream; the host merges options by "strictest union":
+
+- `fps` / `binCount` / `maxFrequency`: **maximum** across all subscribers
+- `minFrequency` / `smoothing`: **minimum** across all subscribers
+- `includeWaveform`: enabled if any subscriber requests it
+
+Paused subscribers (see "Lifecycle" below) are excluded from merging and receive no frames — invisible plugins never raise other subscribers' frame rate or payload.
+
+### Frame structure (AudioSpectrumFrame)
 
 ```ts
 interface AudioSpectrumFrame {
-  frequencyData: Float32Array;  // Frequency domain data (length = fftSize / 2)
-  timeData: Float32Array;       // Time domain data (length = fftSize)
-  sampleRate: number;           // Sample rate (Hz)
+  source: "player" | "silence" | "unavailable";
+  state: "playing" | "paused" | "idle";
+  timestamp: number;              // frame timestamp (seconds)
+  timePos: number | null;         // current playback position (seconds), null when unknown
+  sampleRate: number;             // sample rate (currently 48000)
+  fftSize: number;                // FFT window size (2048)
+  minFrequency: number;           // actual lower bound of this frame's band
+  maxFrequency: number;           // actual upper bound of this frame's band
+  /** Bin magnitudes normalized to 0..1, length = binCount */
+  bins: number[];
+  /** Time-domain waveform normalized to -1..1; only present with includeWaveform: true */
+  waveform?: number[];
+  rms: number;                    // RMS loudness (0..1)
+  peak: number;                   // peak level (0..1)
 }
 ```
 
 | Field | Description |
 |------|------|
-| `frequencyData` | `[0, fftSize/2)` — each bin represents a frequency range amplitude (linear 0-1, not dB) |
-| `timeData` | `[0, fftSize)` — raw PCM waveform samples |
-| `sampleRate` | Actual captured audio sample rate |
+| `bins` | Each element is the magnitude of one band across `minFrequency`–`maxFrequency`, linear 0–1 (not dB) |
+| `waveform` | Raw PCM waveform samples for oscilloscope-style drawing; must be enabled explicitly |
+| `rms` / `peak` | Per-frame loudness metrics, suitable for VU meters, breathing lights, etc. |
+| `state` | Playback state; use it to freeze or fade out visuals while paused |
+| `timePos` | Playback position aligned with the frame, useful for beat alignment |
 
-### Return Value
+---
 
-`subscribe()` returns a **cancellation function**. Call it to stop this subscription. All subscriptions are automatically cancelled when the plugin is disabled/uninstalled:
+## Lifecycle and auto-pause
+
+`subscribe()` returns a **dispose function**; calling it unsubscribes. When a plugin is disabled or uninstalled, the host automatically cleans up all of its subscriptions.
+
+Subscriptions created inside a plugin page's Vue component `setup()` are also bound to the component lifecycle:
+
+- When the component is cached by KeepAlive (invisible), delivery is **paused** and resumes on reactivation
+- When the component unmounts, the subscription is fully disposed
+- When the host window is minimized or hidden, all subscriptions pause together
+
+The subscription itself stays in the subscription table (so it can resume), and a temporarily invisible plugin never loses state:
 
 ```js
-const unsubscribe = ctx.audio.spectrum.subscribe(
-  { fftSize: 1024, interval: 30 },
-  (frame) => {
-    drawBars(frame.frequencyData);
-  }
-);
-
-// Manually unsubscribe later
-unsubscribe();
+// Subscribe inside a component's setup — automatically pauses/resumes with visibility
+export function setupPage(ctx) {
+  const dispose = ctx.audio.spectrum.subscribe({ binCount: 48 }, renderFrame);
+  // You can also dispose() manually when the component unmounts
+}
 ```
 
-### On-Demand Spectrum Capture
+If you subscribe in `activate()` (outside a component), it behaves as a plain subscription cleaned up when the plugin is disabled.
 
-To avoid unnecessary performance overhead, subscribe to spectrum only during playback:
+---
+
+## Minimal example
+
+Below is a complete, runnable plugin entry: draw a 64-bar spectrum in the bottom-right corner of the screen.
 
 ```js
 export function activate(ctx) {
-  let unsubscribe = null;
+  const canvas = document.createElement("canvas");
+  canvas.width = 320;
+  canvas.height = 96;
+  canvas.style.cssText = `
+    position: fixed; bottom: 72px; right: 16px; z-index: 9999;
+    border-radius: 8px; background: rgba(0,0,0,0.55); pointer-events: none;
+  `;
+  document.body.appendChild(canvas);
+  const ctx2d = canvas.getContext("2d");
 
-  ctx.events.onPlayStateChange((isPlaying) => {
-    if (isPlaying && !unsubscribe) {
-      unsubscribe = ctx.audio.spectrum.subscribe(
-        { fftSize: 2048 },
-        (frame) => renderSpectrum(frame)
-      );
-    } else if (!isPlaying && unsubscribe) {
-      unsubscribe();
-      unsubscribe = null;
-    }
+  const dispose = ctx.audio.spectrum.subscribe(
+    { fps: 30, binCount: 64 },
+    (frame) => {
+      const { bins } = frame;
+      const width = canvas.width;
+      const height = canvas.height;
+      const barWidth = width / bins.length;
+
+      ctx2d.clearRect(0, 0, width, height);
+      for (let i = 0; i < bins.length; i++) {
+        const barHeight = Math.max(1, bins[i] * height);
+        ctx2d.fillStyle = `hsl(${200 + (i / bins.length) * 120}, 80%, 60%)`;
+        ctx2d.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+      }
+    },
+  );
+
+  ctx.dispose(() => {
+    dispose();
+    canvas.remove();
   });
 }
 ```
 
 ---
 
-## Full Examples
+## Advanced examples
 
-### Example 1: Spectrum Bar Chart
+### Example 1: waveform oscilloscope
 
-```js
-export function activate(ctx) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 300;
-  canvas.height = 100;
-  canvas.style.cssText = `
-    position: fixed; bottom: 60px; right: 20px; z-index: 9999;
-    border-radius: 8px; background: rgba(0,0,0,0.6);
-  `;
-  document.body.appendChild(canvas);
-  const ctx2d = canvas.getContext("2d");
-
-  ctx.audio.spectrum.subscribe(
-    { fftSize: 256, interval: 50 },
-    (data) => {
-      const { frequencyData } = data;
-      const width = canvas.width;
-      const height = canvas.height;
-      const barWidth = width / frequencyData.length;
-
-      ctx2d.clearRect(0, 0, width, height);
-
-      for (let i = 0; i < frequencyData.length; i++) {
-        const barHeight = frequencyData[i] * height;
-        const x = i * barWidth;
-        const hue = (i / frequencyData.length) * 120 + 200;
-
-        ctx2d.fillStyle = `hsl(${hue}, 80%, 60%)`;
-        ctx2d.fillRect(x, height - barHeight, barWidth - 1, barHeight);
-      }
-    }
-  );
-
-  ctx.dispose(() => canvas.remove());
-}
-```
-
-### Example 2: Waveform Visualization
-
-Using `timeData` to draw raw waveform:
+Enable `includeWaveform` and draw `frame.waveform` as a time-domain waveform:
 
 ```js
 ctx.audio.spectrum.subscribe(
-  { fftSize: 1024, smoothingTimeConstant: 0, interval: 30 },
+  { fps: 60, binCount: 32, smoothing: 0.2, includeWaveform: true },
   (frame) => {
-    const { timeData } = frame;
+    const wave = frame.waveform;
+    if (!wave || wave.length < 2) return;
+
     ctx2d.clearRect(0, 0, width, height);
     ctx2d.beginPath();
     ctx2d.strokeStyle = "#00ff88";
-    ctx2d.lineWidth = 1;
+    ctx2d.lineWidth = 1.5;
 
-    for (let i = 0; i < timeData.length; i++) {
-      const x = (i / timeData.length) * width;
-      const y = (0.5 + timeData[i] * 0.45) * height;
+    for (let i = 0; i < wave.length; i++) {
+      const x = (i / (wave.length - 1)) * width;
+      const y = (0.5 - wave[i] * 0.45) * height;
       if (i === 0) ctx2d.moveTo(x, y);
       else ctx2d.lineTo(x, y);
     }
     ctx2d.stroke();
-  }
+  },
 );
 ```
 
-### Example 3: VU Meter (Loudness Monitor)
+### Example 2: VU meter (loudness monitoring)
+
+`rms` / `peak` are provided directly by the playback engine — no need to compute them yourself:
 
 ```js
-let peak = 0;
+let peakHold = 0;
 
-ctx.audio.spectrum.subscribe(
-  { fftSize: 512, interval: 100 },
-  (frame) => {
-    // Calculate RMS as loudness indicator
-    let sum = 0;
-    for (let i = 0; i < frame.timeData.length; i++) {
-      sum += frame.timeData[i] * frame.timeData[i];
-    }
-    const rms = Math.sqrt(sum / frame.timeData.length);
-    peak = Math.max(peak, rms);
+ctx.audio.spectrum.subscribe({ fps: 30 }, (frame) => {
+  peakHold = Math.max(frame.peak, peakHold * 0.98);
+  updateVUMeter(frame.rms, peakHold);
+});
+```
 
-    updateVUMeter(rms, peak);
+### Example 3: freeze visuals while paused
 
-    // Gradually decay peak
-    peak *= 0.99;
+```js
+let lastBins = [];
+
+ctx.audio.spectrum.subscribe({ binCount: 64 }, (frame) => {
+  if (frame.state === "playing" || frame.bins.some((v) => v > 0)) {
+    lastBins = frame.bins;
   }
-);
+  renderBars(lastBins); // keep the last frame while paused
+});
 ```
 
 ---
 
 ## FAQ
 
-### How do spectrum bins map to frequencies?
+### How do bins map to frequencies?
 
-For FFT size N: `frequencyData[k]` corresponds to approximately `k * sampleRate / N` Hz.
+`bins[i]` covers the i-th band of `[minFrequency, maxFrequency]` divided by the current `scale`. With the default log scale, low frequencies get finer resolution, matching human hearing. `minFrequency` / `maxFrequency` on the frame are the **merged** values (possibly widened/narrowed by other subscribers) — read them from the frame for frequency labeling instead of caching your own options.
 
-For example, `fftSize=2048`, `sampleRate=44100`:
-- `frequencyData[0]` → ~0 Hz (DC)
-- `frequencyData[1]` → ~21.5 Hz
-- `frequencyData[511]` → ~11,025 Hz (Nyquist frequency)
+### How does fps relate to the actual frame rate?
 
-Lower frequency bins have higher resolution. For finer frequency separation in the low end, increase fftSize.
+`fps` is the target rate (1–60); the host polls the engine snapshot every `1000 / fps` ms. Actual callback frequency also depends on the engine's snapshot cadence. Frames with the same `timestamp` are not broadcast twice.
 
-### What's the relationship between interval and actual frame rate?
+### How much does spectrum capture cost?
 
-`interval` is the minimum push interval. Actual frame rate depends on the system audio buffer size:
-- Default 50ms → max ~20 fps
-- Set to 16 → max ~60 fps (high refresh visualization)
-- Set to 100 → max ~10 fps (power saving)
+- The engine only analyzes the spectrum while there is at least one active subscriber; with no subscribers the timer fully stops — zero cost
+- All subscribers share one data stream (one FFT, one IPC broadcast)
+- Higher `binCount` and `fps` cost more; pause subscriptions on invisible pages (component-bound subscriptions pause automatically)
+- Paused subscribers are excluded from option merging, so they never raise someone else's frame rate
 
-### How much performance impact does spectrum capture have?
+### Why am I not receiving frames?
 
-- Underlying system audio loopback capture only starts when there are active subscriptions
-- All subscriptions share the same frame capture (no duplicate capture per subscription)
-- Larger fftSize → higher CPU usage but more precision; choose the minimum for your needs
-- 100ms interval + fftSize=512 has very low CPU overhead, suitable for background operation
+Check in order:
+
+1. Does the manifest declare `capabilities.audioSpectrum: true`?
+2. Check `getStatus()`'s `running` / `reason` — common causes are an uninitialized playback engine or all subscribers paused
+3. Is something actually playing (`frame.state`)?
+4. Did you enable `includeWaveform`? Without it `frame.waveform` is `undefined`, not an empty array
 
 ---
 
-## Next Steps
+## Next steps
 
 | Document | Content |
 |------|------|
-| [Player & Audio Engine →](./player-audio) | Playback controls, EQ, spatial audio, IR convolution |
-| [API Reference →](./context-api) | Complete ctx API listing |
-| [Windows & System →](./windows-system) | Floating windows, desktop lyric, Mini player |
+| [Player & Audio Engine →](./player-audio) | Playback control, EQ, spatial audio, IR convolution |
+| [API Overview →](./context-api) | Full ctx API list |
+| [Windows & System →](./windows-system) | Floating windows, desktop lyric, mini player |

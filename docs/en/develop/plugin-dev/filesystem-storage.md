@@ -5,88 +5,210 @@ outline: [2, 4]
 
 # 📁 Filesystem & Storage
 
-This document covers plugin access to the filesystem, KV storage, playback queue persistence, HTTP requests, event listeners, and appearance subscriptions.
+This document covers plugin access to the filesystem, KV storage, and appearance subscriptions.
+
+> ℹ️ Playback queue persistence, HTTP requests, core event listeners, and similar facilities are internal APIs and out of scope for plugins. See [Internal API Reference →](../internal-api/).
 
 ---
 
 ## Filesystem
 
-> Requires capability: `localFiles: true`
+> Requires capability: `localFiles: true` (most operations)
 
 `ctx.fs` provides access to the local filesystem.
 
 ### API
 
-| Method | Parameters | Description | Returns |
-|------|------|------|------|
-| `listFiles(options)` | `{ directory?, extensions?, recursive? }` | Scan directory for audio files | `Promise<FileEntry[]>` |
-| `listImageFiles(options)` | `{ directory?, extensions?, recursive? }` | Scan directory for image files | `Promise<FileEntry[]>` |
-| `readTextFile(options)` | `{ path, encoding? }` | Read text file content | `Promise<string>` |
-| `readFileBytes(options)` | `{ path, offset?, length? }` | Read binary file | `Promise<ArrayBuffer>` |
-| `writeFile(options)` | `{ path, data, encoding? }` | Write file to plugin directory | `Promise<void>` |
-| `deleteFile(path)` | `path: string` | Delete file in plugin directory | `Promise<boolean>` |
-| `getFileUrl(path)` | `path: string` | Get file playback URL | `Promise<string>` |
+| Method | Description | Returns |
+|------|------|------|
+| `listFiles(directory, opts?)` | Scan a directory; supports `recursive`, `kinds`, `extensions`, `limit`, `maxDepth`, `includeHidden`; the directory can be a path or a `DirectoryRef` | `Promise<{ok, files[]}>` |
+| `listImageFiles(directory, opts?)` | Scan for image files | `Promise<{ok, files[]}>` |
+| `readTextFile(path, opts?)` | Read a text file, 1 MB default cap; path or `FileRef` | `Promise<{ok, text}>` |
+| `readFileBytes(path, opts?)` | Read a binary file, 1 MB default cap; path or `FileRef` | `Promise<{ok, data}>` |
+| `readAudioMetadata(path)` | Read title, duration, cover, and other metadata from an audio file; path or `FileRef` | `Promise<{ok, metadata}>` |
+| `writeFile(path, data, opts?)` | Write a file into the plugin directory, 8 MB cap | `Promise<{ok, path}>` |
+| `deleteFile(path)` | Delete a file inside the plugin directory | `Promise<{ok}>` |
+| `getFileUrl(path)` | Get the file's `file://` playback URL | `Promise<{ok, url}>` |
 
-### Scanning Local Music
+Besides these "bare path" APIs there is a set of **grant-based** file and directory APIs — see the next section, "Granted files & directories".
+
+### Scanning local music directories
 
 ```js
-export function activate(ctx) {
-  async function scanMusicDir() {
-    try {
-      const files = await ctx.fs.listFiles({
-        directory: "C:\\Users\\User\\Music",
-        extensions: [".mp3", ".flac", ".wav"],
-        recursive: true,
-      });
-      console.log(`Found ${files.length} audio files`);
-      return files;
-    } catch (err) {
-      ctx.toast.error("Failed to scan directory: " + err.message);
-      return [];
-    }
-  }
+export async function activate(ctx) {
+  const result = await ctx.fs.listFiles("C:\\Users\\User\\Music", {
+    recursive: true,
+    kinds: ["audio", "lyric", "image", "playlist", "cue"],
+    limit: 5000,
+  });
 
-  scanMusicDir();
+  if (result.ok) {
+    console.log(`Found ${result.files.length} files`);
+  }
 }
 ```
 
-### Playing Local Files
+### Playing local files
 
 ```js
 async function playLocalFile(filePath) {
-  const url = await ctx.fs.getFileUrl(filePath);
-  ctx.player.playTrack({
-    id: filePath,
-    title: filePath.split("\\").pop(),
-    url: url,
-  });
+  const urlResult = await ctx.fs.getFileUrl(filePath);
+  if (urlResult?.ok) {
+    ctx.player.playTrack({
+      id: filePath,
+      title: filePath.split("\\").pop(),
+      url: urlResult.url,
+    });
+  }
 }
 ```
 
-### Reading and Writing Files
+### Reading and writing files
 
 ```js
-// Read text file
-const text = await ctx.fs.readTextFile({ path: "C:\\logs\\app.log" });
+// Read a text file
+const textResult = await ctx.fs.readTextFile("C:\\logs\\app.log");
 
-// Read portion of binary file
-const bytes = await ctx.fs.readFileBytes({
-  path: "C:\\Data\\large.dat",
-  offset: 0,
-  length: 1024,
+// Read part of a binary file
+const bytesResult = await ctx.fs.readFileBytes("C:\\Data\\large.dat", {
+  maxBytes: 1024,
 });
 
-// Write config to plugin directory
-await ctx.fs.writeFile({
-  path: "user-config.json",
-  data: JSON.stringify({ theme: "dark", fontSize: 14 }, null, 2),
-});
+// Write config into the plugin directory
+const writeResult = await ctx.fs.writeFile("user-config.json", JSON.stringify({
+  theme: "dark",
+  fontSize: 14,
+}, null, 2));
 
-// Delete file
+// Overwrite an existing file
+await ctx.fs.writeFile("cache.json", data, { overwrite: true });
+
+// Delete a file
 await ctx.fs.deleteFile("old-cache.json");
 ```
 
-> ⚠️ `writeFile` and `deleteFile` can only operate on files **within the plugin directory**. `readTextFile` / `readFileBytes` can read from any path.
+> ⚠️ `writeFile` and `deleteFile` can only operate on files **inside the plugin directory** (automatically confined to the safe scope). `readTextFile` / `readFileBytes` can read any user-selected path. For large audio files use `getFileUrl()`; never read a whole audio file through `readFileBytes()`.
+
+---
+
+## Granted files & directories
+
+Large files outside the plugin directory (videos, lyric libraries, export folders) should not be accessed with bare paths. The host provides grant-based file APIs: after the user authorizes a directory or file through the system picker, the plugin receives references (`DirectoryRef` / `FileRef`), and all subsequent operations use the reference id plus relative paths — never bare paths.
+
+> Requires capability: `localFiles: true`. The first selection only opens the system picker; once a selection succeeds the host registers the grant with no extra confirmation dialog. Users can review and revoke all grants per plugin in "Granted files & directories" at the top of the plugin management page.
+
+### Requesting grants
+
+```js
+// Request directory access
+const selection = await ctx.fs.requestDirectory({
+  access: "read-write",        // "read" | "read-write"
+  purpose: "Save plugin assets", // purpose shown to the user
+  persist: true,               // default true; false lasts only for this main-process session
+});
+if (selection.ok && !selection.canceled) {
+  const directory = selection.directory; // DirectoryRef
+  console.log("Granted directory:", directory.name, directory.displayPath);
+}
+
+// Request file access
+const picked = await ctx.fs.requestFiles({
+  purpose: "Use as video theme background",
+  persist: true,
+  multiple: false,
+  filters: [{ name: "Videos", extensions: ["mp4", "webm", "mov", "m4v"] }],
+});
+if (picked.ok && !picked.canceled) {
+  const file = picked.files[0]; // FileRef
+}
+```
+
+`requestDirectory` / `requestFiles` return result objects: `{ ok: true, canceled: true }` or `{ ok: true, canceled: false, directory }` / `{ ok: true, canceled: false, files: FileRef[] }`; on failure `{ ok: false, error }`.
+
+### Reference structure
+
+```ts
+interface DirectoryRef {
+  id: string;
+  name: string;
+  access: "read" | "read-write";
+  kind: "user" | "data" | "cache";
+  available: boolean;
+  displayPath?: string;   // for display only
+}
+
+type FileRef =
+  | { kind: "directory-file"; directoryId: string; relativePath: string }
+  | { kind: "selected-file"; fileId: string };
+```
+
+Relative paths reject escaping, absolute paths, symlinks, Windows device names, and anything else that cannot be safely written to disk. Plugins should persist the `DirectoryRef.id` and file relative paths, then reconstruct `FileRef` objects on the next launch.
+
+### Grant management
+
+| API | Description |
+|-----|------|
+| `listDirectoryGrants()` | List registered directory grants (including unavailable/revoked entries; no single-file grants) |
+| `reauthorizeDirectoryGrant(id, request)` | Reopen the picker to renew the grant; the same path keeps its id, picking a different directory yields a new id |
+| `revokeDirectoryGrant(id)` | Revoke a directory grant (keeps the actual files; aborts related transfers and closes media leases) |
+| `revokeFileGrant(id)` | Revoke a single-file grant |
+
+These methods **throw** errors carrying `code` / `message` / `retryable` on failure (unlike the result-object convention of `request*`).
+
+### Private directories and file operations
+
+```js
+// Plugin-private directories created and managed by the host — no picker, not listed in grant management
+const dataDir = await ctx.fs.getPrivateDirectory({ kind: "data" });  // or "cache"
+const video = { kind: "directory-file", directoryId: dataDir.id, relativePath: "videos/bg.mp4" };
+
+// File operations on references
+const stat = await ctx.fs.stat(video);        // { file, name, size, modifiedAt, directory }
+await ctx.fs.mkdir({ kind: "directory-file", directoryId: dataDir.id, relativePath: "videos" });
+
+// Large-file streaming copy (no 8 MB cap); returns the same handle as download tasks
+const task = await ctx.fs.copyFile(sourceFileRef, { directoryId: dataDir.id, relativePath: "copy.mp4" }, {
+  conflict: "rename",   // "fail" (default) | "rename" | "replace"
+});
+await task.wait();
+
+// Open a media lease: turn a file into a URL usable by <video>/<audio>/<img>
+const lease = await ctx.fs.openMedia(video);
+videoElement.src = lease.url;
+// Release when unmounting or switching sources
+// videoElement.pause(); videoElement.removeAttribute("src"); videoElement.load();
+lease.release();
+```
+
+| API | Description |
+|-----|------|
+| `getPrivateDirectory({ kind })` | Get this installation identity's private directory, `kind` is `"data"` or `"cache"` |
+| `stat(file)` | Read name, size, modified time, and whether it is a directory |
+| `mkdir(file)` | Create subdirectories inside a granted directory (including parents) |
+| `copyFile(source, target, { conflict? })` | Streaming copy in the main process; returns a task handle supporting `wait()`/`subscribe()` |
+| `openMedia(file)` | Create a media lease `{ id, url, release() }`; the URL is a short-term lease — never persist it |
+
+> ⚠️ The media URL is a **short-term lease of the current plugin context**: disabling, safe mode, or an update closes the old context's leases. On each startup, check the local file with `stat()` first and call `openMedia()` again; keep media URLs in memory only.
+
+### Reading audio metadata
+
+```js
+// Bare path overload
+const meta = await ctx.fs.readAudioMetadata("D:\\Music\\song.flac");
+if (meta.ok) {
+  console.log(meta.title, meta.kind, meta.relativePath);
+}
+
+// FileRef overload (throws errors carrying a code)
+try {
+  const meta = await ctx.fs.readAudioMetadata(fileRef);
+  console.log(meta.title);
+} catch (error) {
+  console.error(error.code, error.message);
+}
+```
+
+Metadata parsing depends on the host version; plugins relying on it should declare a version floor via `requires.echoMusicVersion`.
 
 ---
 
@@ -96,28 +218,28 @@ await ctx.fs.deleteFile("old-cache.json");
 
 | API | Description | Returns |
 |-----|------|------|
-| `kvGet(key)` | Read key-value | `Promise<any>` |
-| `kvSet(key, value)` | Write key-value | `Promise<void>` |
-| `kvDelete(key)` | Delete key-value | `Promise<void>` |
+| `get(key)` | Read a key | `Promise<any>` (`null` when missing) |
+| `set(key, value)` | Write a key | `Promise<void>` |
+| `delete(key)` | Delete a key | `Promise<void>` |
 
 ### Basic Usage
 
 ```js
-export function activate(ctx) {
+export async function activate(ctx) {
   // Write settings
-  await ctx.storage.kvSet("theme", "dark");
-  await ctx.storage.kvSet("playbackSpeed", 1.25);
-  await ctx.storage.kvSet("recentSearches", ["Jay Chou", "Taylor Swift"]);
+  await ctx.storage.set("theme", "dark");
+  await ctx.storage.set("playbackSpeed", 1.25);
+  await ctx.storage.set("recentSearches", ["Jay Chou", "Taylor Swift"]);
 
-  // Read settings
-  const theme = await ctx.storage.kvGet("theme");
-  const recent = await ctx.storage.kvGet("recentSearches");
+  // Read settings (returns null when missing)
+  const theme = (await ctx.storage.get("theme")) || "light";
+  const recent = await ctx.storage.get("recentSearches");
 
-  console.log("Theme:", theme);        // "dark"
-  console.log("Recent searches:", recent);    // ["Jay Chou", "Taylor Swift"]
+  // Delete keys you no longer need
+  await ctx.storage.delete("recentSearches");
 
-  // Delete
-  await ctx.storage.kvDelete("temp-cache");
+  console.log("Theme:", theme);              // "dark"
+  console.log("Recent searches:", recent);   // ["Jay Chou", "Taylor Swift"]
 }
 ```
 
@@ -125,28 +247,31 @@ export function activate(ctx) {
 
 ```js
 // ✅ Recommended: structured storage
-await ctx.storage.kvSet("settings", {
+await ctx.storage.set("settings", {
   theme: "dark",
   autoScroll: true,
   fontSize: 14,
 });
 
-// ✅ Recommended: version-controlled storage structure
-await ctx.storage.kvSet("version", 2);
-const currentVersion = (await ctx.storage.kvGet("version")) || 1;
-if (currentVersion < 2) {
-  // Migrate old data structure
+// ✅ Recommended: version your storage structure
+const version = (await ctx.storage.get("version")) || 1;
+if (version < 2) {
+  // Migrate the old data structure
+  await ctx.storage.set("version", 2);
 }
 
+// ✅ Recommended: provide defaults when reading
+const settings = (await ctx.storage.get("settings")) || defaults;
+
 // ⚠️ Note: values must be JSON-serializable
-// Cannot store functions, Date objects, Map, Set, etc.
+// You cannot store functions, Date objects, Maps, Sets, DOM nodes, etc.
 ```
 
 ### Lifecycle
 
-- When the plugin is **uninstalled**, all KV data is **automatically cleared**
-- When the plugin is updated (version upgrade), KV data is preserved
-- When the plugin is disabled then re-enabled, KV data is preserved
+- When a plugin is **uninstalled**, all of its KV data is **cleared automatically**
+- Plugin updates (version upgrades) preserve KV data
+- Disabling and re-enabling a plugin preserves KV data
 
 ---
 
@@ -154,14 +279,14 @@ if (currentVersion < 2) {
 
 > Requires capability: `sqlite: true`
 
-`ctx.sqlite` provides a plugin-private SQLite database, created and managed by the host in EchoMusic's user data directory. Databases are isolated by plugin ID — plugins can only access their own named databases and cannot pass arbitrary local paths.
+`ctx.sqlite` provides plugin-private SQLite databases, created and managed by the host under EchoMusic's user data directory, isolated by plugin id. Plugins can only access their own named databases and cannot pass arbitrary local paths.
 
 ### Opening a Database
 
 ```js
 const db = await ctx.sqlite.open({
-  name: "library",                        // Optional, defaults to "main"
-  migrations: [                           // Optional, versioned migration
+  name: "library",                        // optional, defaults to "main"
+  migrations: [                           // optional, versioned migrations
     { version: 1, sql: `CREATE TABLE IF NOT EXISTS songs (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
@@ -173,15 +298,15 @@ const db = await ctx.sqlite.open({
 });
 ```
 
-Database names can only contain letters, digits, dots, underscores, and hyphens, and must start with a letter or digit.
+Database names may only contain letters, digits, dots, underscores, and hyphens, and must start with a letter or digit.
 
 ### CRUD Operations
 
 | API | Description |
 |-----|------|
 | `db.run(sql, params?)` | Execute INSERT/UPDATE/DELETE, returns `{ changes: n }` |
-| `db.get(sql, params?)` | Query a single row, returns `{ ok, row? }` or `null` |
-| `db.all(sql, params?)` | Query multiple rows, returns `{ ok, rows }` |
+| `db.get(sql, params?)` | Query one row, returns `{ ok, row? }` or `null` |
+| `db.all(sql, params?)` | Query many rows, returns `{ ok, rows }` |
 | `db.exec(sql)` | Execute arbitrary SQL (CREATE TABLE, etc.) |
 
 ```js
@@ -189,11 +314,11 @@ Database names can only contain letters, digits, dots, underscores, and hyphens,
 await db.run("INSERT OR REPLACE INTO songs (id, title, artist, play_count) VALUES (?, ?, ?, ?)",
   ["1001", "Sunny Day", "Jay Chou", 42]);
 
-// Query single row
+// Query a single row
 const row = await db.get("SELECT * FROM songs WHERE id = ?", ["1001"]);
 console.log(row.row?.title); // "Sunny Day"
 
-// Query multiple rows
+// Query many rows
 const list = await db.all("SELECT * FROM songs ORDER BY play_count DESC");
 for (const item of list.rows) {
   console.log(item.title, item.play_count);
@@ -202,16 +327,16 @@ for (const item of list.rows) {
 
 ### Parameters & BLOBs
 
-Parameters support `string`, `number`, `boolean`, and `null`. For binary data, wrap in an object:
+Parameters support `string`, `number`, `boolean`, and `null`. Wrap binary data in an object:
 
 ```js
-// Write BLOB (hex or base64)
+// Write a BLOB (hex or base64)
 await db.run("INSERT INTO covers (id, data) VALUES (?, ?)", [
   "album-cover",
   { type: "base64", data: "iVBORw0KGgo=" }
 ]);
 
-// Query BLOB, always returns hex string
+// Query a BLOB; always returned as a hex string
 const row = await db.get("SELECT data FROM covers WHERE id = ?", ["album-cover"]);
 console.log(row.row?.data); // { type: "hex", data: "89504e47..." }
 ```
@@ -225,14 +350,14 @@ await db.transaction([
 ]);
 ```
 
-Up to 500 statements per transaction, max ~256 KB per SQL statement, max 5000 rows per query, max ~8 MB result JSON.
+Up to 500 statements per transaction, ~256 KB max per SQL statement, up to 5000 rows per query, and ~8 MB max result JSON.
 
 ### Database Management
 
 | API | Description |
 |-----|------|
-| `ctx.sqlite.listDatabases()` | List all database names for this plugin |
-| `ctx.sqlite.deleteDatabase(name?)` | Delete a named database (defaults to `main`) |
+| `ctx.sqlite.listDatabases()` | List all databases for this plugin |
+| `ctx.sqlite.deleteDatabase(name?)` | Delete a database (defaults to `main`) |
 | `db.close()` | Close the current connection |
 
 ```js
@@ -244,167 +369,134 @@ await ctx.sqlite.deleteDatabase("cache");
 
 ### Lifecycle
 
-- Database files are created on the first `ctx.sqlite.open()` after plugin install
-- Connections are automatically closed when the plugin is disabled, in safe mode, or EchoMusic exits
-- Plugin **uninstall** deletes the entire SQLite private directory for that plugin
-- Plugin update (version upgrade) preserves databases
-- The host intercepts `ATTACH`, `DETACH`, `VACUUM INTO`, `load_extension()`, and other boundary-violating statements
-
----
-
-## Playback Queue Persistence
-
-The `ctx.storage.playback*` API family operates on the persistent playback queue.
-
-| API | Description |
-|-----|------|
-| `playbackGetSnapshot()` | Get current playback state snapshot |
-| `playbackGetQueue()` | Get complete playback queue |
-| `playbackReplaceQueue(items)` | Replace entire queue |
-| `playbackAppendQueueItems(items)` | Append tracks to queue end |
-| `playbackRemoveQueueItem(songId)` | Remove track from queue |
-| `playbackReorderQueueItems(from, to)` | Reorder track positions |
-| `playbackSetCurrentTrack(songId)` | Set current playing track |
-| `playbackUpdateMeta(meta)` | Update queue metadata (e.g., queue name) |
-
-```js
-// Save current playback state
-const snapshot = await ctx.storage.playbackGetSnapshot();
-console.log("Current track:", snapshot.currentTrack);
-
-// Get full queue
-const queue = await ctx.storage.playbackGetQueue();
-
-// Add tracks and maintain order
-await ctx.storage.playbackAppendQueueItems([newTrack]);
-
-// Move 3rd track to 1st position
-await ctx.storage.playbackReorderQueueItems(2, 0);
-```
-
-> Difference from `ctx.player.playlist.*`: `playback*` APIs are persistent storage operations (restored after restart), while `ctx.player.playlist.*` are runtime queue operations.
-
----
-
-## HTTP Requests
-
-`ctx.api.request()` provides a unified HTTP client.
-
-```js
-const result = await ctx.api.request({
-  method: "GET",
-  url: "https://api.example.com/data",
-  params: { page: 1, limit: 20 },
-  headers: {
-    "X-Custom-Header": "value",
-  },
-});
-
-console.log(result.data);
-
-// POST request
-await ctx.api.request({
-  method: "POST",
-  url: "https://api.example.com/submit",
-  data: { name: "test", value: 123 },
-});
-```
-
-| Parameter | Type | Required | Description |
-|------|------|:--:|------|
-| `method` | `string` | ✅ | HTTP method |
-| `url` | `string` | ✅ | Request URL |
-| `params` | `object` | ❌ | URL query parameters |
-| `data` | `any` | ❌ | Request body data |
-| `headers` | `Record<string, string>` | ❌ | Custom headers |
-
----
-
-## Event Listeners
-
-`ctx.events` provides core player event subscriptions.
-
-| API | Callback Parameters | Description |
-|-----|----------|------|
-| `onTrackChange(fn)` | `(track) => void` | Track change |
-| `onPlayStateChange(fn)` | `(isPlaying) => void` | Play/pause state |
-| `onVolumeChange(fn)` | `(volume) => void` | Volume change |
-
-```js
-export function activate(ctx) {
-  ctx.events.onTrackChange((track) => {
-    console.log(`🎵 Now playing: ${track.title} - ${track.artist}`);
-    updateNowPlaying(track);
-  });
-
-  ctx.events.onPlayStateChange((isPlaying) => {
-    console.log(isPlaying ? "▶ Playing" : "⏸ Paused");
-  });
-
-  ctx.events.onVolumeChange((volume) => {
-    console.log(`🔊 Volume: ${volume}%`);
-  });
-}
-```
-
-- Listeners registered via `ctx.events` are **automatically removed** when the plugin is disabled/uninstalled
-- No need to manually cancel listeners in `deactivate()`
+- Database files are created on the plugin's first `ctx.sqlite.open()` after installation
+- Connections close automatically when the plugin is disabled, safe mode is on, or EchoMusic exits
+- Plugin **uninstall** deletes the plugin's entire SQLite private directory
+- Plugin updates (version upgrades) preserve databases
+- The host intercepts out-of-bounds statements such as `ATTACH`, `DETACH`, `VACUUM INTO`, and `load_extension()`
 
 ---
 
 ## Appearance Subscription
 
-`ctx.appearance` allows plugins to respond to theme and appearance changes.
+`ctx.appearance` lets plugins react to theme and appearance changes.
 
 | API | Description |
 |-----|------|
-| `getSnapshot()` | Get current appearance snapshot |
-| `onSnapshot(fn)` | Subscribe to appearance changes |
+| `getSnapshot()` | Get the current appearance snapshot |
+| `onSnapshot(fn)` | Subscribe to appearance changes; returns a dispose function |
 
-### Appearance Snapshot Structure
+### Appearance snapshot structure
 
 ```js
 const snapshot = await ctx.appearance.getSnapshot();
 // {
-//   themeColor: "#FF6B6B",        // Theme color
-//   darkMode: true,               // Whether dark mode
-//   fontFamily: "Microsoft YaHei", // Font
-//   fontSize: 14,                 // Font size
+//   accentColor: "#31cfa1",          // accent color
+//   isDark: true,                    // whether dark mode
+//   fontFamily: "Microsoft YaHei",   // global font (may be absent)
+//   colors: { ... },                 // theme palette (may be absent)
+//   floatingSurfaceFrosted: true,    // whether floating surfaces are frosted (may be absent)
 // }
 ```
 
-### Responding to Theme Changes
+### Responding to theme changes
 
 ```js
-export function activate(ctx) {
-  async function updateTheme() {
-    const { themeColor, darkMode } = await ctx.appearance.getSnapshot();
-    document.documentElement.style.setProperty("--plugin-accent", themeColor);
-    document.documentElement.style.setProperty("--plugin-bg",
-      darkMode ? "#1a1a1a" : "#ffffff"
+export async function activate(ctx) {
+  function applyTheme({ accentColor, isDark }) {
+    document.documentElement.style.setProperty("--plugin-accent", accentColor);
+    document.documentElement.style.setProperty(
+      "--plugin-bg",
+      isDark ? "#1a1a1a" : "#ffffff"
     );
   }
 
-  updateTheme();
+  applyTheme(await ctx.appearance.getSnapshot());
 
-  ctx.appearance.onSnapshot((newTheme) => {
-    document.documentElement.style.setProperty("--plugin-accent", newTheme.themeColor);
-  });
+  ctx.appearance.onSnapshot(applyTheme);
 }
 ```
 
-> Using CSS variables like `var(--theme-color)` provided by the host is simpler for following theme changes and doesn't require JS subscriptions.
+---
+
+## Theme API
+
+`ctx.theme` provides deep customization of EchoMusic's interface styling. See the plugin repository [README](https://github.com/hoowhoami/EchoMusicPlugins) for details.
+
+### Surface styles (ctx.theme.surface)
+
+```js
+ctx.theme.surface.set({
+  enabled: true,
+  mainOpacity: 82,
+  sidebarOpacity: 82,
+  cardOpacity: 86,
+  elevatedOpacity: 88,
+  dialogOpacity: 90,
+  playerOpacity: 92,
+  backdropFilter: "blur(10px)",
+  playerBackdropFilter: "blur(20px) saturate(180%)",
+});
+ctx.theme.surface.clear(); // restore defaults
+```
+
+### Page transitions (ctx.theme.pageTransition)
+
+```js
+ctx.theme.pageTransition.set({
+  enabled: true,
+  mode: "out-in",
+  appear: true,
+  durationMs: 450,
+  easing: "ease-out",
+  enterOpacity: 0,
+  leaveOpacity: 0,
+  enterTranslateY: 6,
+});
+ctx.theme.pageTransition.clear();
+```
+
+### Accent gradient (ctx.theme.accentGradient)
+
+```js
+ctx.theme.accentGradient.set({
+  color: "#ff5c8a",
+  angle: 180,
+  height: "46%",
+  peakOpacity: 0.28,
+  midOpacity: 0.1,
+  dark: { peakOpacity: 0.4, midOpacity: 0.16 },
+});
+ctx.theme.accentGradient.clear();
+```
+
+---
+
+## Scroll control
+
+`ctx.scroll` provides advanced control over the host's page scroll containers.
+
+| API | Description |
+|-----|------|
+| `queryContainers()` | Get all scroll containers |
+| `getCurrentContainer()` | Get the current focused container |
+| `getState(el?)` | Get the scroll state |
+| `scrollToTop(el?)` | Scroll to the top |
+| `scrollToBottom(el?)` | Scroll to the bottom |
+| `observeContainers(handler)` | Observe scroll container changes |
+
+See [UI Extension Guide →](./ui-extension) for the full scroll API (`selector`, `scrollTo`, `queryContainers({ role?, visible? })`, `observeContainers`).
 
 ---
 
 ## Complete Example: Play Stats Plugin with Storage
 
 ```js
-export function activate(ctx) {
+export async function activate(ctx) {
   const STAT_KEY = "playStats";
 
   async function recordPlay(track) {
-    const stats = (await ctx.storage.kvGet(STAT_KEY)) || {};
+    const stats = (await ctx.storage.get(STAT_KEY)) || {};
     const trackKey = `${track.id || track.title}`;
 
     stats[trackKey] = stats[trackKey] || {
@@ -417,37 +509,26 @@ export function activate(ctx) {
     stats[trackKey].playCount++;
     stats[trackKey].lastPlayed = new Date().toISOString();
 
-    await ctx.storage.kvSet(STAT_KEY, stats);
+    await ctx.storage.set(STAT_KEY, stats);
   }
 
-  async function showStats() {
-    const stats = (await ctx.storage.kvGet(STAT_KEY)) || {};
-    const entries = Object.values(stats)
-      .sort((a, b) => b.playCount - a.playCount)
-      .slice(0, 10);
+  // Watch track changes through a computed
+  ctx.vue.watch(
+    () => ctx.player.currentTrackId,
+    (newId, oldId) => {
+      if (newId && newId !== oldId) {
+        recordPlay(ctx.player.currentTrack);
+      }
+    }
+  );
 
-    console.table(
-      entries.map(e => ({
-        Song: e.title,
-        Artist: e.artist,
-        Plays: e.playCount,
-        LastPlayed: e.lastPlayed?.slice(0, 10),
-      }))
-    );
-  }
-
-  // Record on every track change
-  ctx.events.onTrackChange(recordPlay);
-
-  // Register a page to display stats
-  const { h } = ctx.vue;
+  const { h, ref, onMounted } = ctx.vue;
   const StatsPage = ctx.vue.defineComponent({
     setup() {
-      const { ref, onMounted } = ctx.vue;
       const topTracks = ref([]);
 
       onMounted(async () => {
-        const stats = (await ctx.storage.kvGet(STAT_KEY)) || {};
+        const stats = (await ctx.storage.get(STAT_KEY)) || {};
         topTracks.value = Object.values(stats)
           .sort((a, b) => b.playCount - a.playCount)
           .slice(0, 20);
@@ -456,14 +537,12 @@ export function activate(ctx) {
       return () =>
         h("div", { class: "page-container" }, [
           h("h1", "📊 Play Stats"),
-          h("div", { class: "track-list" },
-            topTracks.value.map(t =>
-              h("div", { class: "track-item" }, [
-                h("span", t.title),
-                h("span", { style: "color: var(--color-text-secondary); margin-left: 8px;" },
-                  `${t.playCount} plays`),
-              ])
-            )
+          ...topTracks.value.map(t =>
+            h("div", { class: "track-item" }, [
+              h("span", t.title),
+              h("span", { style: "color: var(--color-text-secondary); margin-left: 8px;" },
+                `${t.playCount} plays`),
+            ])
           ),
         ]);
     },
@@ -472,7 +551,6 @@ export function activate(ctx) {
   ctx.ui.addPage({
     id: "play-stats",
     title: "Play Stats",
-    icon: "📊",
     component: StatsPage,
   });
 }
@@ -484,6 +562,7 @@ export function activate(ctx) {
 
 | Document | Content |
 |------|------|
-| [Player & Audio Engine →](./player-audio) | Playback controls, EQ, spatial audio, lyrics system |
-| [Windows & System →](./windows-system) | Floating windows, desktop lyric, Mini player |
-| [API Reference →](./context-api) | Complete ctx API listing |
+| [Player & Audio Engine →](./player-audio) | Playback control, play queue, spectrum, lyrics system |
+| [Windows & System →](./windows-system) | Floating windows, Now Playing, processes, icons |
+| [API Overview →](./context-api) | Full plugin ctx API list |
+| [Internal API Reference →](../internal-api/) | Internal APIs (persistence/events/HTTP, etc.) |

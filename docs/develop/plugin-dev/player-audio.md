@@ -59,11 +59,11 @@ export function activate(ctx) {
 
 | 方法 | 说明 |
 |------|------|
-| `play()` | 开始播放 |
+| `play(trackId?, options?)` | 播放指定歌曲（`options?: {autoPlay?, sourceQueueId?}`）或恢复播放 |
 | `pause()` | 暂停播放 |
 | `toggle()` | 播放 / 暂停切换 |
-| `prev()` | 上一首 |
-| `next()` | 下一首 |
+| `prev()` | 队列内上一首 |
+| `next()` | 队列内下一首 |
 | `stop()` | 停止播放 |
 | `seek(time)` | 跳转到指定时间（秒） |
 | `setVolume(vol)` | 设置音量（0-100） |
@@ -71,11 +71,10 @@ export function activate(ctx) {
 | `setPlayMode(mode)` | 设置播放模式 |
 | `setAudioQuality(q)` | 设置音频品质 |
 | `setAudioEffect(e)` | 设置音效 |
-| `playTrack(track)` | 播放指定歌曲 |
-| `playSong(songId, opts?)` | 通过 ID 播放歌曲（可选覆盖队列） |
-| `playNext()` | 播放下一首（跳过队列） |
-| `playLast()` | 播放上一首 |
-| `replaceQueueAndPlay(items)` | 替换队列并播放 |
+| `playTrack(trackId, options?)` | 按 ID 播放指定歌曲 |
+| `playSong(song, opts?)` | 播放歌曲对象（入队并播放） |
+| `playNext(song, opts?)` / `playLast(song, opts?)` | 把歌曲插播到当前之后 / 末尾 |
+| `replaceQueueAndPlay(songs, options?)` | 替换队列并播放 |
 | `dislikePersonalFm()` | 私人 FM 点"不喜欢" |
 | `toggleLyricView(open?)` | 切换歌词视图 |
 
@@ -90,36 +89,42 @@ ctx.player.setPlaybackRate(1.0);
 // 循环模式
 ctx.player.setPlayMode("loop");
 
-// 播放指定歌曲
-ctx.player.playTrack({ id: "song_001", title: "歌名", url: "..." });
+// 按 ID 播放指定歌曲
+ctx.player.playTrack("song_001");
 ```
 
 ---
 
 ## 播放队列管理
 
-`ctx.playlist` 提供对播放队列的完整控制。
+`ctx.playlist` 提供对播放队列的完整控制，支持**多队列**模型（`queues` 为全部队列，`activeQueue` 为当前生效队列；操作缺省作用于 active 队列）。
 
 | API | 说明 |
 |-----|------|
-| `getQueue()` | 获取当前播放队列列表 |
-| `addTrack(track)` | 添加歌曲到队尾 |
-| `removeTrack(songId)` | 移除指定歌曲 |
-| `clear()` | 清空队列 |
-| `replaceQueue(items)` | 替换整个队列 |
-| `reorder(from, to)` | 重排歌曲位置 |
-| `playNext(track)` | 插播（下一首优先播放） |
+| `getActiveQueue()` | 获取当前生效队列 |
+| `getQueue(queueId)` / `getQueueSongs(queueId?)` | 获取指定队列 / 其歌曲列表 |
+| `queues` / `activeQueue` | 全部队列 / 当前队列（computed） |
+| `setActiveQueue(queueId)` | 切换生效队列 |
+| `append(songs, options?)` | 追加歌曲到队尾 |
+| `remove(songId, queueId?)` | 移除指定歌曲 |
+| `clear(queueId?)` | 清空队列 |
+| `replace(songs, options?)` | 替换整个队列 |
+| `reorder(fromIndex, toIndex, queueId?)` | 重排歌曲位置 |
+| `playNext(song, options?)` | 插播（下一首优先播放） |
+| `playSong(song, options?)` / `playLast(song, options?)` | 播放歌曲对象 / 追加到末尾 |
+| `enqueuePlayNext(songId)` / `enqueuePlayNextSequential(songId)` | 按 ID 插播（覆盖式 / 顺序排队） |
+| `replaceAndPlay(songs, options?)` | 替换队列并播放 |
 
 ```js
 // 追加歌曲到队列
-ctx.playlist.addTrack({ id: "001", title: "歌名", artist: "歌手" });
+ctx.playlist.append([{ id: "001", title: "歌名", artist: "歌手" }]);
 
 // 插播（下一首播放）
 ctx.playlist.playNext({ id: "urgent", title: "紧急插播" });
 
 // 清空后替换
 ctx.playlist.clear();
-ctx.playlist.replaceQueue(recommendedSongs);
+ctx.playlist.replace(recommendedSongs);
 ```
 
 ---
@@ -156,8 +161,7 @@ const timeOffset = ctx.lyric.timeOffset;     // 时间偏移（秒）
 ```js
 ctx.lyrics.registerResolver({
   id: "my-lyrics-source",        // 解析器唯一 ID
-  name: "我的歌词源",             // 显示名称
-  order: 200,                    // 优先级（越大越先使用）
+  order: 200,                    // 优先级（升序执行，越小越先使用）
   match({ track }) {             // 是否匹配此歌曲
     return Boolean(track?.hash);
   },
@@ -171,8 +175,7 @@ ctx.lyrics.registerResolver({
 | 参数 | 类型 | 必选 | 说明 |
 |------|------|:--:|------|
 | `id` | `string` | ✅ | 解析器唯一 ID |
-| `name` | `string` | ✅ | 显示名称 |
-| `order` | `number` | ❌ | 优先级，越大越优先 |
+| `order` | `number` | ❌ | 优先级，升序执行，**越小越优先** |
 | `match({track})` | `function` | ❌ | 判断是否匹配 |
 | `resolve({track})` | `async function` | ✅ | 返回 `{ source, lyric }` 或 null |
 
@@ -192,8 +195,10 @@ ctx.lyrics.onSnapshot((snapshot) => {
 ### 发送命令
 
 ```js
-ctx.lyrics.command("scrollDown");
-ctx.lyrics.command("scrollUp");
+// 可用命令：toggleTranslation / toggleRomanization /
+// lyricOffsetBackward / lyricOffsetForward / lyricOffsetReset / seekForward / seekBackward
+ctx.lyrics.command("toggleTranslation");
+ctx.lyrics.command("lyricOffsetForward");
 ```
 
 ---
@@ -233,11 +238,14 @@ ctx.lyricEffects.register({
 |------|------|:--:|------|
 | `id` | `string` | ✅ | 动效唯一 ID |
 | `title` | `string` | ✅ | 显示名称 |
-| `scope` | `string` | ✅ | `"page"`（页面歌词）或 `"desktop"`（桌面歌词） |
+| `scope` | `string \| string[]` | ✅ | `"page"`（页面歌词）、`"desktop"`（桌面歌词），或两者的数组 |
+| `order` | `number` | ❌ | 同一 host 上多个动效的排序 |
 | `layer` | `string` | ❌ | `"style"` 或 `"decorator"` |
 | `className` | `string` | ❌ | 注入到 host 节点的 CSS class |
 | `css` | `string` | ❌ | 注入的全局 CSS |
 | `mount(host)` | `function` | ❌ | host 挂载时调用，返回清理函数 |
+
+`mount(host)` 的 `host` 是富接口，除挂载节点外还提供：`getSnapshot()`（快照含逐字歌词、时间轴与外观信息）、`subscribe(fn)`（订阅快照变化）、`setAutoScrollHandler(fn)`（接管自动滚动）、`requestUpdate()`（请求重绘）。
 
 > ℹ️ 桌面歌词窗口是独立渲染进程，与主窗口不共享 JS 内存。需要使用 `ctx.desktopLyric` 判断当前运行环境。
 
@@ -247,16 +255,23 @@ ctx.lyricEffects.register({
 
 > 需要 capability：`audioSource: true`
 
-接管特定平台或特定歌曲的音源解析：
+接管特定平台或特定歌曲的音源解析。解析器支持**分阶段接管**（`position`）与**候选加工**（`transform`）：
 
 ```js
 ctx.player.audioSource.register({
   id: "webdav-audio",
-  name: "WebDAV 音源",
-  order: 100,
-  async resolve({ songId }) {
-    const url = await resolveWebDAVUrl(songId);
-    return url ? { url } : null;
+  position: "after-catalog",   // 兜底级别：before-catalog / after-catalog / final-fallback
+  order: 100,                  // 同一阶段内升序执行（与 transform 共用）
+  match({ track }) {
+    return Boolean(track?.hash);
+  },
+  async resolve({ track, quality }) {
+    const url = await resolveWebDAVUrl(track.id, quality);
+    return url || null;        // 返回 URL 字符串、Partial<ResolvedAudioSource>，null 表示放弃
+  },
+  // 可选：对指定阶段产生的每个候选依次加工（可替换、修改或拒绝）
+  transform({ source, stage }) {
+    if (stage === "cloud") return { ...source, url: source.url.replace("http://", "https://") };
   },
 });
 ```
@@ -264,9 +279,14 @@ ctx.player.audioSource.register({
 | 参数 | 类型 | 说明 |
 |------|------|------|
 | `id` | `string` | 解析器唯一 ID |
-| `name` | `string` | 显示名称 |
-| `order` | `number` | 优先级 |
-| `resolve({ songId })` | `async` | 返回 `{ url }` 或 null |
+| `order` | `number` | 同一阶段内升序执行，越小越先 |
+| `position` | `string` | 兜底级别：`before-catalog` / `after-catalog` / `final-fallback` |
+| `match({track, ...})` | `async` | 是否处理该歌曲 |
+| `resolve({track, quality, effect, forceReload, position})` | `async` | 返回 URL 字符串、`Partial<ResolvedAudioSource>` 或 null |
+| `transformStages` | `string \| string[]` | 限定 transform 处理的阶段（默认全部阶段） |
+| `transform({source, stage, ...})` | `async` | 加工候选：返回字符串（替换 URL）、部分字段（合并）或 `false`（拒绝该候选） |
+
+> 解析结果为 `null`/`undefined` 表示保持当前候选，`false` 表示拒绝并继续播放器兜底链。
 
 ---
 

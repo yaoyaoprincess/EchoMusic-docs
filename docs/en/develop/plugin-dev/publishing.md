@@ -16,39 +16,40 @@ my-plugin.zip
   └── my-plugin/
       ├── manifest.json
       ├── index.js
-      ├── style.css      ← Optional
-      └── icon.svg       ← Optional
+      ├── style.css      ← optional
+      └── icon.svg       ← optional
 ```
 
-> Downside: users can't receive automatic updates.
+> Drawback: users cannot get updates automatically.
 
 ---
 
 ## Online Plugin Registry
 
-An online registry lets users **browse, one-click install, and auto-update** plugins from within EchoMusic's plugin manager.
+An online registry lets users **browse, one-click install, and auto-update** plugins from EchoMusic's plugin management page.
 
-### How It Works
+> 📊 Install popularity statistics are collected by EchoMusic automatically — no integration needed. See [Popularity & Stats](./marketplace-stats).
+
+### How it works
 
 ```
-  ┌─────────────┐     fetch echo-plugins.json     ┌──────────────┐
-  │  EchoMusic   │ ───────────────────────────────▶│  GitHub Repo  │
-  │ Plugin Manager│                                  │  (Registry)   │
-  │              │ ◀───────────────────────────────│              │
-  │ Show plugin  │      Return plugin index data    └──────────────┘
-  │ list         │
+  ┌─────────────┐      fetch echo-plugins.json      ┌──────────────┐
+  │  EchoMusic   │ ─────────────────────────────────▶ │  GitHub repo  │
+  │  management  │                                     │  (registry)   │
+  │    page      │ ◀───────────────────────────────── │              │
+  │  shows list  │      returns the plugin index       └──────────────┘
   └──────┬───────┘
-         │ User clicks "Install"
+         │ user clicks "Install"
          ▼
-  ┌─────────────┐     clone / download              ┌──────────────┐
-  │ Local plugin │ ◀─────────────────────────────────│  Plugin Repo  │
-  │ directory    │                                    └──────────────┘
+  ┌─────────────┐      clone / download               ┌──────────────┐
+  │ local plugin │ ◀────────────────────────────────── │  plugin repo  │
+  │   directory  │                                     └──────────────┘
   └─────────────┘
 ```
 
-### Step 1: Create a Registry Repository
+### Step 1: create a registry repository
 
-Create a GitHub repository (e.g. `my-echo-plugins`) and add `echo-plugins.json` at the root:
+Create a GitHub repository (e.g. `my-echo-plugins`) and add an `echo-plugins.json` at the repository root:
 
 ```json
 {
@@ -73,72 +74,72 @@ Create a GitHub repository (e.g. `my-echo-plugins`) and add `echo-plugins.json` 
 }
 ```
 
-### echo-plugins.json Fields
+### echo-plugins.json fields
 
-#### Root-Level Fields
+#### Root fields
 
 | Field | Type | Required | Description |
-|-------|------|:--:|------|
+|------|------|:--:|------|
 | `name` | `string` | ✅ | Registry name |
-| `homepage` | `string` | ❌ | Registry homepage URL |
-| `plugins` | `array` | ✅ | List of included plugins |
+| `homepage` | `string` | ❌ | Registry home page URL |
+| `plugins` | `array` | ✅ | Included plugin list |
 
-#### plugins[] Entry Fields
+#### plugins[] entries
 
 | Field | Type | Required | Description |
-|-------|------|:--:|------|
-| `id` | `string` | ✅ | Plugin ID, must match `id` in manifest.json |
-| `path` | `string` | ✅ | Plugin directory path within the repo (empty string = repo root) |
-| `repo` | `string` | ❌ | Plugin source repository URL; leave empty to use the registry repo |
-| `homepage` | `string` | ❌ | Plugin detail page or documentation link |
-| `tags` | `string[]` | ❌ | Category tags for filtering and searching in the online list |
+|------|------|:--:|------|
+| `id` | `string` | ✅ | Plugin id; must match the `id` in the plugin's manifest.json |
+| `path` | `string` | ✅ | Directory path inside the repository (empty string means the repository root) |
+| `repo` | `string` | ❌ | Plugin source repository; leave empty to use the registry repository |
+| `homepage` | `string` | ❌ | Plugin details or documentation link |
+| `tags` | `string[]` | ❌ | Category tags used for filtering and search in the online list |
 
-> ⚠️ **Do not include `version`, `description`, or `author` in `echo-plugins.json`.** These belong to each plugin's `manifest.json`. EchoMusic reads them automatically from the plugin repository.
+> ⚠️ **Do not maintain `version`, `description`, `author`, etc. in `echo-plugins.json`.** Those belong to each plugin's `manifest.json`; EchoMusic reads them from the plugin repository automatically.
 
-### Step 2: Place Plugins in the Repository
+### Step 2: put the plugin into a repository
 
-If the plugin lives in a separate repository (recommended):
+If the plugin lives in its own repository (recommended):
 
 ```
-your-name/lyric-enhancer/        ← Independent plugin repo
+your-name/lyric-enhancer/        ← standalone plugin repository
   ├── manifest.json
   ├── index.js
   ├── style.css
   └── icon.svg
 ```
 
-Then reference it in the registry's `echo-plugins.json`:
+Then point to it from the registry's `echo-plugins.json`:
 
 ```json
 {
   "id": "lyric-enhancer",
-  "path": "",                    ← Empty string because the repo root is the plugin
+  "path": "",                    ← empty string: the repository root is the plugin
   "repo": "https://github.com/your-name/lyric-enhancer"
 }
 ```
 
-If multiple plugins are in the same repository:
+If multiple plugins share one repository:
 
 ```
-your-name/my-echo-plugins/       ← Registry repository
+your-name/my-echo-plugins/       ← registry repository
   ├── echo-plugins.json
-  ├── lyric-enhancer/            ← Plugin 1
+  ├── lyric-enhancer/            ← plugin 1
   │   ├── manifest.json
   │   └── index.js
-  └── mini-spectrum/             ← Plugin 2
+  └── mini-spectrum/             ← plugin 2
       ├── manifest.json
       └── index.js
 ```
 
-Corresponding `echo-plugins.json`:
+The corresponding `echo-plugins.json`:
 
 ```json
 {
   "plugins": [
     {
       "id": "lyric-enhancer",
-      "path": "lyric-enhancer",   ← Points to subdirectory
-      "repo": ""                  ← Empty, uses this repo
+      "path": "lyric-enhancer",   ← points to the subdirectory
+      "repo": ""                  ← empty: use this repository
     },
     {
       "id": "mini-spectrum",
@@ -149,12 +150,138 @@ Corresponding `echo-plugins.json`:
 }
 ```
 
-### Step 3: Users Add the Registry in EchoMusic
+---
 
-1. Open EchoMusic → Settings → Plugin Manager
-2. Click "Add Plugin Registry"
-3. Enter the registry repository URL: `https://github.com/your-name/my-echo-plugins`
-4. EchoMusic automatically fetches `echo-plugins.json` and displays available plugins
+## Programmatic Plugin Management API
+
+Besides the UI's "Add registry" flow, plugins can manage registries and install/uninstall plugins programmatically via **`ctx.electron.plugins`**.
+
+> ⚠️ These APIs live under `ctx.electron.plugins` (the host preload's `window.electron.plugins`), **not** `ctx.plugins` — the ctx top level has no `plugins` member. They are host management APIs: calling them directly changes the user's plugin list (install, uninstall, enable/disable). Use them only in clearly management-oriented plugins (e.g. a plugin manager) and make the actions explicit in your UI.
+
+### Registry management (electron.plugins.marketplace)
+
+| API | Description |
+|-----|------|
+| `ctx.electron.plugins.marketplace.listSources()` | List all added registries, returns `{ sources }` |
+| `ctx.electron.plugins.marketplace.addSource(input, options?)` | Add a registry, `input` is `{ url, name?, enabled? }` |
+| `ctx.electron.plugins.marketplace.patchSource(sourceId, patch)` | Update registry settings, `patch` is `{ name?, enabled? }` |
+| `ctx.electron.plugins.marketplace.removeSource(sourceId)` | Remove a registry |
+| `ctx.electron.plugins.marketplace.list(options?)` | Browse available plugins across registries, returns `{ ok, sources, plugins, fetchedAt }` |
+| `ctx.electron.plugins.marketplace.install(sourceId, pluginId, options?)` | Install a plugin from a registry |
+
+```js
+// Add a registry (enabled: false adds it without enabling)
+await ctx.electron.plugins.marketplace.addSource({
+  url: "https://github.com/hoowhoami/EchoMusicPlugins",
+  name: "EchoMusic Official Plugins",
+  enabled: true,
+});
+
+// List current registries
+const { sources } = await ctx.electron.plugins.marketplace.listSources();
+console.log(sources);
+
+// Rename a registry
+await ctx.electron.plugins.marketplace.patchSource("source-id", {
+  name: "Updated name",
+});
+```
+
+### Browsing and installing
+
+```js
+// Get all available plugins
+const result = await ctx.electron.plugins.marketplace.list();
+// result.plugins is a PluginMarketplacePlugin list (sourceId, manifest, stats, compatibility, ...)
+
+// Install a plugin online
+const installResult = await ctx.electron.plugins.marketplace.install(
+  "source-id",
+  "my-plugin",
+  {
+    githubProxyUrl: "https://ghproxy.example/", // optional: GitHub acceleration proxy
+    enableAfterInstall: true,                   // optional: enable right after install
+  },
+);
+if (installResult.ok) {
+  console.log("Installed:", installResult.plugin.name, "was update:", installResult.updated);
+}
+```
+
+`install` options (`PluginMarketplaceInstallOptions`):
+
+| Option | Type | Description |
+|------|------|------|
+| `githubProxyUrl` | `string` | GitHub acceleration proxy used for this install |
+| `enableAfterInstall` | `boolean` | Whether to enable the plugin automatically after installation |
+
+> There is no `force`-style override option: installing over an existing plugin goes through the host's update flow (version comparison + transactional replacement) and rolls back on failure.
+
+---
+
+## Local Install & Uninstall
+
+### Local install
+
+| API | Description |
+|-----|------|
+| `ctx.electron.plugins.installLocal(paths, options?)` | Install plugins from local paths (ZIP files/folders), `options` is `{ enableAfterInstall?, expectedPluginId? }` |
+| `ctx.electron.plugins.getDroppedFilePaths(files)` | Convert a drop event's `File[]` into absolute local paths |
+
+```js
+// Install plugins dragged from the file manager
+const paths = ctx.electron.plugins.getDroppedFilePaths(event.dataTransfer.files);
+const result = await ctx.electron.plugins.installLocal(paths);
+console.log(`Installed ${result.installed}, failed ${result.failed}`);
+```
+
+### Uninstall
+
+| API | Description |
+|-----|------|
+| `ctx.electron.plugins.uninstall(pluginId, options?)` | Uninstall a plugin (the plugin directory, KV data, and SQLite are always removed); `options.removeData: true` additionally deletes files in the plugin's private data/cache directories |
+
+```js
+await ctx.electron.plugins.uninstall("my-plugin", { removeData: true });
+```
+
+---
+
+## Enable/Disable & Safe Mode
+
+| API | Description |
+|-----|------|
+| `ctx.electron.plugins.setEnabled(pluginId, enabled)` | Enable/disable a plugin |
+| `ctx.electron.plugins.setSafeMode(enabled)` | Toggle global safe mode (true disables all plugins) |
+| `ctx.electron.plugins.reloadRuntimes()` | Broadcast a plugin runtime reload to all windows |
+
+### Failure reporting
+
+Plugins can proactively report runtime failures so EchoMusic can decide whether to suggest disabling them.
+
+| API | Description |
+|-----|------|
+| `reportFailure(failure)` | Report a failure record, `failure` is `{ pluginId?, pluginIds?, reason, message, createdAt? }` |
+| `clearFailure(pluginId?)` | Clear failure records (omit the argument to clear all) |
+| `markStartup(pluginIds)` | Mark plugins active during startup |
+| `setActiveSession(pluginIds)` | Mark plugins active in the current session |
+| `clearStartup()` | Clear startup markers |
+
+`reason` is one of `"activation-error"` (activation failed), `"runtime-error"` (runtime error), `"render-process-gone"` (renderer crash), `"unresponsive"` (unresponsive).
+
+```js
+// Report a failure
+ctx.electron.plugins.reportFailure({
+  pluginId: ctx.manifest.id,
+  reason: "runtime-error",
+  message: "Network request failed during plugin initialization",
+});
+
+// Clear this plugin's failure history
+ctx.electron.plugins.clearFailure(ctx.manifest.id);
+```
+
+> If an enabled plugin crashes repeatedly within one **startup session**, EchoMusic automatically suggests disabling it.
 
 ---
 
@@ -162,7 +289,7 @@ Corresponding `echo-plugins.json`:
 
 ### version in manifest.json
 
-Plugin version is defined in `manifest.json` following [Semantic Versioning](https://semver.org/):
+The plugin version is defined in `manifest.json` and follows [Semantic Versioning](https://semver.org/):
 
 ```json
 {
@@ -170,17 +297,17 @@ Plugin version is defined in `manifest.json` following [Semantic Versioning](htt
 }
 ```
 
-### Update Detection
+### Update detection
 
-EchoMusic compares the locally installed plugin `version` with the online registry's `manifest.json` `version`:
+EchoMusic compares the installed plugin's `version` with the `manifest.json` `version` from the online registry:
 
-| Scenario | EchoMusic Behavior |
-|----------|-------------------|
-| Online version > local version | Shows "Update available", prompts user to upgrade |
-| Online version = local version | Shows "Up to date" |
-| Local version not found in registry | No automatic update prompt |
+| Situation | EchoMusic behavior |
+|------|----------------|
+| Online version > local version | Shows "update available" and prompts to upgrade |
+| Online version = local version | Shows "up to date" |
+| Local version missing from the registry | No update prompt |
 
-### Version Upgrade Guidelines
+### Version bump guidelines
 
 ```json
 // Bug fix: bump PATCH
@@ -195,13 +322,13 @@ EchoMusic compares the locally installed plugin `version` with the online regist
 
 ---
 
-## Using TypeScript / Vue SFC
+## TypeScript / Vue SFC
 
-Plugin entries run in a browser ESM environment. If you need TypeScript or `.vue` single-file components, you must first bundle them into plain JavaScript ESM.
+The plugin entry runs in a browser ESM environment. To use TypeScript or `.vue` single-file components, bundle everything into a plain JavaScript ESM first.
 
-### Recommended Toolchain
+### Recommended toolchains
 
-#### Option 1: Vite (Recommended)
+#### Option 1: Vite (recommended)
 
 ```bash
 # Initialize
@@ -218,19 +345,19 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
-      entry: 'src/index.ts',        // Entry point
+      entry: 'src/index.ts',        // entry
       formats: ['es'],              // ESM format
-      fileName: () => 'index.js',   // Output filename
+      fileName: () => 'index.js',   // output file name
     },
     rollupOptions: {
-      external: [],                 // Don't exclude any deps (host provides none)
+      external: [],                 // bundle everything (the host provides no dependencies)
     },
     outDir: 'dist',
   },
 });
 ```
 
-After building, point `main` in `manifest.json` to `dist/index.js`:
+After building, point `manifest.json`'s `main` at `dist/index.js`:
 
 ```json
 {
@@ -255,34 +382,35 @@ npm install -D esbuild
 
 ---
 
-## Floating Window Supplement
+## Floating window notes
 
-Regarding `contributes.windows` configuration (detailed in [Manifest Reference](./manifest#contributeswindows)), here are additional tips:
+For the `contributes.windows` configuration (detailed in the [Manifest Reference](./manifest#contributeswindows)), a few extra notes:
 
-- Floating windows are created by the **Electron main process** and run in a different process from your plugin JS
-- The floating window's HTML can use `<script>` tags, but cannot directly access `ctx`
-- For communication between the floating window and main window, use `postMessage` or Electron IPC (via host-provided bridges)
-- See the [EchoMusicPlugins Windows Docs](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md) for detailed documentation
+- Floating windows are created by the **Electron main process**, in a different process from the plugin JS
+- The floating window entry script runs through the host's floating-window loader and receives a **dedicated floating window context** (`activateWindow(ctx)` / `activate(ctx)` / default function) with only the subset of APIs needed to render the window
+- See [Windows & System →](./windows-system) and the [EchoMusicPlugins floating window guide](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/floating-windows.md) for details
 
 ---
 
-## Release Checklist
+## Publishing checklist
 
-Before publishing your plugin, verify each item:
+Before publishing, verify each item:
 
-- [ ] `manifest.json` is well-formed, valid JSON
-- [ ] `id` is unique, no conflicts
+- [ ] `manifest.json` is valid JSON with the correct format
+- [ ] `id` is unique and conflict-free
 - [ ] `version` follows semver
-- [ ] `capabilities` follows the principle of least privilege
-- [ ] Entry file has no bare imports (no `import from 'vue'`)
-- [ ] `requires.echoMusicVersion` range is reasonable
-- [ ] Tested successfully in EchoMusic
-- [ ] `echo-plugins.json` does not include version/description/author (belongs to manifest.json)
+- [ ] `capabilities` follows least privilege
+- [ ] The entry file has no bare imports (no `import from 'vue'`)
+- [ ] `requires.echoMusicVersion` has a sensible range
+- [ ] Tested in EchoMusic
+- [ ] `echo-plugins.json` contains no version/description/author (they belong in manifest.json)
 
 ---
 
 ## Next Steps
 
-- [Plugin Development Overview →](./) — Back to overview
-- [Context API Reference →](./context-api) — Complete ctx API reference
-- [EchoMusicPlugins Repository →](https://github.com/hoowhoami/EchoMusicPlugins) — Official plugin examples
+- [API Overview →](./context-api) — full ctx API reference
+- [Windows & System →](./windows-system) — floating windows, desktop lyric, mini player
+- [📊 Popularity & Stats →](./marketplace-stats) — popularity methodology and stat queries
+- [Plugin Development Overview →](./) — back to the overview
+- [EchoMusicPlugins repository →](https://github.com/hoowhoami/EchoMusicPlugins) — official plugin examples

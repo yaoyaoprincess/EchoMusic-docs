@@ -19,33 +19,27 @@ outline: [2, 4]
   "icon": "icon.svg",
   "main": "index.js",
   "style": "style.css",
+  "tags": ["tool"],
   "runtime": {
     "miniPlayer": false,
     "desktopLyric": true
   },
   "capabilities": {
-    "audioSource": false,
     "audioSpectrum": true,
-    "kugouApi": false,
-    "kugouVerification": false,
-    "localFiles": true,
-    "lyricEffects": false,
     "lyrics": true,
-    "process": false,
-    "webServer": false,
-    "sqlite": false
+    "localFiles": true
   },
   "requires": {
-    "echoMusicVersion": ">=2.2.6-beta.9 <3"
+    "echoMusicVersion": ">=2.3.2 <3"
   },
   "contributes": {
     "windows": [
       {
         "id": "my-float",
-        "label": "我的浮窗",
-        "url": "float.html",
-        "transparent": true,
-        "alwaysOnTop": true
+        "title": "我的浮窗",
+        "main": "float.js",
+        "defaultWidth": 360,
+        "defaultHeight": 200
       }
     ]
   }
@@ -149,6 +143,36 @@ outline: [2, 4]
 
 ---
 
+### tags
+
+| 属性 | 值 |
+|------|-----|
+| 类型 | `string[]` |
+| 必选 | ❌ |
+
+插件标签数组，可用于分类或筛选（`echo-plugins.json` 中的 `tags` 字段用于插件源目录归类）。
+
+```json
+"tags": ["lyrics", "tool"]
+```
+
+---
+
+### downloadUrl
+
+| 属性 | 值 |
+|------|-----|
+| 类型 | `string` |
+| 必选 | ❌ |
+
+插件包的直接下载地址（可选）。未提供时，在线插件源按插件源仓库路径下载。
+
+```json
+"downloadUrl": "https://example.com/releases/my-plugin-1.2.3.zip"
+```
+
+---
+
 ### icon
 
 | 属性 | 值 |
@@ -226,7 +250,7 @@ outline: [2, 4]
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|:---:|------|
 | `miniPlayer` | `boolean` | `false` | 是否在 Mini 播放器窗口中加载 |
-| `desktopLyric` | `boolean` | `false` | 是否在桌面歌词窗口中加载。改变桌面歌词布局、动效或尺寸时，需同时使用 `ctx.lyricEffects.register({ scope: &quot;desktop&quot; })` 和 `ctx.desktopLyric`。 |
+| `desktopLyric` | `boolean` | `false` | 是否在桌面歌词窗口中加载。改变桌面歌词布局、动效或尺寸时，需同时使用 `ctx.lyricEffects.register({ scope: "desktop" })` 和 `ctx.desktopLyric`。 |
 
 ### 使用场景
 
@@ -249,14 +273,21 @@ outline: [2, 4]
 "capabilities": {
   "audioSource": false,
   "audioSpectrum": true,
+  "backups": false,
+  "downloads": false,
   "kugouApi": false,
   "kugouVerification": false,
   "localFiles": true,
   "lyricEffects": false,
   "lyrics": true,
+  "lyricsPage": false,
   "process": false,
-  "webServer": false,
-  "sqlite": false
+  "serverIntercept": false,
+  "sqlite": false,
+  "tcp": false,
+  "theme": false,
+  "unrestrictedNetwork": false,
+  "webServer": false
 }
 ```
 
@@ -273,11 +304,12 @@ outline: [2, 4]
 ```js
 // 需要使用 audioSource 能力
 ctx.player.audioSource.register({
-  platform: "my-platform",
-  async resolve(songId) {
-    const response = await fetch(`https://api.example.com/song/${songId}`);
+  id: "my-platform-resolver",
+  position: "after-catalog", // 兜底级别，旧插件默认 before-catalog
+  async resolve({ track, quality }) {
+    const response = await fetch(`https://api.example.com/song/${track.id}`);
     const data = await response.json();
-    return { url: data.streamUrl };
+    return data.streamUrl; // 返回 URL 字符串，或 Partial<ResolvedAudioSource> 对象
   },
 });
 ```
@@ -292,11 +324,67 @@ ctx.player.audioSource.register({
 
 ```js
 // 需要使用 audioSpectrum 能力
-ctx.audio.spectrum.subscribe({ fftSize: 2048 }, (data) => {
-  // data.frequencyData 为 Float32Array，包含频域数据
-  drawVisualizer(data.frequencyData);
+ctx.audio.spectrum.subscribe({ fps: 30, binCount: 48 }, (frame) => {
+  // frame.bins 为频谱数据数组，frame.waveform 为可选波形数据
+  drawVisualizer(frame.bins);
 });
 ```
+
+#### backups
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.backups` |
+
+创建与恢复**应用备份**，或把插件自己的存储后端注册为备份提供者。详见[备份与恢复 →](./backups)。
+
+#### downloads
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.net.download` / `ctx.net.downloads` |
+
+使用宿主**下载引擎**进行断点续传下载（进度订阅、暂停/恢复、sha256 校验）。详见[网络与下载 →](./network)。
+
+#### lyricsPage
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.ui.lyricsPage` |
+
+注册**自定义歌词页与换肤方案**（`register/usePage/useSkin/openSkins`）。详见[歌词页换肤 →](./lyrics-page)。
+
+#### theme
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.theme.register` |
+
+注册**完整应用主题**（亮/暗色 variants、颜色 token、背景与装饰）。详见[主题相关章节](./filesystem-storage#主题相关)。
+
+#### tcp
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.net.tcp.connect` |
+
+建立**原始 TCP 连接**（读写、超时与保活配置，连接上限 16）。详见[网络与下载 →](./network#tcp-客户端)。
+
+#### unrestrictedNetwork
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.net.request` |
+
+通过**主进程发起网络请求**（绕过渲染进程 CORS 限制，支持自定义 TLS/超时/重定向策略）。详见[网络与下载 →](./network)。
+
+#### serverIntercept
+
+| 属性 | 值 |
+|------|-----|
+| 授予 | `ctx.server.intercept` |
+
+**拦截主程序发往 API server 的请求**（读取、修改、Mock 或转发）。详见[服务请求拦截 →](./server-intercept)。
 
 #### kugouApi
 
@@ -430,15 +518,22 @@ const row = await db.get("SELECT * FROM songs WHERE id = ?", ["1"]);
   "windows": [
     {
       "id": "my-float",
-      "label": "我的浮窗",
-      "url": "float.html",
+      "title": "我的浮窗",
+      "main": "float.js",
+      "style": "float.css",
+      "defaultWidth": 360,
+      "defaultHeight": 200,
+      "minWidth": 240,
+      "minHeight": 120,
+      "position": "top-center",
       "transparent": true,
       "alwaysOnTop": true,
       "skipTaskbar": true,
+      "resizable": false,
+      "movable": true,
       "rememberBounds": true,
-      "allowOutsideWorkArea": true,
-      "width": 360,
-      "height": 200
+      "allowOutsideWorkArea": false,
+      "acceptFirstMouse": false
     }
   ]
 }
@@ -446,18 +541,26 @@ const row = await db.get("SELECT * FROM songs WHERE id = ?", ["1"]);
 
 | 参数 | 类型 | 默认值 | 说明 |
 |------|------|:---:|------|
-| `id` | `string` | — | 窗口唯一标识 |
-| `label` | `string` | — | 窗口标题 |
-| `url` | `string` | — | 窗口 HTML 文件（相对于插件目录） |
-| `transparent` | `boolean` | `false` | 启用透明背景 |
-| `alwaysOnTop` | `boolean` | `false` | 窗口置顶 |
-| `skipTaskbar` | `boolean` | `false` | 不在任务栏显示 |
-| `rememberBounds` | `boolean` | `false` | 记住窗口位置和大小 |
+| `id` | `string` | — | 窗口唯一标识（必填，插件内不可重复） |
+| `title` | `string` | `"{插件名} - {窗口id}"` | 窗口标题 |
+| `main` | `string` | — | **浮窗入口 JS 文件**（必填，相对于插件目录）。浮窗没有独立的 HTML，入口脚本运行在宿主提供的浮窗环境中 |
+| `style` | `string` | — | 浮窗样式文件（相对于插件目录，仅 `.css`） |
+| `type` | `string` | `"floating"` | 窗口类型，当前仅支持 `"floating"` |
+| `defaultWidth` | `number` | `420` | 默认宽度（px） |
+| `defaultHeight` | `number` | `72` | 默认高度（px），任务栏歌词类横条窗口常用 |
+| `minWidth` / `minHeight` | `number` | 随默认值 | 最小尺寸 |
+| `maxWidth` / `maxHeight` | `number` | 随默认值 | 最大尺寸 |
+| `position` | `string` | `"top-center"` | 初始位置：`"top-center"` 或 `"center"` |
+| `transparent` | `boolean` | `true` | 启用透明背景 |
+| `alwaysOnTop` | `boolean` | `true` | 窗口置顶 |
+| `skipTaskbar` | `boolean` | `true` | 不在任务栏显示 |
+| `resizable` | `boolean` | `false` | 允许拖拽缩放 |
+| `movable` | `boolean` | `true` | 允许拖拽移动 |
+| `rememberBounds` | `boolean` | `true` | 记住窗口位置和大小 |
 | `allowOutsideWorkArea` | `boolean` | `false` | 允许超出显示器工作区 |
-| `width` | `number` | — | 默认宽度（px） |
-| `height` | `number` | — | 默认高度（px） |
+| `acceptFirstMouse` | `boolean` | `false` | 点击穿透首次点击（直接作为窗口激活） |
 
-> 浮窗由 Electron 主进程创建，属于独立的 BrowserWindow。详见 [窗口与系统 →](./windows-system) 和 [EchoMusicPlugins 浮窗文档](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/windows.md)。
+> ⚠️ 浮窗入口是 **JS 文件**（`main`），不是 HTML——旧版文档中的 `url`、`label`、`width`、`height` 字段已废弃。浮窗内运行在**独立的插件窗口上下文**中，可用 API 与主窗口不同，详见 [窗口与系统 →](./windows-system#浮窗专用上下文) 和 [EchoMusicPlugins 浮窗文档](https://github.com/hoowhoami/EchoMusicPlugins/blob/main/docs/floating-windows.md)。
 
 ---
 
