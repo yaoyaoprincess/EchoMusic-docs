@@ -9,179 +9,176 @@ This guide covers EchoMusic's build process and multi-platform packaging.
 ## Development Mode
 
 ````bash
-# Start dev server with hot reload
+# Start the dev server (hot reload)
 pnpm dev
 ````
 
-Development mode features:
-- Vite dev server with Hot Module Replacement (HMR)
-- Electron main process auto-starts
-- Vue DevTools enabled by default
-- Native modules compiled on first launch
+Dev mode features:
+
+- Vite dev server provides hot module replacement (HMR)
+- The Electron main process is compiled and launched automatically by `vite-plugin-electron`
+- Vue DevTools is enabled automatically
+- **Native modules are never compiled automatically**: neither `pnpm dev` nor `pnpm build` compiles the Rust modules — build them manually first as described in [Local Dev Setup](/en/develop/local-dev#build-the-rust-native-modules)
 
 ## Production Build
 
 ````bash
-# Compile frontend + package Electron app
+# Type check + frontend build + electron-builder packaging
 pnpm build
 ````
 
-Build process:
+`pnpm build` runs the following in order:
 
-1. **Frontend compilation**: Vite compiles Vue components to static assets
-2. **TypeScript compilation**: Compiles main process and backend TypeScript code
-3. **Rust compilation**: Compiles all native modules (release mode)
-4. **Electron Builder packaging**: Packages into platform-specific installers
-5. **Post-packaging**: Runs `build/afterPack.js` hook script
+1. **Type check**: `vue-tsc --noEmit`
+2. **Frontend build**: Vite builds the 4 entries (main window, desktop lyrics, taskbar player, plugin floating window) plus the main process and preload
+3. **Electron Builder packaging**: output goes to the `release/` directory
 
-### Post-Packaging Hook (afterPack.js)
+> Note: `build.npmRebuild` is disabled in `package.json`, so packaging **only copies the existing `.node` artifacts and never compiles them for you**. Before packaging, make sure all native modules have been built for the target platform/architecture — Windows / macOS require all 8 modules, and Linux requires the 7 modules other than `echo-platform-adaptor`.
 
-`build/afterPack.js` executes after Electron Builder completes packaging, handling:
+Platform shortcut scripts are also available (they reinstall the server runtime dependencies with `--omit=dev` before packaging):
 
-- Cleaning up unnecessary build artifacts
-- Adjusting platform-specific file structures
-- Handling symlinks and permissions
+````bash
+pnpm build:win    # Windows x64
+pnpm build:mac    # macOS
+pnpm build:linux  # Linux
+````
 
 ## Build Artifacts
 
-After a successful build, the `release/` directory contains:
+There are 6 build targets (3 platforms × x64/arm64); artifacts are generated in the `release/` directory:
 
-| Platform | Format | File |
-|------|------|------|
-| **macOS** | DMG installer | `EchoMusic-{version}.dmg` |
-| **macOS** | ZIP archive | `EchoMusic-{version}-mac.zip` |
-| **Windows** | NSIS installer | `EchoMusic-Setup-{version}.exe` |
-| **Windows** | Portable | `EchoMusic-{version}-portable.exe` |
-| **Linux** | deb package | `EchoMusic_{version}_amd64.deb` |
-| **Linux** | rpm package | `EchoMusic-{version}.x86_64.rpm` |
-| **Linux** | AppImage | `EchoMusic-{version}.AppImage` |
-| **Linux** | tar.gz | `EchoMusic-{version}.tar.gz` |
+| Platform | Arch | Format | Example File |
+|------|------|------|----------|
+| **macOS** | arm64 / x64 | DMG installer | `EchoMusic-{version}-macOS-arm64.dmg` |
+| **macOS** | arm64 / x64 | ZIP archive | `EchoMusic-{version}-mac.zip` |
+| **Windows** | x64 / arm64 | NSIS installer | `EchoMusic-{version}-Windows-Setup-{arch}.exe` |
+| **Linux** | x64 / arm64 | AppImage | `EchoMusic-{version}-{os}-{arch}.AppImage` |
+| **Linux** | x64 / arm64 | deb package | `EchoMusic_{version}_amd64.deb` |
+| **Linux** | x64 / arm64 | pacman package | `EchoMusic-{version}-{os}-{arch}.pkg.tar.zst` |
+| **Linux** | x64 / arm64 | rpm package | `EchoMusic-{version}.{arch}.rpm` |
+| **Linux** | x64 / arm64 | tar.gz | `EchoMusic-{version}-{os}-{arch}.tar.gz` |
 
 ## Build Configuration
 
-Electron Builder config file: `electron-builder.yml`
+The packaging config is not a standalone file — it is embedded in the `build` key of `package.json` (electron-builder configuration). Key settings:
 
-Key settings:
-
-````yaml
-appId: com.echomusic.app
-productName: EchoMusic
-directories:
-  output: release
-mac:
-  target:
-    - dmg
-    - zip
-  icon: build/icons/icon.icns
-win:
-  target:
-    - nsis
-    - portable
-  icon: build/icons/icon.ico
-linux:
-  target:
-    - deb
-    - rpm
-    - AppImage
-    - tar.gz
-  icon: build/icons/icon.png
+````jsonc
+{
+  "build": {
+    "appId": "com.hoowhoami.echomusic",
+    "productName": "EchoMusic",
+    "publish": [{ "provider": "github", "owner": "hoowhoami", "repo": "EchoMusic" }],
+    "npmRebuild": false,
+    "directories": { "output": "release", "buildResources": "build" },
+    "protocols": [{ "name": "EchoMusic Share", "schemes": ["echomusic"] }],
+    "files": ["dist", "dist-electron"],
+    "extraResources": [
+      // 7 native module .node files (echo-audio-player, echo-audio-capture, echo-media-controls,
+      // echo-sqlite-store, echo-opencc, echo-upnp, echo-airplay)
+      // macOS / Windows platform configs additionally bundle echo-platform-adaptor.node
+      // plus server/module, server/util, server/node_modules, build/icons, CHANGELOG, LICENSE, etc.
+    ],
+    "mac": { "target": ["zip", "dmg"], "hardenedRuntime": true, "entitlements": "build/entitlements.mac.plist" },
+    "win": { "target": ["nsis"] },
+    "linux": { "target": ["AppImage", "deb", "pacman", "rpm", "tar.gz"] },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "include": "build/installer.nsh" }
+  }
+}
 ````
+
+The related resource files live in the `build/` directory:
+
+| File | Description |
+|------|------|
+| `build/installer.nsh` | NSIS installer hook script (Windows install customization) |
+| `build/entitlements.mac.plist` | macOS hardened runtime entitlements |
+| `build/entitlements.mac.inherit.plist` | Entitlements inherited by child processes |
+| `build/icons/` | App and tray icons |
+
+The app registers the `echomusic://` protocol ("EchoMusic Share") for opening share links.
 
 ## CI/CD Automated Builds
 
-EchoMusic uses GitHub Actions for continuous integration and release publishing. Config files are in `.github/workflows/`.
+The project uses GitHub Actions for continuous integration and publishing; there are 4 workflows under `.github/workflows/`.
 
 ### Workflow Overview
 
-| Workflow | File | Description |
-|--------|------|------|
-| Build & Release | `build.yml` (21KB) | Multi-platform auto-build & GitHub Release publishing |
-| AI Labeler | `issue-ai-labeler.yml` | AI-powered automatic issue labeling |
-| Auto Close | `issue-closer.yml` | Auto-close long-inactive issues |
+| Workflow | File | Trigger | Description |
+|--------|------|------|------|
+| Build & Release | `build.yml` | `v*` tag push / manual | 6-target build matrix + Release publishing + Telegram/QQ group notifications |
+| Native artifacts | `build-native.yml` | Manual only | Compiles native modules per platform and uploads CI artifacts (no Release) |
+| AI labeler | `issue-ai-labeler.yml` | Issue opened/edited | AI checks whether the Issue follows the template rules and labels non-compliant ones `invalid` |
+| Auto close | `issue-closer.yml` | Daily schedule | Closes Issues labeled `invalid` |
 
-### Build & Release Workflow
+### Build & Release Workflow (build.yml)
 
-Automatically triggers when a `v*` tag is pushed (e.g., `v1.0.0`).
+Triggered automatically when a `v*` tag (e.g. `v1.0.0`) is pushed. The flow:
 
-**Build Matrix**:
+1. **prepare-release**: checks whether the previous Release is missing `latest*.yml` update metadata and converts it to a draft first, so electron-updater never sees an incomplete version
+2. **build (6-target matrix)**:
 
-| Platform | Runner | Artifacts |
+| Target | Runner | Artifacts |
 |------|--------|------|
-| macOS x64 | `macos-13` | dmg + zip |
-| macOS arm64 | `macos-latest` | dmg + zip |
-| Windows x64 | `windows-latest` | NSIS installer + portable |
-| Linux x64 | `ubuntu-latest` | deb + rpm + AppImage + tar.gz |
+| macOS arm64 | `macos-14` | dmg + zip (ad-hoc signing, `identity=-`) |
+| macOS x64 | `macos-14` | dmg + zip (ad-hoc signing) |
+| Linux x64 | `ubuntu-22.04` | AppImage + deb + pacman + rpm + tar.gz |
+| Linux arm64 | `ubuntu-22.04-arm` | AppImage + deb + pacman + rpm + tar.gz |
+| Windows x64 | `windows-latest` | NSIS installer |
+| Windows arm64 | `windows-11-arm` | NSIS installer |
 
-**CI Pipeline**:
+3. Each target builds the native modules in parallel (macOS uses `rustup target` cross/native compilation), then runs `vue-tsc`, `vite build`, and `electron-builder --publish never`
+4. Artifact verification: macOS/Linux verify that `echo-audio-player.node` does not link system FFmpeg; each package and its update metadata are validated
+5. **release**: extracts the version notes from `CHANGELOG.md`, uploads all artifacts as a draft first, then publishes (tags containing `-` are marked prerelease)
+6. **notify / notify-qq**: after a successful release, pushes an update summary to the Telegram channel and the QQ group (OneBot API)
 
-1. Checkout code (with submodules)
-2. Setup pnpm + Node.js 20
-3. Install dependencies (`pnpm install`)
-4. Compile Rust native modules (cross-platform builds)
-5. Compile frontend assets (`pnpm build`)
-6. Electron Builder packaging
-7. Upload artifacts to GitHub Releases
-8. Generate Release Notes
+### Native Module CI Artifacts (build-native.yml)
 
-### Issue Management Automation
-
-**AI Labeler (issue-ai-labeler.yml)**:
-
-- Trigger: On new Issue creation
-- Function: AI analyzes Issue content and auto-applies classification labels
-- Labels: bug, enhancement, documentation, etc.
-
-**Auto Closer (issue-closer.yml)**:
-
-- Trigger: Scheduled periodic execution
-- Function: Auto-closes issues without `bug` or `enhancement` labels that have been inactive for a long period
-- Adds `stale` label and comment reminder before closing
+Open GitHub Actions and click **Run workflow**; you can toggle macOS arm64/x64, Linux arm64/x64, and Windows arm64/x64 independently (all enabled by default). The selected targets are compiled in parallel in separate matrix jobs, and each target produces its own artifact (e.g. `EchoMusic-native-macos-arm64`). This workflow only uploads CI artifacts and never creates a Release; the artifact root directory is `native`, so after downloading and extracting it into the repository root, the `.node` layout required for local packaging is restored. Linux includes 7 modules; macOS / Windows additionally include `echo-platform-adaptor`.
 
 ## Publishing a New Version
 
-1. Ensure all changes are committed and tested
-2. Update version number in `package.json`
-3. Update `CHANGELOG.md` with changes
-4. Create a Git tag:
+1. Make sure all changes are committed and tested
+2. Update the version number in `package.json`
+3. Update `CHANGELOG.md` with the changes (CI extracts the Release notes and notification summary from it)
+4. Create the Git tag:
 
 ````bash
 git tag v1.0.0
 git push origin v1.0.0
 ````
 
-5. GitHub Actions will auto-build and publish to Releases
+5. GitHub Actions builds and publishes to Releases automatically (tags containing `-` are marked as prereleases)
 
-## Auto-Update
+## Auto Update
 
-EchoMusic has built-in update detection (`electron/updater.ts`):
+The update logic lives in the main process at `src/main/ipc/settings.ts` (based on `electron-updater`):
 
-- Checks GitHub Releases for new versions on launch
-- Supports silent download of update packages
-- Prompts user to install after download
-- Cross-platform support (macOS/Windows/Linux)
+- `autoDownload = false`: after a new version is detected, the user confirms before download; once downloaded, the update installs from inside the app
+- Prerelease support: follows the in-app prerelease toggle (`allowPrerelease`); versions whose tags contain `-` are prereleases
+- GitHub accelerator: a GitHub accelerator URL can be configured; if the accelerator fails, the updater automatically falls back to the official GitHub Releases
+- macOS: the current distribution is ad-hoc signed and **does not support Squirrel.Mac automatic update installation**; the app offers a DMG manual download entry instead (Apple Silicon → arm64, Intel → x64)
+- Arch Linux: no built-in installer is used; the app prompts to download the pacman package manually (`pacman -U`) or the tar.gz archive
+- Online updates are disabled in dev mode
 
 ## Platform-Specific Notes
 
 ### macOS
 
-- Must compile on macOS — cross-compilation is limited
-- Apple Developer certificate required for code signing (optional)
-- Unsigned builds require manual Gatekeeper bypass:
+- Must be built on macOS; CI uses the `x86_64-apple-darwin` / `aarch64-apple-darwin` targets respectively
+- The current distribution is ad-hoc signed (`identity=-`) without an Apple Developer certificate; if the app fails to open after installation, run:
 
   ```bash
   xattr -cr /Applications/EchoMusic.app && codesign --force --deep --sign - /Applications/EchoMusic.app
   ```
 
-- Separate x64 and arm64 build targets
-
 ### Windows
 
-- Must compile on Windows
-- NSIS installer recommended (better user experience)
-- Portable version suitable for USB drives
+- Must be built on Windows (CI uses the `windows-latest` / `windows-11-arm` runners)
+- Only an NSIS installer is provided (`oneClick: false`, custom install directory allowed); there is no portable build
+- arm64 builds require the ARM64 C++ toolchain
 
 ### Linux
 
-- Compile on Ubuntu environment
-- AppImage offers best compatibility — recommended as first choice
-- deb/rpm for distro-native package management
+- CI uses `ubuntu-22.04` (x64) and `ubuntu-22.04-arm` (arm64)
+- Artifacts include AppImage, deb, pacman (`.pkg.tar.zst`), rpm, and tar.gz
+- AppImage has the best compatibility; deb/rpm/pacman suit their respective distributions' package management

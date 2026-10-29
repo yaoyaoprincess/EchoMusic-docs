@@ -8,43 +8,59 @@ This guide covers setting up the EchoMusic local development environment.
 
 ## Prerequisites
 
-Before starting, ensure your system has the following tools installed:
+Before you start, make sure the following tools are installed:
 
-| Tool | Minimum Version | Description |
-|------|----------|------|
-| Node.js | 18+ | JavaScript runtime |
+| Tool | Version | Notes |
+|------|---------|------|
+| Node.js | 22.12+ | JavaScript runtime |
 | pnpm | 9+ | Package manager |
-| Rust | 1.70+ | Required for compiling native modules |
-| FFmpeg dev libraries | — | Audio decoding (no external ffmpeg binary needed at runtime) |
-| LLVM / libclang (Windows only) | — | Required for compiling echo-ffmpeg-player |
+| Rust | stable | For building native modules (the audio module `echo-audio-player` declares a minimum of Rust 1.87; current stable is recommended) |
+| C/C++ toolchain | — | Required by native dependencies (MSVC on Windows, Xcode CLT on macOS, build-essential on Linux) |
+| LLVM / libclang | — | Required on all platforms for `bindgen` binding generation |
 
-### Installing FFmpeg Dev Libraries
+### Installing the Toolchain
 
 **macOS**:
 
-```bash
-brew install ffmpeg
-```
-
-**Linux (Debian/Ubuntu)**:
+Install the Xcode Command Line Tools and LLVM (dependency install commands below use Homebrew):
 
 ```bash
-sudo apt install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev
+xcode-select --install
+brew install llvm pkg-config
+export LIBCLANG_PATH="$(brew --prefix llvm)/lib"
 ```
+
+Skip the first command if the Command Line Tools are already installed. Run subsequent builds in the same terminal where `LIBCLANG_PATH` is set.
 
 **Windows**:
 
-LLVM and libclang are required to compile echo-ffmpeg-player:
+Install the "Desktop development with C++" workload of Visual Studio Build Tools along with the Windows SDK, and use the MSVC Rust toolchain; building for ARM64 additionally requires the ARM64 C++ tools. LLVM/libclang can be installed and configured with the following PowerShell commands:
 
 ```powershell
 winget install LLVM.LLVM
-```
-
-Set the environment variable:
-
-```powershell
 $env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
 ```
+
+`LIBCLANG_PATH` must point to the directory containing `libclang.dll`. The setting above applies to the current terminal only; to persist it, run `setx LIBCLANG_PATH "C:\Program Files\LLVM\bin"` (new terminals will pick it up). The LLVM bundled with Visual Studio works too.
+
+**Linux**:
+
+On Debian / Ubuntu, for example, install the build tools, libclang, and the audio backend dev libraries; the latter half covers the desktop dependencies required to run Electron:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential pkg-config clang libclang-dev \
+  libasound2-dev libpulse-dev libpipewire-0.3-dev \
+  libgtk-3-dev libnotify-dev libnss3 libxss1 libxtst6 xdg-utils
+```
+
+Other distributions ship equivalent packages. The playback engine's Linux backend enables ALSA, PulseAudio, and PipeWire simultaneously — installing just one backend's dev libraries is not enough.
+
+### About FFmpeg
+
+EchoMusic does **not** require system FFmpeg dev libraries. The FFmpeg used by the playback engine is vendored inside the repository: `ffmpeg_slim.zip` (prebuilt FFmpeg libraries) and `configs.zip` (build configuration) under `native/echo-audio-player/vendor/ffmpeg-audio/crates/ffmpeg_audio_sys/vendor/`, unpacked and linked automatically during the build.
+
+Only as a fallback when the vendored build fails can you set `FFMPEG_MODE=system` to link against system FFmpeg — this introduces extra dev library and runtime dynamic library dependencies and is not needed by default.
 
 ## Clone the Project
 
@@ -57,123 +73,165 @@ git submodule update --init --recursive
 ## Install Dependencies
 
 ```bash
-# Install frontend and Electron dependencies
 pnpm install
-
-# Install backend service dependencies
-cd server && npm install && cd ..
 ```
 
-### Electron Issues on Linux
+> The `server` submodule is managed as a pnpm workspace member (see `pnpm-workspace.yaml`); the command above installs its runtime dependencies automatically. There is no need to run `npm install` inside the `server` directory.
 
-If you encounter the following error on Linux:
+### Electron Issue on Linux
+
+If you hit the following error on Linux:
 
 ```
-Error: ENOENT: no such file or directory, open '.../electron/path.txt'
+Error: ENOENT: no such file or directory, open '.../node_modules/electron/path.txt'
 ```
 
-You need to manually download Electron to the appropriate directory:
+Manually download Electron into the target directory (use the version actually installed per `pnpm-lock.yaml`):
 
 ```bash
-cd node_modules/.pnpm/electron@42.3.1/node_modules/electron/
+cd node_modules/.pnpm/electron@43.7.6/node_modules/electron/
 mkdir -p dist
-curl -L -o /tmp/electron.zip "https://npmmirror.com/mirrors/electron/v42.3.1/electron-v42.3.1-linux-x64.zip"
+curl -L -o /tmp/electron.zip "https://npmmirror.com/mirrors/electron/v43.7.6/electron-v43.7.6-linux-x64.zip"
 unzip -o /tmp/electron.zip -d dist/
 printf '%s' './electron' > path.txt
 ```
 
-## Compile Rust Native Modules
+## Build the Rust Native Modules
 
-If you encounter "missing .node file" errors on startup:
+The `*.node` artifacts are not committed to the repository. **You must build them manually on first setup, after modifying Rust code, or after switching system/CPU architecture. A root-level `pnpm install` only covers the root project and the `server` workspace; `pnpm dev` / `pnpm build` never compile the native modules automatically.**
+
+If startup fails with a missing `.node` file error:
 
 ```
-Error: Cannot find module '.../echo-ffmpeg-player/echo-ffmpeg-player.node'
-[error] [FfmpegController] Failed to load echo-ffmpeg-player addon
+Error: Cannot find module '.../echo-audio-player/echo-audio-player.node'
 ```
 
-You need to manually compile the Rust native modules (`.node` files are excluded in `.gitignore`). Use the napi-rs build scripts included with each addon to generate the platform-specific `.node`:
+build the modules one by one per the table below (Linux skips `echo-platform-adaptor`; all other platforms build all 8):
+
+| Module Directory | Purpose |
+|----------|------|
+| `native/echo-audio-player` | Playback, decoding, and audio effect processing |
+| `native/echo-audio-capture` | System audio and microphone capture |
+| `native/echo-media-controls` | System media controls |
+| `native/echo-sqlite-store` | SQLite persistence |
+| `native/echo-opencc` | Lyric Simplified/Traditional Chinese conversion |
+| `native/echo-upnp` | DLNA / UPnP device control |
+| `native/echo-airplay` | AirPlay device discovery and audio streaming |
+| `native/echo-platform-adaptor` | Platform adaptation (system windows, taskbar; macOS / Windows) |
+
+In each module directory run `npm install` to fetch its build dependencies, then `npm run build` (which is `napi build --release --no-const-enum`).
+
+**macOS / Linux (Bash, from the repository root)**:
 
 ```bash
-# Compile echo-ffmpeg-player
-cd native/echo-ffmpeg-player
-pnpm install --ignore-workspace
-pnpm exec napi build --release --no-const-enum
-
-cd ../echo-media-controls
-npm install
-npm run build
-
-cd ../echo-sqlite-store
-npm install
-npm run build
-
-cd ../..
+bash <<'BASH'
+set -e
+addons=(echo-audio-player echo-audio-capture echo-media-controls echo-sqlite-store echo-opencc echo-upnp echo-airplay)
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  addons+=(echo-platform-adaptor)
+fi
+for addon in "${addons[@]}"; do
+  (
+    cd "native/$addon"
+    npm install
+    npm run build
+  )
+done
+BASH
 ```
 
-`echo-ffmpeg-player` has built-in real-time spectrum analysis, with spectrum data output directly through the playback engine. The playback engine supports audio device switching and exclusive output mode.
+**Windows (PowerShell)**:
 
-## Start Dev Server
+```powershell
+$addons = @("echo-audio-player", "echo-audio-capture", "echo-media-controls", "echo-sqlite-store", "echo-opencc", "echo-upnp", "echo-airplay", "echo-platform-adaptor")
+foreach ($addon in $addons) {
+  Push-Location "native/$addon"
+  try {
+    npm install
+    if ($LASTEXITCODE -ne 0) { throw "Failed to install build dependencies for $addon" }
+    npm run build
+    if ($LASTEXITCODE -ne 0) { throw "Failed to build $addon" }
+  } finally {
+    Pop-Location
+  }
+}
+```
+
+Each module produces a same-named `.node` in its own directory, e.g. `native/echo-audio-capture/echo-audio-capture.node`. Running only `cargo build --release` does not produce the artifact at the path the app expects — always use the napi-rs build scripts above.
+
+For cross-compilation, prepare the target toolchain and SDK, run `rustup target add <target>`, then execute `npx napi build --release --no-const-enum --target <target>` in **each module directory**. x64 and arm64 artifacts must not be mixed; refer to the [CI build matrix](https://github.com/hoowhoami/EchoMusic/blob/main/.github/workflows/build.yml).
+
+> After recompiling, quit EchoMusic completely and restart it — already loaded native modules are not reloaded by frontend hot updates.
+
+## Start the Dev Server
 
 ```bash
 pnpm dev
 ```
 
-In development mode, the Electron main process automatically launches the local server:
+The dev-mode startup flow:
 
-1. Electron main process starts
-2. Main process loads and initializes Rust native modules
-3. Main process starts the Node.js backend server
-4. Main process creates BrowserWindow and loads the Vite dev server
-5. Renderer process communicates with the backend server via HTTP
+1. Vite starts the dev server, and `vite-plugin-electron` compiles and launches the Electron main process
+2. The main process loads and initializes the Rust native modules
+3. The main process initializes the Kugou API service in-process (the `server/` submodule, scanning the `module/` route table)
+4. The main process creates the BrowserWindow, which loads the Vite dev server page
+5. The renderer makes all API calls over IPC (`api:request`) directly to the main process — there is no HTTP port
 
-### Linux Distribution Packaging
+## Memory Diagnostics
 
-If a distribution package uses the system Electron to launch EchoMusic (e.g., Arch/Manjaro's `electron42 /usr/lib/echo-music/app.asar`), the entry script should use the project-provided `build/linux-system-electron-wrapper.sh` template for compatibility.
+To observe memory changes of the Electron main, Renderer, and GPU processes, enable startup-phase memory diagnostics:
 
-You can directly install and use:
+```bash
+# macOS / Linux
+ECHOMUSIC_MEMORY_DIAGNOSTICS=1 pnpm dev
 
-- `build/linux-system-electron-wrapper.sh`: system Electron entry wrapper template
+# Windows PowerShell
+$env:ECHOMUSIC_MEMORY_DIAGNOSTICS = "1"
+pnpm dev
+```
 
-The same wrapper is automatically installed during the `afterPack` phase of `electron-builder` builds.
+Logs are written to the Electron log file, e.g. on macOS:
+
+```text
+~/Library/Logs/EchoMusic/echo-music-YYYY-MM-DD.log
+```
 
 ## Debugging
 
 ### Recommended IDE
 
-The project provides recommended VS Code extensions (`.vscode/extensions.json`). VS Code will prompt to install them when opening the project. Recommended extensions include Vue (Volar), TypeScript, Rust Analyzer, ESLint, Prettier, Tailwind CSS IntelliSense, and more.
-
-The project also includes `.claude/settings.json` for optimized AI-assisted development with Claude Code.
+The project ships a `.vscode/extensions.json` with recommended extensions; VS Code will prompt to install them when you open the project. Recommended extensions include Vue (Volar), ESLint, Prettier, Tailwind CSS IntelliSense, and Iconify.
 
 ### Frontend Debugging
 
-- Press `Ctrl + Shift + I` (Windows/Linux) or `Cmd + Option + I` (macOS) in the Electron window to open DevTools
-- Vue DevTools is automatically enabled in development mode
+- Press `Ctrl + Shift + I` (Windows/Linux) or `Cmd + Option + I` (macOS) inside the Electron window to open DevTools
+- Vue DevTools is enabled automatically in dev mode
 
-### Backend Debugging
+### Main Process & API Service Debugging
 
-- Backend server logs output in the Electron main process console
-- Viewable through DevTools' main process console
+- Main process and API service (server submodule) logs are written via electron-log
+- Check the DevTools or the log file for `[IPC-Server]`-prefixed API route loading logs
 
 ### Rust Module Debugging
 
-- Compile with `cargo build` (without `--release`) for more debug information
-- We recommend using VS Code + rust-analyzer for development
+- Build with `cargo build` (without `--release`) for richer debug information
+- `rust-analyzer` is recommended for code intelligence and debugging
 
-## Common Issues
+## FAQ
 
-### pnpm install Fails
+### pnpm install fails
 
-Ensure you're using pnpm 9+:
+Make sure pnpm 9+ is installed:
 
 ```bash
 pnpm --version
-# If version is too low
+# If the version is too old
 npm install -g pnpm@latest
 ```
 
-### Slow Rust Compilation
+### Slow Rust compilation
 
-First-time Rust module compilation can be slow (downloading dependencies + compilation). Subsequent incremental compilations will be much faster. Set up a Chinese mirror for speedup:
+The first Rust build is slow (dependency download + compilation); incremental builds are much faster. A domestic mirror can speed up downloads:
 
 ```bash
 # ~/.cargo/config.toml
@@ -184,6 +242,18 @@ replace-with = 'mirror'
 registry = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"
 ```
 
-### Port Conflict
+### Unable to find libclang
 
-If port 3000 is in use (Vite dev server), modify the port configuration in `vite.config.ts`.
+Check the LLVM/libclang installation and `LIBCLANG_PATH`; it should point to the directory containing `libclang.dll` (Windows) or the libclang library (macOS/Linux), not an executable.
+
+### FFmpeg falls back to system FFmpeg
+
+If the build log shows `Falling back to attempting to link the system's FFmpeg`, verify that `ffmpeg_slim.zip` and `configs.zip` under `native/echo-audio-player/vendor/ffmpeg-audio/crates/ffmpeg_audio_sys/vendor/` are intact. The default build needs no system FFmpeg and no `FFMPEG_MODE=system`.
+
+### pkg-config errors for ALSA / PulseAudio / PipeWire on Linux
+
+Install all three audio backend dev libraries listed in the prerequisites (none can be skipped), and make sure `pkg-config` can find libraries of the target architecture.
+
+### Port conflict
+
+The Vite dev server port can be changed in the `server` section of `vite.config.mts`.

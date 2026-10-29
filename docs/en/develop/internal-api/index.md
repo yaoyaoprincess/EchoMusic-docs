@@ -5,42 +5,71 @@ outline: [2, 4]
 
 # 🔧 Internal API Reference
 
-> ⚠️ **This documentation is for core development reference only.** The following APIs are EchoMusic main/renderer process internal interfaces, **not exposed to plugins**. For plugin development, please refer to [Plugin API Overview →](../plugin-dev/context-api).
+> ⚠️ **This documentation is for core development reference only.** The following APIs are EchoMusic main/renderer process internal interfaces, **not exposed to plugins** (plugins get a restricted subset). For plugin development, see the [Plugin API Overview](/en/develop/plugin-dev/context-api).
 
-EchoMusic's internal APIs cover core modules including the audio engine, window management, system integration, and playback state persistence. They are organized into four categories:
+EchoMusic's internal APIs are exposed as `window.electron` by the single `contextBridge.exposeInMainWorld('electron', ...)` call in the preload script `src/preload/index.ts`, covering 25+ API groups across the audio engine, window management, system integration and persistence. They are organized into four categories:
 
 | Module | Description | Entry |
-|------|------|:--:|
-| 🎵 Audio Engine | FFmpeg engine: EQ, spatial audio, IR convolution, device control, event listening | [→](audio-engine) |
-| 📡 Playback State & Persistence | Playback events, queue persistence, local API server, HTTP request proxy | [→](playback-state) |
-| 🖥️ Window & Interaction Management | Desktop lyrics, Mini Player, window control, system tray | [→](window-management) |
-| ⚙️ System Features Integration | Shortcuts, power management, app updates, logging, audio effects management | [→](system-features) |
+|--------|-------------|:--:|
+| 🎵 Audio Engine | Rust engine: loading/gapless source switching, track transitions, EQ, effects & DSP providers, audio graph, devices, events | [→](/en/develop/internal-api/audio-engine) |
+| 📡 Playback State & Persistence | Multi-queue storage, history, key-value, settings backup, API server, HTTP request proxy | [→](/en/develop/internal-api/playback-state) |
+| 🖥️ Window & Interaction Management | Taskbar quartet, network casting (DLNA/AirPlay), desktop lyrics, Mini Player, window control, tray | [→](/en/develop/internal-api/window-management) |
+| ⚙️ System Features Integration | Shortcuts, power, network settings, updates, logging & diagnostics, effect files, window composition, etc. | [→](/en/develop/internal-api/system-features) |
 
 ---
 
-## Module Overview
+## API group map
 
-### 🎵 Audio Engine (`ctx.audio`)
+All API groups actually exposed on `window.electron` (plus top-level fields `platform`, `isWayland`, `notifyPageMounted()` and the launch-argument-injected `echoInitialDark` / `echoWindowBackground`):
 
-The complete operational surface for the underlying FFmpeg + SoundTouch engine. 10-band parametric equalizer, spatial audio presets, IR impulse response convolution, audio device switching, volume fade, loudness normalization, engine lifecycle management, and more.
+### Groups with dedicated pages
 
-### 📡 Playback State & Persistence (`ctx.events` / `ctx.storage` / `ctx.apiServer` / `ctx.api`)
+| API group | One-line description | Docs |
+|-----------|----------------------|:--:|
+| `player` | Full audio engine control: loading/source switching, transitions, EQ, effects, devices, events | [Audio Engine](/en/develop/internal-api/audio-engine) |
+| `storage` | Playback snapshot / multi-queue / history / key-value persistence | [Playback State & Persistence](/en/develop/internal-api/playback-state) |
+| `apiServer` | In-process KuGou API host (`start` / `status` / `identity`) | [Playback State & Persistence](/en/develop/internal-api/playback-state) |
+| `settingsBackup` | Settings & data backup export/inspect/import | [Playback State & Persistence](/en/develop/internal-api/playback-state) |
+| `desktopLyric` | Desktop lyrics floating window (incl. drag/resize sessions) | [Window & Interaction Management](/en/develop/internal-api/window-management) |
+| `nowPlaying` | Now-playing snapshot sync and command channel | [Window & Interaction Management](/en/develop/internal-api/window-management) |
+| `taskbarLyric` | Windows taskbar lyrics (state/settings/width) | [Window & Interaction Management](/en/develop/internal-api/window-management) |
+| `miniPlayer` | Mini Player floating window | [Window & Interaction Management](/en/develop/internal-api/window-management) |
+| `windowControl` | Minimize/maximize/close/fullscreen for the current window | [Window & Interaction Management](/en/develop/internal-api/window-management) |
+| `output` | Network casting (DLNA / AirPlay target discovery and sessions) | [Window & Interaction Management](/en/develop/internal-api/window-management) |
+| `tray` | Tray playback state sync and play mode | [Window & Interaction Management](/en/develop/internal-api/window-management) |
+| `shortcuts` | In-app and plugin global shortcuts | [System Features](/en/develop/internal-api/system-features) |
+| `power` | Resume notification and sleep timer actions | [System Features](/en/develop/internal-api/system-features) |
+| `network` | Proxy settings (5 modes) | [System Features](/en/develop/internal-api/system-features) |
+| `updater` | App update download/cancel/install/state | [System Features](/en/develop/internal-api/system-features) |
+| `appInfo` | Version info, changelog, relaunch, open settings | [System Features](/en/develop/internal-api/system-features) |
+| `log` / `logging` | Structured logging and log settings | [System Features](/en/develop/internal-api/system-features) |
+| `diagnostics` | Memory and process diagnostic snapshots | [System Features](/en/develop/internal-api/system-features) |
+| `audioEffects` | Effect resource import/download/delete/reconcile | [System Features](/en/develop/internal-api/system-features) |
 
-Playback lifecycle events (track change / play-pause / volume change), persistent storage of the playback queue (restore on restart), local HTTP API server start/stop, main-process proxied HTTP client.
+### Groups summarized on this page
 
-### 🖥️ Window & Interaction Management (`ctx.desktopLyric` / `ctx.miniPlayer` / `ctx.windowControl` / `ctx.tray`)
+| API group | One-line description |
+|-----------|----------------------|
+| `ipcRenderer` | Restricted `send` / `invoke` / `on` / `off` passthrough (payloads uniformly sanitized for serialization); generally not used directly |
+| `api` | Main-process proxied HTTP client `api.request(config)`, supports binary body passthrough |
+| `cloud` | Cloud-drive upload file picking and reading (`pickUploadFiles` / `readUploadFileData` / `clearUploadFiles`) |
+| `share` | Text copy, clipboard read, region screenshot (`captureRectToClipboard`) and share-target open |
+| `fonts` | System font enumeration (`getAll()`) |
+| `opencc` | Batch Chinese script conversion for lyrics `convertBatch(texts, profile)` (5 profiles, powered by echo-opencc) |
+| `recognize` | Song recognition capture (device enumeration/start/stop/cancel, powered by echo-audio-capture; PCM uploaded through the `api.request` binary channel) |
+| `audioSpectrum` | Engine spectrum subscription (`getStatus` / `getSnapshot` / `subscribe(options, fn)`, returns a handle) |
+| `external` | External playlist/link resolution `resolvePlaylist(req)` (KuGou/NetEase/QQ/Qishui/Spotify/Apple Music etc.) |
+| `mediaControls` | System media control sync (metadata/state/timeline/skip intervals, powered by SMTC / MPRIS / MPNowPlayingInfoCenter) |
+| `plugins` | Full plugin-system interface (install/marketplace/files/network/database/windows/backups) — **has its own docs**, see the [Plugin API Overview](/en/develop/plugin-dev/context-api) |
 
-Show/hide/lock/click-through of the desktop lyrics overlay, expand/always-on-top/position control of the Mini Player window, minimize/maximize/fullscreen for the current window, system tray icon status synchronization.
-
-### ⚙️ System Features Integration (`ctx.shortcuts` / `ctx.power` / `ctx.updater` / `ctx.appInfo` / `ctx.logger` / `ctx.audioEffects`)
-
-Global shortcut registration and listening, system suspend/resume response, automatic app update download and install, version/platform info query, structured logging, IR impulse response file management.
+> The marketplace's anonymous statistics reporting (aggregate install counts etc.) is collected by the main process `src/main/plugins/marketplaceStats.ts`; see [Marketplace Stats Reporting](/en/develop/plugin-dev/marketplace-stats).
 
 ---
 
 ## 📂 Related Documents
 
-- [Plugin API Overview →](../plugin-dev/context-api) — Official APIs available to plugins
-- [Project Architecture →](../architecture) — EchoMusic overall architecture
-- [Project Structure →](../project-structure) — Complete directory structure
-- [Kugou API Reference →](../kugou-api) — Kugou Music public API
+- [Plugin API Overview](/en/develop/plugin-dev/context-api) — the official API available to plugins
+- [Architecture](/en/develop/architecture) — overall EchoMusic architecture
+- [Project Structure](/en/develop/project-structure) — full directory structure
+- [Native Addons](/en/develop/native-addons) — Rust NAPI native extensions
+- [Kugou API Reference](/en/develop/kugou-api) — Kugou Music public API

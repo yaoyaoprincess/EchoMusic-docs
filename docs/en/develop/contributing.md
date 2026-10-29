@@ -8,47 +8,48 @@ Thank you for your interest in EchoMusic! Welcome to project contributions. Plea
 
 ## Code of Conduct
 
-- Be kind and respectful, embrace different perspectives and experience levels
-- Provide constructive criticism and suggestions
-- Focus on what's best for the community
+- Stay friendly and respectful; embrace people of different backgrounds and experience levels
+- Offer constructive criticism and suggestions
+- Focus on what is best for the community
 
 ## How to Contribute
 
 ### Reporting Bugs
 
-If you find a bug, please submit an issue using the [Bug Report template](https://github.com/hoowhoami/EchoMusic/issues/new?template=bug_report.md), including:
+If you find a bug, please submit an Issue using the [Bug report template](https://github.com/hoowhoami/EchoMusic/issues/new?template=bug_report.md) and include:
 
-1. **Title**: Concise problem description
-2. **Environment**: OS version, EchoMusic version
-3. **Steps to Reproduce**: Detailed steps to trigger the bug
-4. **Expected Behavior**: What you expected to happen
-5. **Actual Behavior**: What actually happened
-6. **Screenshots or Logs**: If applicable
+1. **Title**: a concise description of the problem
+2. **Environment**: OS version and EchoMusic version
+3. **Reproduction steps**: how to trigger the bug in detail
+4. **Expected behavior**: what you expected to happen
+5. **Actual behavior**: what actually happened
+6. **Screenshots or logs**: if applicable
 
 ### Feature Suggestions
 
-Please use the [Feature Request template](https://github.com/hoowhoami/EchoMusic/issues/new?template=feature_request.md):
+Please use the [feature request template](https://github.com/hoowhoami/EchoMusic/issues/new?template=feature_request.md):
 
-1. Search [Issues](https://github.com/hoowhoami/EchoMusic/issues) first to avoid duplicates
-2. Describe the feature in detail with use cases
+1. Search the [Issues](https://github.com/hoowhoami/EchoMusic/issues) first to avoid duplicates
+2. Describe the feature and its use cases in detail
 3. Explain why this feature is valuable to the project
 
 ### Issue Automation
 
-- New issues are auto-labeled by the `issue-ai-labeler` workflow
-- Long-inactive issues are auto-closed by `issue-closer` after being marked `stale`
+- After a new Issue is opened, the `issue-ai-labeler` workflow uses AI to check whether it follows the template rules; Issues missing the required sections (problem description / reproduction steps / environment info, etc.) are automatically labeled `invalid`
+- The `issue-closer` workflow runs daily and closes Issues labeled `invalid`, leaving a reminder comment first; once the information is completed, the Issue can be reopened
 
 ### Submitting Code
 
-#### Fork & Local Development
+#### Fork and Local Development
 
 ````bash
 # Fork the repository
 # https://github.com/hoowhoami/EchoMusic/fork
 
-# Clone your fork
+# Clone your fork (including the server submodule)
 git clone https://github.com/YOUR_USERNAME/EchoMusic.git
 cd EchoMusic
+git submodule update --init --recursive
 
 # Create a feature branch
 git checkout -b feature/my-feature
@@ -63,100 +64,120 @@ git commit -m "feat: your feature description"
 git push origin feature/my-feature
 ````
 
-#### Commit Conventions
+#### Commit Convention
 
-No strict format required, but clear messages are recommended:
+There is no strict requirement on commit message formats, but please keep them clear:
 
-- `feat: xxx` — New feature
-- `fix: xxx` — Bug fix
-- `docs: xxx` — Documentation update
-- `refactor: xxx` — Code refactoring
-- `style: xxx` — Formatting
-- `chore: xxx` — Build/tooling changes
+- `feat: xxx` — new feature
+- `fix: xxx` — bug fix
+- `docs: xxx` — documentation update
+- `refactor: xxx` — code refactoring
+- `style: xxx` — code formatting
+- `chore: xxx` — build/tooling changes
 
 #### Pull Request Process
 
-1. Ensure code passes local testing
-2. Ensure `pnpm dev` starts without errors
-3. PR title clearly describes the changes
-4. PR description explains the purpose and scope of changes
+1. Make sure your changes run locally (`pnpm dev` starts and the core features work)
+2. Run the tests related to your changes (see "Testing" below)
+3. Use a clear PR title that describes the change
+4. Explain the purpose and scope of the change in the PR description
 5. Wait for code review
+
+## Testing
+
+Project tests live in the `tests/` directory and are written with Node.js's built-in `node:test` framework (no third-party test framework) — 275 test files in total (220 `*.test.mjs` + 55 `*.test.ts`).
+
+There is no root-level `test` script in `package.json`; tests are run per file:
+
+````bash
+# Run a single JavaScript test
+node --test tests/api-request-merge-security.test.mjs
+
+# Run a single TypeScript test (requires Node's type-stripping support:
+# Node 22.12+ with --experimental-strip-types; enabled by default in newer versions)
+node --test --experimental-strip-types tests/abort-error.test.ts
+````
+
+Before submitting a PR, at least run the test files corresponding to the modules you changed; some end-to-end smoke tests (`*.electron-smoke.mjs`) require a full Electron environment.
 
 ## Code Standards
 
-### Tooling
+### Code Style Tools
 
-The project is configured with the following tools for consistent code style:
+The project is configured with the following tools to keep the code style consistent:
 
 | Tool | Config File | Description |
 |------|----------|------|
-| ESLint | `.eslintrc.json` | JavaScript/TypeScript linting |
-| Prettier | `.prettierrc` | Code formatting |
-| EditorConfig | `.vscode/extensions.json` | Recommended VS Code extensions |
+| ESLint | `eslint.config.js` (`.eslintrc.json` is a legacy config kept alongside) | JavaScript/TypeScript/Vue linting |
+| Prettier | `.prettierrc` / `.prettierignore` | Code formatting |
+| VS Code recommended extensions | `.vscode/extensions.json` | Consistent editor plugins (see below) |
 
-Install the corresponding editor plugins and enable format-on-save for the best experience.
+The repository has no `.editorconfig`; consistent editor behavior is ensured through the extensions recommended in `.vscode/extensions.json`.
+
+Common commands:
+
+````bash
+pnpm lint    # ESLint check with auto-fix (.vue/.js/.ts/.jsx/.tsx)
+pnpm format  # Prettier formatting for src and config files
+````
 
 ### Frontend (Vue 3 + TypeScript)
 
-- Use Composition API (`<script setup>`)
-- Follow Vue 3 official style guide
+- Use the Composition API (`<script setup>`)
+- Follow the official Vue 3 style guide
 - TypeScript strict mode
-- PascalCase for component names
-- kebab-case for file names
+- Name components in PascalCase
+- File naming follows the repository's existing conventions
 
 ### Backend (Node.js)
 
 - Use TypeScript
-- async/await for asynchronous operations
-- try/catch for error handling
+- Use async/await for asynchronous operations
+- Handle errors with try/catch
 
 ### Rust Native Modules
 
-- Follow Rust official coding conventions
+- Follow the official Rust coding standards
 - Format code with `cargo fmt`
 - Lint with `cargo clippy`
 
-## Recommended Dev Tools
+## Recommended Development Tools
 
 ### VS Code
 
-Open the project and VS Code will prompt to install recommended extensions from `.vscode/extensions.json`, including:
+The project provides `.vscode/extensions.json`; VS Code will prompt to install the recommended extensions when you open the project, including:
 
 - Vue Language Features (Volar)
-- TypeScript
-- Rust Analyzer
 - ESLint
 - Prettier
 - Tailwind CSS IntelliSense
-
-### Claude Code
-
-The project includes `.claude/settings.json` for optimized AI-assisted development with Claude Code.
+- Iconify
 
 ## Development Notes
 
-- **Cross-platform**: Ensure changes work on macOS, Windows, and Linux
-- **Native modules**: After modifying Rust code, verify compilation on all platforms
-- **Dependencies**: Use pnpm — do not mix npm/yarn
-- **Backward compatibility**: Avoid breaking changes when possible
+- **Cross-platform compatibility**: make sure your changes work on macOS, Windows, and Linux
+- **Native modules**: after modifying Rust code, make sure it compiles on all target platforms (Linux does not build `echo-platform-adaptor`)
+- **Dependency management**: use pnpm, do not mix npm/yarn; `server/` is a pnpm workspace member, so a root-level `pnpm install` is enough
+- **Backward compatibility**: avoid introducing breaking changes when possible
 
 ## Review Process
 
-1. Submit PR and wait for maintainer review
-2. Revise based on review feedback
-3. PR is merged after approval
+1. After submitting a PR, wait for the maintainers to review
+2. Revise the code according to the review feedback
+3. The PR is merged once approved
 
 ## Documentation Contributions
 
-Documentation contributions are equally important:
+Documentation contributions are equally welcome:
 
-- Fix errors or outdated information
-- Fill in missing documentation
+- Fix errors or outdated information in the docs
+- Add missing documentation content
 - Improve readability and structure
 - Add usage examples and best practices
 
 ## Contact
 
 - [GitHub Issues](https://github.com/hoowhoami/EchoMusic/issues)
-- QQ Group: 1036693403
-- [Telegram](https://t.me/+H9vpkAJrDlViZjU1)
+- QQ group 1: 1036693403
+- QQ group 2: 491694809
+- [Telegram](https://telegram.me/+H9vpkAJrDlViZjU1)

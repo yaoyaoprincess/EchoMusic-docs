@@ -4,128 +4,139 @@ title: 项目结构
 
 # 📁 项目结构
 
-本文详细介绍 EchoMusic 项目的目录结构和各模块职责。
+本文详细介绍 EchoMusic 项目的目录结构和各模块职责。以下结构以 `main` 分支实际代码为准。
 
 ## 目录树
 
 ```
 EchoMusic/
-├── .claude/                    # Claude Code 配置
-│   └── settings.json           # Claude Code 项目设置
-├── .github/                    # GitHub CI/CD 与社区配置
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.md       # Bug 报告模板
-│   │   └── feature_request.md  # 功能请求模板
-│   └── workflows/
-│       ├── build.yml           # 多平台构建与发布
-│       ├── issue-ai-labeler.yml # AI 自动分类 Issue
-│       └── issue-closer.yml    # 自动关闭过期 Issue
+├── .github/                        # GitHub CI/CD 与社区配置
+│   ├── ISSUE_TEMPLATE/             # Issue 模板（bug_report / feature_request）
+│   └── workflows/                  # GitHub Actions 工作流
+│       ├── build.yml               # 多平台构建与 Release 发布（Tag 触发）
+│       ├── build-native.yml        # 原生模块 CI 产物（手动触发）
+│       ├── issue-ai-labeler.yml    # AI 判定 Issue 合规性
+│       └── issue-closer.yml        # 自动关闭无效 Issue
 ├── .vscode/
-│   └── extensions.json         # 推荐 VS Code 扩展
-├── build/                      # 构建配置与资源
-│   ├── icons/                  # 应用图标
-│   └── afterPack.js            # Electron Builder 打包后处理
-├── electron/                   # Electron 主进程代码
-│   ├── main.ts                 # 主进程入口
-│   ├── preload.ts              # 预加载脚本
-│   └── updater.ts              # 自动更新逻辑
-├── native/                     # Rust 原生模块（napi-rs）
-│   ├── echo-ffmpeg-player/     # FFmpeg + SoundTouch 播放引擎
-│   │   ├── src/
-│   │   │   ├── lib.rs          # 模块入口
-│   │   │   ├── player.rs       # 播放器核心逻辑
-│   │   │   ├── eq.rs           # EQ 均衡器
-│   │   │   └── fade.rs         # 淡入淡出控制
-│   │   └── Cargo.toml
-│   ├── echo-media-controls/    # 系统媒体控制
-│   │   ├── src/
-│   │   │   ├── lib.rs
-│   │   │   ├── macos.rs        # macOS 实现
-│   │   │   ├── windows.rs      # Windows 实现
-│   │   │   └── linux.rs        # Linux 实现
-│   │   └── Cargo.toml
-│   └── echo-sqlite-store/      # SQLite 本地存储
-│       ├── src/
-│       │   ├── lib.rs
-│       │   ├── db.rs           # 数据库操作
-│       │   ├── models.rs       # 数据模型
-│       │   └── migrations.rs   # 数据库迁移
-│       └── Cargo.toml
-├── server/                     # Node.js 后端服务
-│   ├── index.ts                # 服务入口
-│   ├── routes/                 # API 路由
-│   │   ├── song.ts             # 歌曲相关接口
-│   │   ├── search.ts           # 搜索接口
-│   │   ├── playlist.ts         # 歌单接口
-│   │   ├── artist.ts           # 歌手接口
-│   │   ├── album.ts            # 专辑接口
-│   │   ├── lyric.ts            # 歌词接口
-│   │   └── user.ts             # 用户相关接口
-│   ├── services/               # 业务逻辑层
-│   │   ├── kugou.ts            # 酷狗 API 调用封装
-│   │   └── cache.ts            # 缓存逻辑
-│   └── package.json
-├── src/                        # Vue 3 前端代码
-│   ├── App.vue                 # 根组件
-│   ├── main.ts                 # 前端入口
-│   ├── router/                 # 路由配置
-│   │   └── index.ts
-│   ├── stores/                 # Pinia 状态管理
-│   │   ├── player.ts           # 播放器状态
-│   │   ├── user.ts             # 用户状态
-│   │   ├── settings.ts         # 设置状态
-│   │   └── search.ts           # 搜索状态
-│   ├── views/                  # 页面组件
-│   │   ├── HomeView.vue        # 首页
-│   │   ├── DiscoverView.vue    # 发现页
-│   │   ├── SearchView.vue      # 搜索页
-│   │   ├── FMView.vue          # 私人 FM
-│   │   ├── RecognizeView.vue   # 听歌识曲
-│   │   ├── SongDetailView.vue  # 歌曲详情
-│   │   ├── PlaylistView.vue    # 歌单详情
-│   │   ├── ArtistView.vue      # 歌手详情
-│   │   ├── AlbumView.vue       # 专辑详情
-│   │   ├── SettingsView.vue    # 设置页
-│   │   └── ProfileView.vue     # 个人中心
-│   ├── components/             # 通用组件
-│   │   ├── PlayerBar.vue       # 底部播放栏
-│   │   ├── PlayQueue.vue       # 播放队列
-│   │   ├── LyricPanel.vue      # 歌词面板
-│   │   ├── LyricDesktop.vue    # 桌面歌词
-│   │   ├── EqPanel.vue         # EQ 面板
-│   │   ├── SongCard.vue        # 歌曲卡片
-│   │   ├── SearchInput.vue     # 搜索输入框
-│   │   └── ...
-│   ├── composables/            # 组合式函数
-│   │   ├── usePlayer.ts        # 播放器逻辑
-│   │   ├── useAudio.ts         # 音频设备
-│   │   ├── useLyric.ts         # 歌词处理
-│   │   ├── useSearch.ts        # 搜索逻辑
-│   │   └── useTheme.ts         # 主题切换
-│   ├── api/                    # API 请求封装
-│   │   ├── index.ts            # Axios 实例
-│   │   ├── song.ts
-│   │   ├── search.ts
-│   │   └── ...
-│   ├── utils/                  # 工具函数
-│   ├── types/                  # TypeScript 类型定义
-│   └── assets/                 # 静态资源
-├── resources/                  # 应用资源文件
-├── .eslintrc.json              # ESLint 代码检查配置
-├── .prettierrc                 # Prettier 代码格式化配置
-├── .prettierignore             # Prettier 忽略规则
-├── .npmrc                      # npm/pnpm 配置
-├── .gitmodules                 # Git 子模块配置
-├── CHANGELOG.md                # 版本更新日志
-├── package.json                # 项目配置
-├── pnpm-lock.yaml              # 依赖锁定
-├── vite.config.ts              # Vite 配置
-├── electron-builder.yml        # Electron Builder 配置
-├── tsconfig.json               # TypeScript 配置
-├── tailwind.config.ts          # Tailwind CSS 配置
-├── LICENSE                     # GPL v3.0 许可证
-└── README.md                   # 项目 README
+│   └── extensions.json             # 推荐 VS Code 扩展
+├── build/                          # 打包资源（electron-builder buildResources）
+│   ├── entitlements.mac.plist      # macOS 签名 entitlements
+│   ├── entitlements.mac.inherit.plist
+│   ├── installer.nsh               # NSIS 安装器钩子脚本
+│   └── icons/                      # 应用与托盘图标
+├── cloudflare/
+│   └── plugin-marketplace-worker/  # 插件源市场 Cloudflare Worker
+├── docs/                           # 仓库内开发文档（DSP Provider、插件系统、打包说明等）
+├── native/                         # Rust 原生模块（napi-rs），9 个 crate
+│   ├── echo-audio-player/          # 播放、解码及音效处理（内嵌 FFmpeg/SoundTouch vendor）
+│   ├── echo-audio-capture/         # 系统音频与麦克风采集
+│   ├── echo-media-controls/        # 系统媒体控制（SMTC / MPRIS / MPNowPlayingInfoCenter）
+│   ├── echo-sqlite-store/          # SQLite 持久化存储
+│   ├── echo-opencc/                # 歌词简繁转换
+│   ├── echo-upnp/                  # DLNA / UPnP 设备控制
+│   ├── echo-airplay/               # AirPlay 设备发现与音频发送
+│   ├── echo-platform-adaptor/      # 系统窗口、任务栏等平台适配（macOS / Windows）
+│   └── echo-native-log/            # 原生日志（内部依赖 crate，不随安装包分发）
+├── scripts/                        # 开发辅助脚本（托盘图标生成、任务栏诊断等）
+├── screenshots/                    # README 界面截图
+├── server/                         # 酷狗 API 服务：KuGouMusicApi git 子模块
+│   └── module/                     # 235 个 API module（路由按文件名派生）
+├── src/                            # 应用源码（主进程 / 渲染进程 / 共享代码）
+│   ├── main/                       # Electron 主进程
+│   ├── preload/                    # 预加载脚本（contextBridge）
+│   ├── renderer/                   # Vue 3 渲染进程
+│   ├── shared/                     # 主/渲染进程共享类型与工具
+│   ├── desktop-lyric/              # 桌面歌词窗口入口（App.vue + main.ts）
+│   ├── plugin-window/              # 插件浮窗进程入口
+│   └── shims-vue.d.ts
+├── tests/                          # node:test 原生测试（275 个 *.test.ts / *.test.mjs）
+├── desktop-lyric.html              # 桌面歌词窗口 HTML 入口
+├── index.html                      # 主窗口 HTML 入口
+├── plugin-window.html              # 插件浮窗 HTML 入口
+├── taskbar-player.html             # 任务栏播放器 HTML 入口
+├── eslint.config.js                # ESLint 扁平配置
+├── .eslintrc.json                  # 旧版 ESLint 配置（并存）
+├── .prettierrc / .prettierignore   # Prettier 格式化配置
+├── .npmrc                          # npm/pnpm 配置
+├── .gitmodules                     # Git 子模块配置（server → KuGouMusicApi）
+├── pnpm-workspace.yaml             # pnpm workspace（根项目 + server）
+├── vite.config.mts                 # Vite 配置（Vue / Tailwind / Electron 多入口）
+├── tsconfig.json / tsconfig.node.json
+├── CHANGELOG.md                    # 版本更新日志
+├── THIRD_PARTY_NOTICES.md          # 第三方依赖授权说明
+├── LICENSE / LICENSES/             # GPL-3.0 与第三方许可证
+├── package.json                    # 项目配置（打包配置在 build 键中）
+└── pnpm-lock.yaml                  # 依赖锁定
 ```
+
+## src/ 应用源码
+
+### src/main/ — Electron 主进程
+
+主进程按子系统划分，入口为 `index.ts`：
+
+| 目录/文件 | 说明 |
+|-----------|------|
+| `ipc/` | IPC 处理器按域拆分：`player.ts`、`settings.ts`（含自动更新）、`plugins.ts`、`window.ts`、`output.ts`、`server.ts`（`api:request`）等 20+ 文件，统一在 `registry.ts` 注册 |
+| `server.ts` | 进程内加载 `server/` 子模块，处理渲染进程的 API 请求 |
+| `player/` | 播放控制器、会话、DSP Provider 注册、内嵌封面缓存 |
+| `mediaTransport/` | DLNA/UPnP 发现与控制、RAOP（AirPlay）适配 |
+| `outputs/` | 本机/投放输出的会话管理与命令门控 |
+| `plugins/` | 插件安装事务、市场缓存、文件授权、插件网络/TCP/SQLite 通道、插件浮窗（`windows.ts`） |
+| `window/` | 窗口创建与背景材质（Mica/Acrylic/Hyprland）、全屏、窗口模式 |
+| `storage/` | KV 存储、设置、播放队列、历史（经 echo-sqlite-store） |
+| `desktopLyric/` | 桌面歌词窗口管理 |
+| `external/` | 外部平台歌单导入（网易云、QQ 音乐、酷我、汽水、Spotify、Apple Music 等） |
+| `media/` | 本地音乐文件扫描与元数据 |
+| `downloads/` | 下载引擎 |
+| `opencc/` | 简繁转换（echo-opencc 调用封装） |
+| `diagnostics/` | 内存诊断 |
+| `app.ts` | 应用生命周期编排（托盘、任务栏、快捷键、协议处理等） |
+| `tray.ts`、`mediaControls.ts`、`taskbarMediaBar.ts`、`miniPlayer.ts` 等 | 系统集成单文件模块 |
+
+### src/renderer/ — Vue 3 渲染进程
+
+| 目录/文件 | 说明 |
+|-----------|------|
+| `main.ts`、`App.vue` | 应用入口与根组件 |
+| `views/` | 页面组件：`Home.vue`、`Explore.vue`、`Search.vue`、`Cloud.vue`、`FreeListen.vue`、`PersonalFm.vue`、`Recognize.vue`、`Settings.vue`、`Ranking.vue`、`History.vue` 等；`details/` 存放歌曲/歌手/专辑/歌单/MV 详情页，`lyric/` 为全屏歌词页（含 AMLL 模式与皮肤系统），`settings/`、`plugins/`、`search/` 按功能拆分组件 |
+| `stores/` | Pinia 状态：`player.ts`（含 `player/` 子模块 20+ 文件）、`playlist.ts`（含 `playlist/` 子目录）、`user.ts`、`setting.ts`、`auth.ts`、`lyric.ts`、`theme.ts`、`output.ts`、`historyStore.ts`、`sqlitePersist.ts`（自研持久化插件）等 25+ |
+| `components/` | 通用组件（120+ 文件）：播放栏、队列、歌词面板等 |
+| `composables/` | 组合式函数（27+ 文件） |
+| `api/` | 酷狗 API 请求封装（`music.ts`、`search.ts`、`user.ts`、`playlist.ts`、`artist.ts` 等，按域拆分） |
+| `services/` | 渲染层服务 |
+| `router/` | Vue Router 路由配置 |
+| `taskbarPlayer/`、`miniPlayer/`、`nowPlaying/` | 任务栏播放器、mini 模式、正在播放界面 |
+| `plugins/` | 插件运行时（渲染进程侧） |
+| `theme/`、`constants/`、`layouts/`、`models/`、`utils/`、`tasks/` | 主题、常量、布局、模型、工具（66+ 文件）、后台任务 |
+
+### src/shared/ 与 src/preload/
+
+| 目录 | 说明 |
+|------|------|
+| `src/shared/` | 主/渲染进程共享代码（70+ 文件）：类型定义、播放决策、持久化协议、更新笔记、主题、窗口策略等，保证两端行为一致 |
+| `src/preload/` | `index.ts` 为 preload 入口（contextBridge 暴露 API 面），`pluginResources.ts` 为插件资源 preload |
+
+### 独立窗口入口
+
+| 文件/目录 | 说明 |
+|-----------|------|
+| `index.html` + `src/renderer/` | 主窗口 |
+| `desktop-lyric.html` + `src/desktop-lyric/` | 桌面歌词窗口 |
+| `taskbar-player.html` + `src/renderer/taskbarPlayer/` | 任务栏播放器窗口（Windows） |
+| `plugin-window.html` + `src/plugin-window/` | 插件浮窗（独立窗口进程） |
+
+## server/ 子模块
+
+`server/` 是 [MakcRe/KuGouMusicApi](https://github.com/MakcRe/KuGouMusicApi) 的 git 子模块（`.gitmodules` 声明），同时是 pnpm workspace 成员，根目录 `pnpm install` 会一并安装其依赖。它不是自研路由服务：
+
+- API 路由由 `module/*.js` 文件名派生（如 `song_url.js` → `/song/url`），锁定版本共 235 个模块
+- 主进程 `src/main/server.ts` 在进程内加载并调用这些 module，无独立 HTTP 服务
+- 详见[酷狗 API 参考](/develop/kugou-api)
+
+## 原生模块（native/）
+
+每个原生模块都是独立的 Rust crate，通过 napi-rs 编译为同名 `.node` 文件（如 `native/echo-audio-capture/echo-audio-capture.node`），在 Electron 主进程中直接加载调用。`echo-audio-player` 内嵌 `vendor/ffmpeg-audio`（FFmpeg 解码库，构建时从 vendored 的 `ffmpeg_slim.zip` 解包，无需系统 FFmpeg）。构建方式见[本地开发环境](/develop/local-dev)，模块 API 见[原生模块](/develop/native-addons)。
 
 ## 关键文件说明
 
@@ -133,43 +144,37 @@ EchoMusic/
 
 | 文件 | 说明 |
 |------|------|
-| `electron/main.ts` | Electron 主进程入口，创建窗口、初始化服务、管理开机自启 |
-| `src/main.ts` | Vue 3 应用入口，挂载根组件和插件 |
+| `index.html` | Vite 主入口，加载 `src/renderer/main.ts` |
+| `src/main/index.ts` | Electron 主进程入口（协议注册、GPU/高 DPI 设置、加载 `app.ts`） |
+| `src/preload/index.ts` | 预加载脚本，contextBridge 暴露 `window.electron.api` |
 
 ### 配置文件
 
 | 文件 | 说明 |
 |------|------|
-| `vite.config.ts` | Vite 构建配置，含 Electron 插件 |
-| `electron-builder.yml` | 多平台打包配置 |
-| `tailwind.config.ts` | Tailwind CSS 主题定制 |
-| `tsconfig.json` | TypeScript 编译选项 |
-| `.eslintrc.json` | ESLint 代码风格检查规则 |
-| `.prettierrc` | Prettier 代码格式化配置 |
+| `vite.config.mts` | Vite 构建配置：4 个 HTML 入口、`@vitejs/plugin-vue`、Tailwind（`@tailwindcss/vite`）、`vite-plugin-electron`（主进程 + preload）、bundle 分析 |
+| `package.json` | 项目与依赖配置；多平台打包配置内嵌在 `build` 键中（appId、extraResources、nsis/dmg/deb 等） |
+| `pnpm-workspace.yaml` | workspace 成员：根项目与 `server` |
+| `tsconfig.json` / `tsconfig.node.json` | TypeScript 编译选项 |
+| `eslint.config.js` | ESLint 扁平配置（`.eslintrc.json` 为旧版并存配置） |
+| `.prettierrc` / `.prettierignore` | Prettier 代码格式化配置 |
 | `.npmrc` | npm/pnpm 镜像与配置 |
+| `.gitmodules` | 子模块配置：`server` → MakcRe/KuGouMusicApi |
 
-### 开发者工具配置
+### 打包资源（build/）
 
-| 文件/目录 | 说明 |
-|-----------|------|
-| `.claude/` | Claude Code 项目级别配置（AI 辅助开发） |
-| `.vscode/extensions.json` | 推荐的 VS Code 扩展列表 |
+| 文件 | 说明 |
+|------|------|
+| `build/entitlements.mac.plist` | macOS 硬化运行时 entitlements |
+| `build/entitlements.mac.inherit.plist` | 子进程继承的 entitlements |
+| `build/installer.nsh` | NSIS 安装器钩子脚本（Windows 安装逻辑定制） |
+| `build/icons/` | 应用图标、托盘模板图标（`IconTemplate.png` 等）与图标源文件 |
 
 ### GitHub 工作流
 
 | 文件 | 说明 |
 |------|------|
-| `.github/workflows/build.yml` | 多平台自动构建与 Release 发布（macOS/Windows/Linux） |
-| `.github/workflows/issue-ai-labeler.yml` | 使用 AI 自动为 Issue 添加分类标签 |
-| `.github/workflows/issue-closer.yml` | 自动关闭长时间无活动的 Issue |
-| `.github/ISSUE_TEMPLATE/` | Issue 模板（Bug 报告 / 功能请求） |
-
-### 构建相关
-
-| 文件 | 说明 |
-|------|------|
-| `build/afterPack.js` | Electron Builder 打包后处理脚本 |
-
-### Rust 原生模块
-
-每个原生模块都是独立的 Rust crate，通过 napi-rs 编译为 `.node` 文件，在 Electron 主进程中直接加载调用。
+| `.github/workflows/build.yml` | Tag 推送触发的 6 目标构建矩阵（macOS/Linux/Windows × x64/arm64）、Release 草稿发布、Telegram/QQ 群通知 |
+| `.github/workflows/build-native.yml` | 手动触发的原生模块编译工作流，按平台产出 CI artifact（不发布 Release） |
+| `.github/workflows/issue-ai-labeler.yml` | 使用 AI 判定新 Issue 是否符合模板规范，不合规自动标记 `invalid` |
+| `.github/workflows/issue-closer.yml` | 每日定时关闭被标记 `invalid` 的 Issue |
