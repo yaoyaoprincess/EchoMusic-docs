@@ -153,6 +153,7 @@ export default defineConfig({
                 { text: '文件存储与数据', link: '/develop/plugin-dev/filesystem-storage' },
                 { text: '窗口与系统', link: '/develop/plugin-dev/windows-system' },
                 { text: '发布与分发', link: '/develop/plugin-dev/publishing' },
+                { text: '热度与统计', link: '/develop/plugin-dev/marketplace-stats' },
               ]
             },
           ],
@@ -326,6 +327,7 @@ export default defineConfig({
                 { text: 'Filesystem & Storage', link: '/en/develop/plugin-dev/filesystem-storage' },
                 { text: 'Windows & System', link: '/en/develop/plugin-dev/windows-system' },
                 { text: 'Publishing', link: '/en/develop/plugin-dev/publishing' },
+                { text: 'Heat & Stats', link: '/en/develop/plugin-dev/marketplace-stats' },
               ]
             },
           ],

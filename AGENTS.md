@@ -28,6 +28,8 @@
 | `theme/style.css` | 自定义样式 |
 | `components/DownloadButton.vue` | 下载按钮组件：从 GitHub Releases 获取正式版/预发布版 |
 | `components/DownloadCore.vue` | 下载按钮核心实现（含镜像测速、按系统/架构匹配安装包） |
+| `components/PluginExplorer.vue` | 插件列表交互组件：热度排名 + 搜索/分类筛选/排序（热度实时读取插件市场统计 API，构建时读取 `data/plugins.json`） |
+| `data/plugins.json` | 🤖 自动生成的插件目录数据（官方 + 社区，含 sourceId），勿手改 |
 
 > `.vitepress/cache/` 与 `docs/.vitepress/dist/` 为构建产物（已 gitignore），不要提交或手改。
 
@@ -54,7 +56,7 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 |------|------|
 | `index.md` | 插件系统概览 |
 | `install.md` | 安装插件 |
-| `list.md` | 插件列表（🤖 自动生成，勿手改） |
+| `list.md` | 插件列表（🤖 自动生成，勿手改；顶部含 PluginExplorer 交互组件：热度榜/筛选/排序） |
 | `community.md` | 社区插件源（🤖 自动生成，勿手改） |
 | `manage.md` | 插件管理与安全 |
 
@@ -103,6 +105,13 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 | `filesystem-storage.md` | 文件存储与数据 |
 | `windows-system.md` | 窗口与系统 |
 | `publishing.md` | 发布与分发 |
+| `marketplace-stats.md` | 插件热度与统计：上报链路、热度口径（score 公式）、公开查询接口 |
+| `network.md` | 网络与下载：主进程请求 / TCP 客户端 / 断点续传下载引擎 |
+| `graphics.md` | Graphics 绘图：WebGPU/HDR 画布与 Canvas2D 回退 |
+| `server-intercept.md` | 服务请求拦截：拦截器链、Mock/转发、fail-open 语义 |
+| `tasks.md` | 任务面板：会话式任务注册、保留策略、操作按钮 |
+| `backups.md` | 备份与恢复：命令式 API 与存储提供方 |
+| `lyrics-page.md` | 歌词页换肤：自定义歌词页注册与皮肤配置 |
 
 ### `docs/changelog/index.md` — 更新日志（🤖 自动同步，勿手改）
 由脚本从上游 `CHANGELOG.md` 增量同步。
@@ -141,6 +150,7 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 ## 自动生成文件一览（勿手改）
 | 文件 | 生成方式 |
 |------|----------|
-| `docs/guide/plugins/list.md` 及 `docs/en/guide/plugins/list.md` | `scripts/sync-upstream.py` 从上游 `echo-plugins.json` 生成 |
+| `docs/guide/plugins/list.md` 及 `docs/en/guide/plugins/list.md` | `scripts/sync-upstream.py` 从上游 `echo-plugins.json` 生成（含 PluginExplorer 组件段落） |
+| `.vitepress/data/plugins.json` | 同上（插件目录数据，含 sourceId，供 PluginExplorer 构建时读取与热度查询） |
 | `docs/guide/plugins/community.md` 及 `docs/en/guide/plugins/community.md` | 同上（社区插件源页） |
 | `docs/changelog/index.md` 及 `docs/en/changelog/index.md` | 同上（从上游 `CHANGELOG.md` 增量同步） |
