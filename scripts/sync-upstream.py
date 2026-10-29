@@ -733,6 +733,7 @@ def get_plugin_meta(plugin_entry):
 
     return {
         'id': plugin_id,
+        'sourceId': repo_to_source_id(source_url),
         'zh_name': zh_name,
         'en_name': en_name,
         'zh_desc': zh_desc,
@@ -772,6 +773,19 @@ def build_plugin_list_md(plugins, lang='zh'):
         grouped.setdefault(cat_idx, []).append(p)
 
     sections = [header]
+
+    # Interactive explorer (heat ranking + client-side filtering), tables below act as static catalog
+    if lang == 'zh':
+        sections.append('\n## 🔎 筛选与热度榜\n')
+        sections.append('<PluginExplorer />\n')
+        sections.append('> 💡 上方组件支持按热度 / 安装数排序和分类筛选，热度数据实时读取自 '
+                        'EchoMusic 插件市场统计；下方为完整静态目录。\n')
+    else:
+        sections.append('\n## 🔎 Filter & Heat Ranking\n')
+        sections.append('<PluginExplorer />\n')
+        sections.append('> 💡 The explorer above supports sorting by heat / installs and category'
+                        ' filtering, with heat data read live from the EchoMusic marketplace stats;'
+                        ' the full static catalog is kept below.\n')
 
     for cat_idx in range(len(CATEGORIES)):
         if cat_idx not in grouped:
@@ -816,13 +830,14 @@ def build_plugin_list_md(plugins, lang='zh'):
 # ── 插件同步 ──────────────────────────────────────────
 
 def sync_plugins():
-    """Sync plugin list from upstream echo-plugins.json."""
+    """Sync plugin list from upstream echo-plugins.json.
+    Returns (changed, upstream_plugins)."""
     print('[1/4] 获取插件源索引...')
     try:
         data = fetch_json(PLUGINS_JSON_URL)
     except Exception as e:
         print('  ✗ 获取失败: {}'.format(e))
-        return False
+        return False, []
 
     plugins_json = data.get('plugins', [])
     print('  ✓ 获取到 {} 个插件'.format(len(plugins_json)))
@@ -858,6 +873,8 @@ def sync_plugins():
         author = curated.get('author') or curated.get('json_author') or ''
         extra = {
             'id': pid,
+            # 仅文档收录插件没有上游 repo，sourceId 从 link_prefix 推导（供热度查询用）
+            'sourceId': repo_to_source_id(link) if link else 'unknown',
             'zh_name': curated['zh_name'],
             'en_name': curated['en_name'],
             'zh_desc': curated['zh_desc'],
@@ -903,7 +920,7 @@ def sync_plugins():
                     f.write(content)
                 print('  ✓ {} 插件列表已更新'.format(label))
 
-    return changed
+    return changed, upstream_plugins
 
 
 # ── 更新日志同步 ──────────────────────────────────────
@@ -1157,7 +1174,8 @@ def sync_changelog():
 # ── 社区插件源同步 ──────────────────────────────────
 
 def sync_community_sources():
-    """Sync community plugin sources, building a combined community page."""
+    """Sync community plugin sources, building a combined community page.
+    Returns (changed, community_plugins)."""
     all_plugins = []  # (source_index, plugin_dict)
     featured_idx = None
 
@@ -1214,6 +1232,7 @@ def sync_community_sources():
             all_plugins.append({
                 'source_idx': idx,
                 'id': pid,
+                'sourceId': repo_to_source_id(src_repo),
                 'zh_name': zh_name,
                 'en_name': en_name,
                 'zh_desc': zh_desc,
@@ -1251,6 +1270,90 @@ def sync_community_sources():
                     f.write(content)
                 print('  ✓ {} 社区插件源页面已更新'.format(label))
 
+    return changed, all_plugins
+
+
+# ── 插件数据 JSON（供 PluginExplorer 组件构建时使用）──────────
+
+STATS_API_URL = 'https://echomusic-plugin-marketplace.hoowhoami.dpdns.org/v1/plugins/stats'
+
+
+def write_plugins_json(upstream_plugins, community_plugins):
+    """Write .vitepress/data/plugins.json consumed by the PluginExplorer component.
+
+    The component statically imports this file, so the full catalog is rendered
+    at build time (SSG/SEO friendly); heat data is fetched client-side from the
+    plugin marketplace stats API at runtime.
+    """
+    categories = [
+        {'idx': i, 'zh': zh, 'en': en}
+        for i, (zh, en) in enumerate(CATEGORIES)
+    ]
+    plugins = []
+    for p in upstream_plugins:
+        cat = p['category']
+        in_range = 0 <= cat < len(CATEGORIES)
+        plugins.append({
+            'id': p['id'],
+            'sourceId': p.get('sourceId', 'unknown'),
+            'zhName': p['zh_name'],
+            'enName': p['en_name'],
+            'zhDesc': p['zh_desc'],
+            'enDesc': p['en_desc'],
+            'author': p['author'],
+            'category': cat,
+            'categoryZh': CATEGORIES[cat][0] if in_range else '',
+            'categoryEn': CATEGORIES[cat][1] if in_range else '',
+            'link': p.get('link') or '',
+            'share': p.get('share', '#'),
+            'source': 'official',
+            'sourceZh': '官方插件源',
+            'sourceEn': 'Official Source',
+        })
+    for p in community_plugins:
+        src = COMMUNITY_SOURCES[p['source_idx']]
+        plugins.append({
+            'id': p['id'],
+            'sourceId': p.get('sourceId', 'unknown'),
+            'zhName': p['zh_name'],
+            'enName': p['en_name'],
+            'zhDesc': p['zh_desc'],
+            'enDesc': p['en_desc'],
+            'author': p['author'],
+            'category': None,
+            'categoryZh': '',
+            'categoryEn': '',
+            'link': p.get('link') or '',
+            'share': p.get('share', '#'),
+            'source': 'community',
+            'sourceZh': src['name'],
+            'sourceEn': src['en_name'],
+        })
+
+    data = {
+        'generatedAt': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'statsApi': STATS_API_URL,
+        'categories': categories,
+        'plugins': plugins,
+    }
+
+    path = os.path.join(DOCS_DIR, '.vitepress', 'data', 'plugins.json')
+    content = json.dumps(data, ensure_ascii=False, indent=2) + '\n'
+    changed = True
+    if os.path.exists(path):
+        with open(path, 'r', encoding='utf-8') as f:
+            changed = f.read() != content
+    if changed and not DRY_RUN:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(content)
+    if DRY_RUN:
+        print('  ○ plugins.json {} (dry-run, 跳过写入)'.format('有变更' if changed else '无变化'))
+    elif changed:
+        print('  ✓ plugins.json 已更新 (官方 {} + 社区 {} 款)'.format(
+            len(upstream_plugins), len(community_plugins)))
+    else:
+        print('  ✓ plugins.json 无变化')
     return changed
 
 
@@ -1362,15 +1465,17 @@ def main():
         print('模式: DRY-RUN (不写入文件)')
     print('=' * 60)
 
-    plugin_changed = sync_plugins()
+    plugin_changed, upstream_plugins = sync_plugins()
     print()
-    community_changed = sync_community_sources()
+    community_changed, community_plugins = sync_community_sources()
     print()
     changelog_changed = sync_changelog()
+    print()
+    json_changed = write_plugins_json(upstream_plugins, community_plugins)
 
     print()
     print('=' * 60)
-    if plugin_changed or community_changed or changelog_changed:
+    if plugin_changed or community_changed or changelog_changed or json_changed:
         print('✓ 检测到变更')
         if DRY_RUN:
             print('  (dry-run: 未实际写入)')

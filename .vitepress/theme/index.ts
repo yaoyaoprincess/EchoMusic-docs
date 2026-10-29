@@ -8,6 +8,7 @@ import {
   NolebaseEnhancedReadabilitiesScreenMenu,
 } from '@nolebase/vitepress-plugin-enhanced-readabilities/client'
 import DownloadButton from '../components/DownloadButton.vue'
+import PluginExplorer from '../components/PluginExplorer.vue'
 
 import '@nolebase/vitepress-plugin-inline-link-preview/client/style.css'
 import '@nolebase/vitepress-plugin-enhanced-readabilities/client/style.css'
@@ -25,5 +26,6 @@ export default {
     enhanceAppWithTabs(app)
     app.use(NolebaseInlineLinkPreviewPlugin)
     app.component('DownloadButton', DownloadButton)
+    app.component('PluginExplorer', PluginExplorer)
   }
 } satisfies Theme
