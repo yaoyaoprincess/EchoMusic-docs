@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-28T23:25:03Z",
+  "generatedAt": "2026-10-31T08:58:21Z",
   "statsApi": "https://echomusic-plugin-marketplace.hoowhoami.dpdns.org/v1/plugins/stats",
   "categories": [
     {
@@ -250,7 +250,7 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/folia-style",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.2.4%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.2.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -335,7 +335,7 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/player-frontend",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplayer-frontend%3FsourceId%3Dgithub%253Aechomusic-org%252Fplayer-frontend%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend%26version%3D1.2.8%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplayer-frontend%3FsourceId%3Dgithub%253Aechomusic-org%252Fplayer-frontend%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend%26version%3D1.2.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
