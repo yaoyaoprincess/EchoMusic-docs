@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-28T23:25:03Z",
+  "generatedAt": "2026-11-07T14:25:22Z",
   "statsApi": "https://echomusic-plugin-marketplace.hoowhoami.dpdns.org/v1/plugins/stats",
   "categories": [
     {
@@ -250,7 +250,7 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/folia-style",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.2.4%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.2.7%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -284,7 +284,7 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/Lyrics-bridge",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2FLyrics-bridge%3FsourceId%3Dgithub%253Aechomusic-org%252Flyrics-bridge%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge%26version%3D1.1.8%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2FLyrics-bridge%3FsourceId%3Dgithub%253Aechomusic-org%252Flyrics-bridge%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge%26version%3D1.1.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -335,7 +335,7 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/player-frontend",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplayer-frontend%3FsourceId%3Dgithub%253Aechomusic-org%252Fplayer-frontend%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend%26version%3D1.2.8%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplayer-frontend%3FsourceId%3Dgithub%253Aechomusic-org%252Fplayer-frontend%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend%26version%3D1.3.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -573,7 +573,7 @@
       "categoryZh": "☁️ 音源与存储",
       "categoryEn": "Audio Sources & Storage",
       "link": "https://github.com/EchoMusic-org/tingfm-radio",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftingfm-radio%3FsourceId%3Dgithub%253Aechomusic-org%252Ftingfm-radio%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio%26version%3D1.0.4%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftingfm-radio%3FsourceId%3Dgithub%253Aechomusic-org%252Ftingfm-radio%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio%26version%3D1.0.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -777,7 +777,7 @@
       "categoryZh": "🛠️ 效率工具",
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/EchoMusic-org/volume-wheel",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fvolume-wheel%3FsourceId%3Dgithub%253Aechomusic-org%252Fvolume-wheel%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fvolume-wheel%3FsourceId%3Dgithub%253Aechomusic-org%252Fvolume-wheel%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel%26version%3D1.0.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
