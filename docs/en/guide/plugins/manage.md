@@ -56,6 +56,8 @@ If you encounter plugin issues:
 3. **Check Fault Records**: The Plugin Manager marks faulty plugins with ⚠️ — click to view error source, time, message, and stack trace
 4. **Clear Records**: Once resolved, you can clear the fault records
 
+If an **online plugin fails to load**: network errors (DNS resolution failure, connection timeout, connection reset, proxy unavailable, etc.) are shown as categorized, friendly messages. Use "Show Details" to view and copy the original error, or open Network Settings with one click (added in v2.3.3).
+
 ::: warning Note
 Plugins run in the renderer process with elevated privileges. Only install plugins from trusted sources. If you're unsure about a plugin, review its code before installing.
 :::

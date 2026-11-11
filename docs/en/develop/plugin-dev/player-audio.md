@@ -187,10 +187,10 @@ ctx.lyrics.registerResolver({
 
 ```js
 const snapshot = ctx.lyrics.getSnapshot();
-console.log(snapshot.currentLine, snapshot.lines);
+console.log(snapshot.lines, snapshot.currentIndex);
 
-ctx.lyrics.onSnapshot((snapshot) => {
-  console.log("Lyrics updated:", snapshot.currentLine);
+ctx.lyrics.onSnapshot((lyric) => {
+  console.log("Lyrics updated:", lyric.lines[lyric.currentIndex]);
 });
 ```
 

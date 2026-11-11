@@ -20,6 +20,8 @@ Four main-process modules form the Windows taskbar integration, with native capa
 | `src/main/taskbarThumbnail.ts` | **DWM cover preview**: cover thumbnail and Aero Peek on taskbar hover (bitmap decoded in main, capped at 512px, delivered as premultiplied BGRA) |
 | `src/main/thumbar.ts` | **Thumbnail toolbar buttons**: previous/play-pause/next buttons on the taskbar preview |
 
+2.3.3-beta.1 improves the display of the Windows taskbar quick-control icons.
+
 ### Taskbar lyrics API (electron.taskbarLyric)
 
 | API | Description |
@@ -74,6 +76,8 @@ The unified channel for the main window to broadcast playback state to desktop l
 | `onCommand(fn)` | Auxiliary windows receive commands |
 
 The snapshot is nested: `snapshot.playback` (`trackId`, `title`, `artist`, `album?`, `coverUrl?`, `duration`, `currentTime`, `isPlaying`, `isFavorite`, `isPersonalFM`, `playbackRate`, `clock?` etc.), `snapshot.lyric` (line-by-line lyrics, translation/romanization modes, offset), `snapshot.appearance` (dark mode, accent color, font family).
+
+Broadcasts are **incremental patches**: the main process keeps a reference-compared baseline of the last snapshot sent to each receiving window and only resends the parts whose references changed (during playback the renderer syncs progress at roughly 120ms intervals, so a full snapshot on every tick would mean structured-cloning thousands of lyric-line objects per IPC). When the `snapshot.lyric.lines` reference is unchanged, the lyric object in the patch omits the `lines` array and the preload merges it with the previously received value; a full snapshot is still sent as a fallback on first show, window show, and reload.
 
 The command set is a superset of shortcut commands (`togglePlayback` / `nextTrack` / `toggleTranslation` / `lyricOffsetForward` ...), plus object commands `{ type: 'seek' | 'setVolume', value }` and `{ type: 'adjustVolume', delta }`.
 

@@ -105,6 +105,8 @@ v2.3.1 adds artist effects, headphone effects and an effect marketplace, support
 - **Artist effects / Headphone effects**: the headphone spatial processing (VHE) applies at the audio's current sample rate and uses tiered partitioned convolution to reduce high-sample-rate overhead
 - **Hot-pluggable DSP modules**: effect engines can be dynamically loaded and unloaded; compatible third-party effect engines can be imported, enabled and switched in "Settings → Effect Management"
 
+v2.3.3 adds search to the Effect Marketplace, so you can quickly find the effect you want.
+
 ::: tip
 When switching between speakers/headphones, the effect panel preserves the same engine's info, preset list and current effect marker, avoiding panel flickering.
 :::

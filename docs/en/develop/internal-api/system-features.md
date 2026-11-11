@@ -75,6 +75,16 @@ Five proxy modes (`NetworkProxyMode` in `src/shared/network.ts`): `'system'` (fo
 
 Main-process `src/main/networkSettings.ts` + `src/main/networkPolicy.ts` apply the proxy **uniformly across**: KuGou API requests, cover/image fetches, direct audio links, app updates (electron-updater), and plugin network requests. Sessions are partitioned by purpose (`echo-app-network` / `echo-kugou-api` / `echo-community-audio` / `persist:desktop-lyric` / `electron-updater`), each with the proxy and credentials applied; the engine-level streaming proxy is additionally pushed to `echo-audio-player` via `set_http_proxy(s)` (see [Audio Engine](audio-engine)). Post-wake network recovery also happens at this layer (see Power management).
 
+Network settings also support custom User-Agents, split into three per-module fields (`src/shared/network.ts`):
+
+| Field | Scope |
+|-------|-------|
+| `userAgent` | Global UA: applies to the global network stack (windows/plugins); set per session partition via `session.setUserAgent` and synced to existing WebContents; leave empty to use the Electron default |
+| `kugouUserAgent` | KuGou API only: injected by a request interceptor solely for KuGou domains (`kugou.com` / `kgimg.com`), overriding the API's default Android UA; leave empty to keep the upstream default |
+| `playerUserAgent` | Native player audio stream fetches: pushed to the engine via `setUserAgent`; leave empty to keep the built-in default |
+
+All three share the same validation (`normalizeUserAgent`): printable ASCII only, 1024-character limit; invalid or oversized values are treated as empty.
+
 ---
 
 ## Updater (electron.updater)
@@ -114,6 +124,14 @@ electron.log.error("Processing failed", { details: "..." });
 | `diagnostics.getMemory(label?)` | Memory diagnostic snapshot: renderer memory (working set/private/heap), `performance.memory`, `webFrame` resource usage, all app process metrics |
 
 Main-process counterparts: `src/main/eventLoopMonitor.ts` (event-loop blocking detection) and `src/main/diagnostics/` (`memory.ts` process memory sampling). Native logs are bridged into the unified log stream via echo-native-log (see [Native Addons](/en/develop/native-addons)).
+
+---
+
+## Developer mode & CDP debugging
+
+The settings page's **Experimental features** group offers a **Developer mode** toggle (persisted as `devToolsEnabled`, off by default). When enabled, the main process writes the `remote-debugging-port` switch before `app.ready` (`src/main/index.ts`), opening a Chrome DevTools Protocol debug port on the local machine that clients such as chrome-devtools-mcp can connect to; the UI shows a confirmation dialog about the port risk before enabling, and changes to the toggle or port take effect after an app restart.
+
+The debug port is persisted as `devToolsDebugPort` (parsing and validation in `src/shared/devTools.ts`): default `9223`, allowed range 1024–65535, invalid values fall back to the default (`normalizeDevToolsDebugPort`). Neither setting migrates with settings backups — `sanitizePortableAppSettings` strips `devToolsEnabled` / `devToolsDebugPort` on export so local debug configuration is not carried into other environments.
 
 ---
 

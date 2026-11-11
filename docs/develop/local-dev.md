@@ -207,6 +207,10 @@ pnpm dev
 - 在 Electron 窗口中按 `Ctrl + Shift + I`（Windows/Linux）或 `Cmd + Option + I`（macOS）打开开发者工具
 - Vue DevTools 在开发模式下自动启用
 
+### CDP 调试
+
+在应用设置页的「实验性功能」分组中开启**开发者模式**后，应用会在本机开放 CDP（Chrome DevTools Protocol）调试端口，可用 chrome-devtools-mcp 等客户端连接并调试应用。端口默认 `9223`，可在设置中自定义（允许范围 1024–65535），修改开关或端口后需重启应用生效。该开关与端口不随设置备份迁移。
+
 ### 主进程与 API 服务调试
 
 - 主进程与 API 服务（server 子模块）日志通过 electron-log 输出

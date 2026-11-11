@@ -207,6 +207,10 @@ The project ships a `.vscode/extensions.json` with recommended extensions; VS Co
 - Press `Ctrl + Shift + I` (Windows/Linux) or `Cmd + Option + I` (macOS) inside the Electron window to open DevTools
 - Vue DevTools is enabled automatically in dev mode
 
+### CDP Debugging
+
+After enabling **Developer mode** in the app settings' "Experimental features" group, the app opens a CDP (Chrome DevTools Protocol) debug port on the local machine, which clients such as chrome-devtools-mcp can connect to for debugging the app. The port defaults to `9223` and can be customized in settings (allowed range 1024–65535); changes to the toggle or port take effect after an app restart. The toggle and port are not migrated with settings backups.
+
 ### Main Process & API Service Debugging
 
 - Main process and API service (server submodule) logs are written via electron-log

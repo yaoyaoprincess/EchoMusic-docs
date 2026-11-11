@@ -67,6 +67,7 @@ Global shortcuts work even when the app is in the background:
 | Open Search | `Ctrl + F` / `Cmd + F` |
 | Play / Pause | `Space` |
 | Close Dialog | `Esc` |
+| Close Window | `Ctrl + W` / `Cmd + W` (app menu "Window", added in v2.3.3) |
 
 Customize shortcuts in **Settings → Shortcuts**; press `Esc` while configuring to clear a shortcut instead of recording it.
 
@@ -114,6 +115,8 @@ v2.3.1 adds standalone network settings with several proxy configuration modes:
 
 The global proxy uniformly covers the Kugou API, covers, audio direct links, updates, plugins and other app network requests.
 
+v2.3.3 adds a custom User-Agent setting, letting you control request headers for different modules separately.
+
 ## Data Management
 
 ### Local Storage
@@ -155,6 +158,8 @@ v2.3.1 adds backup and restore for app settings, plugins and plugin data, lettin
 - v2.3.2 adds multi-account switching management, supporting multiple accounts with quick switching
 - The profile center supports viewing and editing your profile and avatar (added in v2.3.1)
 - v2.3.1 adds login device management in the profile center: view the current account's logged-in devices and remove non-local devices
+- v2.3.3: when logging out, you can choose whether to keep account data; if kept, you can directly restore the login later
+- v2.3.3: Experimental settings support importing user info to reuse the login state
 
 ## About
 

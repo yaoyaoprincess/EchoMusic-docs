@@ -75,6 +75,16 @@ electron.shortcuts.onTrigger((command) => { /* ... */ });
 
 主进程 `src/main/networkSettings.ts` + `src/main/networkPolicy.ts` 将代理**统一覆盖**：酷狗 API 请求、封面/图片、音频直链、应用更新（electron-updater）、插件网络请求。实现上按用途划分 Electron session 分区（`echo-app-network` / `echo-kugou-api` / `echo-community-audio` / `persist:desktop-lyric` / `electron-updater`），分别套用代理与凭证；引擎级流媒体代理另经 `echo-audio-player` 的 `set_http_proxy(s)` 下发（见[音频引擎](audio-engine)）。唤醒后的网络恢复也在此层完成（见电源管理）。
 
+网络设置同时支持自定义 User-Agent，按模块拆分为三个字段（`src/shared/network.ts`）：
+
+| 字段 | 作用范围 |
+|------|----------|
+| `userAgent` | 全局 UA：作用于窗口/插件等全局网络栈，按 session 分区经 `session.setUserAgent` 应用并同步到已存在的 WebContents；留空使用 Electron 默认值 |
+| `kugouUserAgent` | 酷狗 API 专用：经请求拦截器只注入酷狗域名（`kugou.com` / `kgimg.com`）的请求，可覆盖 API 默认的 Android UA；留空保持上游默认行为 |
+| `playerUserAgent` | 原生播放器拉取音频流：经 `setUserAgent` 下发给引擎；留空保持内置默认行为 |
+
+三者校验一致（`normalizeUserAgent`）：仅接受可见 ASCII、长度上限 1024，非法或超长按空值处理。
+
 ---
 
 ## 更新器（electron.updater）
@@ -114,6 +124,14 @@ electron.log.error("处理失败", { details: "..." });
 | `diagnostics.getMemory(label?)` | 内存诊断快照：渲染进程内存（工作集/私有/堆）、`performance.memory`、`webFrame` 资源用量、全部应用进程指标 |
 
 主进程侧配套 `src/main/eventLoopMonitor.ts`（事件循环阻塞监测）与 `src/main/diagnostics/`（`memory.ts` 进程内存采样）。原生日志经 echo-native-log 桥接进统一日志流（见[原生模块](/develop/native-addons)）。
+
+---
+
+## 开发者模式与 CDP 调试
+
+设置页「实验性功能」分组提供**开发者模式**开关（持久化为 `devToolsEnabled`，默认关闭）。开启时主进程在 `app.ready` 前写入 `remote-debugging-port` 启动参数（`src/main/index.ts`），在本机开放 Chrome DevTools Protocol 调试端口，可使用 chrome-devtools-mcp 等客户端连接调试；开启前 UI 会弹窗确认端口风险，开关或端口变更需重启应用生效。
+
+调试端口持久化为 `devToolsDebugPort`（解析与校验在 `src/shared/devTools.ts`）：默认 `9223`，允许范围 1024–65535，非法值回退默认（`normalizeDevToolsDebugPort`）。两者都不随设置备份迁移——导出时 `sanitizePortableAppSettings` 会剥离 `devToolsEnabled` / `devToolsDebugPort`，避免把本机调试配置带入其他环境。
 
 ---
 

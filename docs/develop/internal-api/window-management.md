@@ -20,6 +20,8 @@ outline: [2, 4]
 | `src/main/taskbarThumbnail.ts` | **DWM 封面预览**：鼠标悬停任务栏图标时的封面缩略图与 Aero Peek（位图主进程解码、限 512px、premultiplied BGRA 下发） |
 | `src/main/thumbar.ts` | **缩略图工具栏按钮**：任务栏预览上的上一首/播放暂停/下一首按钮 |
 
+2.3.3-beta.1 优化了 Windows 任务栏快捷控制图标的显示。
+
 ### 任务栏歌词 API（electron.taskbarLyric）
 
 | API | 说明 |
@@ -74,6 +76,8 @@ outline: [2, 4]
 | `onCommand(fn)` | 辅助窗口接收命令 |
 
 快照为嵌套结构：`snapshot.playback`（`trackId`、`title`、`artist`、`album?`、`coverUrl?`、`duration`、`currentTime`、`isPlaying`、`isFavorite`、`isPersonalFM`、`playbackRate`、`clock?` 等）、`snapshot.lyric`（逐行歌词、翻译/音译模式、偏移）、`snapshot.appearance`（暗色、强调色、字体）。
+
+广播是**增量 patch**：主进程按引用比较维护每个接收窗口的上次快照基线，只重发引用变化的部分（播放期间渲染端以约 120ms 频率同步进度，全量重发意味着每次 IPC 都要结构化克隆数千个歌词行子对象）。`snapshot.lyric.lines` 引用未变时，patch 中的歌词对象不携带 `lines` 数组，由 preload 合并时沿用上次接收的值；首次显示、窗口 show 与 reload 后仍发送全量快照兜底。
 
 命令集是快捷键命令的超集（`togglePlayback` / `nextTrack` / `toggleTranslation` / `lyricOffsetForward` ...），另支持对象命令 `{ type: 'seek' | 'setVolume', value }` 与 `{ type: 'adjustVolume', delta }`。
 
