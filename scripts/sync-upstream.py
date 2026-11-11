@@ -492,6 +492,14 @@ CURATED = {
         'json_author': 'yuanqian, lm379',
         'category': 4,
     },
+    'echo-menu-lyrics': {
+        'zh_name': 'Mac 菜单栏歌词',
+        'en_name': 'macOS Menu Bar Lyrics',
+        'zh_desc': '在 macOS 菜单栏显示当前播放歌词，随时瞄一眼正在唱到哪一句',
+        'en_desc': 'Show the currently playing lyrics in the macOS menu bar for a glance at the current line',
+        'json_author': 'whuyfk',
+        'category': 1,
+    },
 }
 
 # 社区源插件统一归入一个分类

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-28T23:25:03Z",
+  "generatedAt": "2026-11-11T16:25:03Z",
   "statsApi": "https://echomusic-plugin-marketplace.hoowhoami.dpdns.org/v1/plugins/stats",
   "categories": [
     {
@@ -64,6 +64,23 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/oneday5799/EchoMusicPlugins/tree/main/custom-icon",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcustom-icon%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.8.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fcustom-icon",
+      "source": "official",
+      "sourceZh": "官方插件源",
+      "sourceEn": "Official Source"
+    },
+    {
+      "id": "echo-acrylic",
+      "sourceId": "github:qaz2070/echo-acrylic",
+      "zhName": "亚克力分层材质",
+      "enName": "echo-acrylic",
+      "zhDesc": "给按钮、卡片、列表行、播放栏等可交互元素铺一层染色亚克力板材（半透明 + 背后磨砂 + 主题色染色），不改背景与壁纸。四组分区各自可开关，并可独立调颜色、浓度、磨砂。",
+      "enDesc": "(No English description) 给按钮、卡片、列表行、播放栏等可交互元素铺一层染色亚克力板材（半透明 + 背后磨砂 + 主题色染色），不改背景与壁纸。四组分区各自可开关，并可独立调颜色、浓度、磨砂。",
+      "author": "小爱",
+      "category": 0,
+      "categoryZh": "🎨 界面美化",
+      "categoryEn": "UI & Themes",
+      "link": "https://github.com/qaz2070/echo-acrylic",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-acrylic%3FsourceId%3Dgithub%253Aqaz2070%252Fecho-acrylic%26source%3Dhttps%253A%252F%252Fgithub.com%252Fqaz2070%252Fecho-acrylic%26version%3D3.4.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fqaz2070%252Fecho-acrylic",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -239,6 +256,23 @@
       "sourceEn": "Official Source"
     },
     {
+      "id": "echo-menu-lyrics",
+      "sourceId": "github:whuyfk/echo-menu-lyrics",
+      "zhName": "Mac 菜单栏歌词",
+      "enName": "macOS Menu Bar Lyrics",
+      "zhDesc": "在 macOS 菜单栏显示当前播放歌词，随时瞄一眼正在唱到哪一句",
+      "enDesc": "Show the currently playing lyrics in the macOS menu bar for a glance at the current line",
+      "author": "whuyfk",
+      "category": 1,
+      "categoryZh": "🎵 歌词与播放",
+      "categoryEn": "Lyrics & Playback",
+      "link": "https://github.com/whuyfk/echo-menu-lyrics",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-menu-lyrics%3FsourceId%3Dgithub%253Awhuyfk%252Fecho-menu-lyrics%26source%3Dhttps%253A%252F%252Fgithub.com%252Fwhuyfk%252Fecho-menu-lyrics%26version%3D0.4.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fwhuyfk%252Fecho-menu-lyrics",
+      "source": "official",
+      "sourceZh": "官方插件源",
+      "sourceEn": "Official Source"
+    },
+    {
       "id": "folia-style",
       "sourceId": "github:echomusic-org/folia-style",
       "zhName": "Folia 歌词",
@@ -250,7 +284,7 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/folia-style",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.2.4%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.2.8%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -284,7 +318,7 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/Lyrics-bridge",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2FLyrics-bridge%3FsourceId%3Dgithub%253Aechomusic-org%252Flyrics-bridge%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge%26version%3D1.1.8%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2FLyrics-bridge%3FsourceId%3Dgithub%253Aechomusic-org%252Flyrics-bridge%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge%26version%3D1.1.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -335,7 +369,7 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/player-frontend",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplayer-frontend%3FsourceId%3Dgithub%253Aechomusic-org%252Fplayer-frontend%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend%26version%3D1.2.8%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplayer-frontend%3FsourceId%3Dgithub%253Aechomusic-org%252Fplayer-frontend%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend%26version%3D1.3.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -573,7 +607,7 @@
       "categoryZh": "☁️ 音源与存储",
       "categoryEn": "Audio Sources & Storage",
       "link": "https://github.com/EchoMusic-org/tingfm-radio",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftingfm-radio%3FsourceId%3Dgithub%253Aechomusic-org%252Ftingfm-radio%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio%26version%3D1.0.4%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftingfm-radio%3FsourceId%3Dgithub%253Aechomusic-org%252Ftingfm-radio%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio%26version%3D1.0.6%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -777,7 +811,7 @@
       "categoryZh": "🛠️ 效率工具",
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/EchoMusic-org/volume-wheel",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fvolume-wheel%3FsourceId%3Dgithub%253Aechomusic-org%252Fvolume-wheel%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fvolume-wheel%3FsourceId%3Dgithub%253Aechomusic-org%252Fvolume-wheel%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel%26version%3D1.0.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel",
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
