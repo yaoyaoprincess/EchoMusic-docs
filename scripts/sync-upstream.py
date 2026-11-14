@@ -4,7 +4,7 @@ EchoMusic Docs Auto-Sync Script
 同步上游插件列表 (echo-plugins.json) 和更新日志 (CHANGELOG.md)。
 检测变更后更新对应文档页面。
 
-Usage: python scripts/sync-upstream.py [--dry-run]
+Usage: python scripts/sync-upstream.py [--dry-run] [--icons-only]
 """
 
 import json
@@ -81,6 +81,7 @@ COMMUNITY_SOURCES = [
 ]
 
 DRY_RUN = '--dry-run' in sys.argv
+ICONS_ONLY = '--icons-only' in sys.argv
 
 # ── 分类定义 ──────────────────────────────────────────
 
@@ -547,6 +548,133 @@ def fetch_text(url):
                 print('  Retrying ({}/3) after {}s: {}'.format(attempt + 1, wait, e))
                 time.sleep(wait)
     raise last_err
+
+
+# ── 插件图标本地镜像 ──────────────────────────────────
+# raw.githubusercontent / jsDelivr 在国内访问不稳定，浏览器端多级回退仍会出现裂图
+# （且 hydration 前加载失败会漏掉 @error 处理）。由同步脚本把图标下载到
+# docs/public/plugin-icons/ 作为本地镜像，组件优先本地加载，零外网依赖。
+
+ICON_EXTS = ('.png', '.jpg', '.jpeg', '.svg', '.webp', '.gif', '.ico')
+
+
+def icon_ext_from_url(url):
+    """Guess the icon file extension from its URL (default: .png)."""
+    lower = url.split('?')[0].split('#')[0].lower()
+    for ext in ICON_EXTS:
+        if lower.endswith(ext):
+            return ext
+    return '.png'
+
+
+def fetch_icon_bytes(url):
+    """Download icon bytes with retry. Returns bytes or None."""
+    req = urllib.request.Request(url, headers={'User-Agent': 'EchoMusic-docs-sync/1.0'})
+    last_err = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = resp.read()
+                if data:
+                    return data
+                last_err = IOError('empty response body')
+        except (urllib.error.URLError, urllib.error.HTTPError) as e:
+            last_err = e
+            if attempt < 2:
+                time.sleep(2 ** attempt)
+    print('    ✗ 图标下载失败: {}'.format(last_err))
+    return None
+
+
+def load_prev_plugin_data():
+    """Read the current plugins.json (before this run overwrites it) to know
+    each plugin's previously synced version — unchanged versions skip download."""
+    path = os.path.join(DOCS_DIR, '.vitepress', 'data', 'plugins.json')
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return {p['id']: p for p in data.get('plugins', [])}
+    except Exception:
+        return {}
+
+
+def download_plugin_icons(plugins):
+    """Mirror official plugin icons into docs/public/plugin-icons/.
+
+    Sets p['iconExt'] on success (written into plugins.json for the component);
+    on failure the remote icon URL is kept and the component falls back to the
+    jsDelivr → raw → initial-letter chain. Returns whether any file was written.
+    """
+    icons_dir = os.path.join(DOCS_DIR, 'docs', 'public', 'plugin-icons')
+    prev = load_prev_plugin_data()
+    kept = set()
+    downloaded = 0
+    for p in plugins:
+        icon_url = p.get('icon')
+        if not icon_url:
+            continue
+        ext = p.get('iconExt') or icon_ext_from_url(icon_url)
+        fname = p['id'] + ext
+        fpath = os.path.join(icons_dir, fname)
+        prev_version = (prev.get(p['id']) or {}).get('version')
+        # 版本未变且本地镜像已存在时跳过（每小时定时同步不重复打扰上游）
+        if (os.path.exists(fpath)
+                and p.get('version')
+                and p.get('version') == prev_version):
+            kept.add(fname)
+            p['iconExt'] = ext
+            continue
+        data = fetch_icon_bytes(icon_url)
+        if data is None:
+            continue  # 下载失败：保留远程链接，组件走回退链
+        if not DRY_RUN:
+            os.makedirs(icons_dir, exist_ok=True)
+            with open(fpath, 'wb') as f:
+                f.write(data)
+        kept.add(fname)
+        p['iconExt'] = ext
+        downloaded += 1
+        print('  ✓ {} ({}, {} KB)'.format(fname, p.get('version') or '?', max(1, len(data) // 1024)))
+
+    # 清理已下架 / 图标改扩展名插件的孤儿文件
+    if not DRY_RUN and os.path.isdir(icons_dir):
+        for name in sorted(os.listdir(icons_dir)):
+            _, ext = os.path.splitext(name)
+            if ext.lower() in ICON_EXTS and name not in kept:
+                os.remove(os.path.join(icons_dir, name))
+                print('  - 移除孤儿图标 {}'.format(name))
+
+    if DRY_RUN:
+        print('  ○ 图标本地镜像 {} 个（dry-run，跳过写入）'.format(len(kept)))
+    elif downloaded:
+        print('  ✓ 图标本地镜像：新增/更新 {} 个，共 {} 个'.format(downloaded, len(kept)))
+    else:
+        print('  ✓ 图标本地镜像无变化（共 {} 个）'.format(len(kept)))
+    return downloaded > 0
+
+
+def sync_icons_only():
+    """--icons-only: 只根据现有 plugins.json 补齐/刷新图标本地镜像，不拉取上游。"""
+    path = os.path.join(DOCS_DIR, '.vitepress', 'data', 'plugins.json')
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception as e:
+        print('✗ 读取 plugins.json 失败: {}'.format(e))
+        sys.exit(1)
+    official = [p for p in data.get('plugins', [])
+                if p.get('source') == 'official' and p.get('icon')]
+    print('官方插件 {} 个（带图标），检查本地镜像...'.format(len(official)))
+    before = json.dumps(data, ensure_ascii=False, sort_keys=True)
+    download_plugin_icons(official)
+    after = json.dumps(data, ensure_ascii=False, sort_keys=True)
+    if before != after:
+        if not DRY_RUN:
+            with open(path, 'w', encoding='utf-8') as f:
+                f.write(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+        print('✓ plugins.json 已更新 iconExt 字段')
+    else:
+        print('✓ plugins.json 无变化')
 
 
 def fetch_manifest(plugin_entry):
@@ -1230,6 +1358,7 @@ def write_plugins_json(upstream_plugins, community_plugins):
             'share': p.get('share', '#'),
             'version': p.get('version'),
             'icon': p.get('icon'),
+            'iconExt': p.get('iconExt'),
             'tags': p.get('tags', []),
             'source': 'official',
             'sourceZh': '官方插件源',
@@ -1252,6 +1381,7 @@ def write_plugins_json(upstream_plugins, community_plugins):
             'share': p.get('share', '#'),
             'version': p.get('version'),
             'icon': p.get('icon'),
+            'iconExt': p.get('iconExt'),
             'tags': p.get('tags', []),
             'source': 'community',
             'sourceZh': src['name'],
@@ -1391,19 +1521,29 @@ def main():
     print('时间: {}'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
     if DRY_RUN:
         print('模式: DRY-RUN (不写入文件)')
+    if ICONS_ONLY:
+        print('模式: ICONS-ONLY (仅刷新图标本地镜像)')
     print('=' * 60)
 
-    plugin_changed, upstream_plugins = sync_plugins()
+    if ICONS_ONLY:
+        sync_icons_only()
+        sys.exit(0)
+
+    # sync_plugins 只返回插件元数据列表；元数据变化体现在 plugins.json 的
+    # 文件 diff（json_changed）里，不再单独报 changed
+    upstream_plugins = sync_plugins()
     print()
     community_changed, community_plugins = sync_community_sources()
     print()
     changelog_changed = sync_changelog()
     print()
+    # 图标本地镜像需在写 plugins.json 之前执行：为插件元数据补 iconExt 字段
+    icons_changed = download_plugin_icons(upstream_plugins)
     json_changed = write_plugins_json(upstream_plugins, community_plugins)
 
     print()
     print('=' * 60)
-    if plugin_changed or community_changed or changelog_changed or json_changed:
+    if community_changed or changelog_changed or icons_changed or json_changed:
         print('✓ 检测到变更')
         if DRY_RUN:
             print('  (dry-run: 未实际写入)')

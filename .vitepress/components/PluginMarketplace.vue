@@ -43,7 +43,6 @@
               v-if="iconSrc(p)"
               :src="iconSrc(p)"
               alt=""
-              loading="lazy"
               @error="onIconError(p)"
             />
             <span v-else class="pm-icon-fallback">{{ initial(p) }}</span>
@@ -169,25 +168,37 @@ const TEXTS = {
 const t = computed(() => (isZh.value ? TEXTS.zh : TEXTS.en))
 
 const copied = ref({})
-const iconStage = ref({}) // p.id → 0: jsDelivr 镜像, 1: raw 原始, 2: 放弃（首字母占位）
+const iconStage = ref({}) // p.id → 图标候选源序号；超出候选数则显示首字母占位
 
-// raw.githubusercontent 国内访问不稳定：优先走 jsDelivr 镜像，失败再回退 raw
+// raw.githubusercontent 国内访问不稳定：本地镜像 → jsDelivr 镜像 → raw 原始 逐级回退
 function jsdelivrUrl(raw) {
   return raw.replace(
     /^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\//,
     'https://cdn.jsdelivr.net/gh/$1@$2/'
   )
 }
+function iconCandidates(p) {
+  const list = []
+  // 同步脚本下载到 docs/public/plugin-icons/ 的本地镜像；?v= 版本号破缓存
+  if (p.iconExt) {
+    const v = p.version && p.version !== 'unknown' ? '?v=' + encodeURIComponent(p.version) : ''
+    list.push('/plugin-icons/' + p.id + p.iconExt + v)
+  }
+  if (p.icon) {
+    list.push(jsdelivrUrl(p.icon))
+    list.push(p.icon)
+  }
+  return list
+}
 function iconSrc(p) {
-  if (!p.icon) return null
+  const list = iconCandidates(p)
   const stage = iconStage.value[p.id] ?? 0
-  if (stage === 0) return jsdelivrUrl(p.icon)
-  if (stage === 1) return p.icon
-  return null
+  return stage < list.length ? list[stage] : null
 }
 function onIconError(p) {
+  const max = iconCandidates(p).length
   const cur = iconStage.value[p.id] ?? 0
-  if (cur < 2) iconStage.value = { ...iconStage.value, [p.id]: cur + 1 }
+  if (cur < max) iconStage.value = { ...iconStage.value, [p.id]: cur + 1 }
 }
 function initial(p) {
   const name = displayName(p) || p.id || '?'
@@ -373,6 +384,8 @@ html.dark .pm-icon {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  /* 1 行简介也预留 2 行高度，保证同行卡片的标签/元信息起点一致 */
+  min-height: calc(2 * 1.65em);
 }
 .pm-tags {
   display: flex;
@@ -397,6 +410,8 @@ html.dark .pm-icon {
 .pm-stats {
   display: flex;
   gap: 8px;
+  /* 吸底：简介/标签行数不一致时，把三数据+按钮钉在卡片底部，同排卡片横向对齐 */
+  margin-top: auto;
 }
 .pm-stat-box {
   flex: 1;
@@ -430,7 +445,6 @@ html.dark .pm-icon {
 .pm-actions {
   display: flex;
   gap: 8px;
-  margin-top: auto;
 }
 .pm-btn {
   flex: 1;

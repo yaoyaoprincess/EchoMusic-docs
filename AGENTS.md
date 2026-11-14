@@ -30,7 +30,7 @@
 | `components/DownloadCore.vue` | 下载按钮核心实现（含镜像测速、按系统/架构匹配安装包） |
 | `components/PluginMarketplace.vue` | 插件市场卡片页组件：软件内市场风格的卡片网格（图标/版本/标签/三数据/分享·仓库·安装），仅官方源插件，与 `usePluginCatalog.js` 共用 |
 | `components/usePluginCatalog.js` | 插件目录共享逻辑：目录数据、搜索/分类/排序状态、热度加载（缓存+超时+重试），供 PluginMarketplace 使用 |
-| `data/plugins.json` | 🤖 自动生成的插件目录数据（官方源插件，含 sourceId/version/icon/tags），勿手改 |
+| `data/plugins.json` | 🤖 自动生成的插件目录数据（官方源插件，含 sourceId/version/icon/iconExt/tags），勿手改 |
 
 > `.vitepress/cache/` 与 `docs/.vitepress/dist/` 为构建产物（已 gitignore），不要提交或手改。
 
@@ -133,6 +133,7 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 |-------------|------|
 | `title_img/` | 首页标题图片（含隐藏款 `114514.png`） |
 | `favicon.svg`、`icon.ico` | 站点图标 |
+| `plugin-icons/` | 🤖 官方插件图标本地镜像（`<插件id>.<ext>`，由同步脚本下载生成，勿手改；插件市场卡片优先本地加载，避免 raw.githubusercontent/jsDelivr 国内不稳定导致裂图） |
 | `community/index.html`、`en/community/index.html` | 静态跳转页（meta-refresh）：社区板块已删除，旧路由重定向到首页 |
 | `features/index.html`、`en/features/index.html` | 静态跳转页：功能介绍板块已删除，旧路由重定向到首页 |
 | `develop/api/index.html`、`en/develop/api/index.html` | 静态跳转页：旧 `api.md` 已改名 `kugou-api.md`，重定向到新地址 |
@@ -142,8 +143,9 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 ## 自动化
 
 ### `scripts/sync-upstream.py` — 上游自动同步脚本
-从上游仓库拉取数据并更新文档（支持 `--dry-run`）：
+从上游仓库拉取数据并更新文档（支持 `--dry-run`、`--icons-only` 仅刷新图标镜像）：
 - 拉取 `echo-plugins.json`，生成社区插件源页（中英文，即 `docs/guide/plugins/community.md` 及其英文对应文件）与插件目录数据 `.vitepress/data/plugins.json`（供插件市场卡片页使用；插件列表页已由插件市场页替代）；
+- 下载官方插件图标到 `docs/public/plugin-icons/` 本地镜像（版本未变时跳过下载，自动清理孤儿文件），并在 plugins.json 记录 `iconExt` 字段；
 - 拉取 `CHANGELOG.md`，增量追加到更新日志页（中英文）；
 - 英文内容用 `deep_translator` 自动翻译；
 - 内含 `CURATED` 人工翻译元数据表，用于覆盖自动翻译的插件名称/描述。
@@ -157,6 +159,6 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 ## 自动生成文件一览（勿手改）
 | 文件 | 生成方式 |
 |------|----------|
-| `.vitepress/data/plugins.json` | 同上（官方源插件目录数据，含 sourceId/version/icon/tags，供插件市场卡片页构建时读取与热度查询） |
+| `.vitepress/data/plugins.json` | 同上（官方源插件目录数据，含 sourceId/version/icon/iconExt/tags，供插件市场卡片页构建时读取与热度查询） |
 | `docs/guide/plugins/community.md` 及 `docs/en/guide/plugins/community.md` | 同上（社区插件源页） |
 | `docs/changelog/index.md` 及 `docs/en/changelog/index.md` | 同上（从上游 `CHANGELOG.md` 增量同步） |
