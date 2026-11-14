@@ -13,14 +13,19 @@
         <option value="name">{{ t.sortName }}</option>
         <option value="default">{{ t.sortDefault }}</option>
       </select>
+      <select v-model="verBase" class="pm-sort" :aria-label="t.verLabel">
+        <option value="all">{{ t.verAll }}</option>
+        <option v-for="g in versionGroups" :key="g.base" :value="g.base">
+          {{ g.base }}{{ t.seriesSuffix }}
+        </option>
+      </select>
       <select
-        v-if="versionOptions.length"
+        v-if="activeGroup"
         v-model="appVer"
         class="pm-sort"
-        :aria-label="t.verLabel"
+        :aria-label="t.verBoundLabel"
       >
-        <option value="all">{{ t.verAll }}</option>
-        <option v-for="v in versionOptions" :key="v" :value="v">≥ {{ v }}</option>
+        <option v-for="b in activeGroup.bounds" :key="b" :value="b">≥ {{ b }}</option>
       </select>
     </div>
 
@@ -132,7 +137,7 @@ import { computed, ref } from 'vue'
 import { ArrowDownToLine, Download, FolderGit2, Heart, RefreshCw, Share2 } from 'lucide-vue-next'
 import { usePluginCatalog } from './usePluginCatalog'
 
-const { catalog, isZh, query, category, sortKey, appVer, versionOptions, displayVer, heatState, filtered, countText, statsOf, fmtCount, totalOf, displayName, displayDesc } =
+const { catalog, isZh, query, category, sortKey, verBase, appVer, versionGroups, activeGroup, displayVer, heatState, filtered, countText, statsOf, fmtCount, totalOf, displayName, displayDesc } =
   usePluginCatalog()
 
 const TEXTS = {
@@ -140,13 +145,15 @@ const TEXTS = {
     searchPlaceholder: '搜索插件 / 描述 / 作者…',
     sortLabel: '排序方式',
     sortDefault: '默认排序',
-    sortHeat: '❤ 热度优先',
-    sortInstalls: '⬇ 安装总量优先',
+    sortHeat: '热度优先',
+    sortInstalls: '安装总量优先',
     sortName: '名称排序',
     filterLabel: '分类筛选',
     all: '全部',
-    verLabel: '适用的 EchoMusic 版本',
+    verLabel: '适用的大版本',
+    verBoundLabel: '该系列的具体版本',
     verAll: '适用全部版本',
+    seriesSuffix: ' 系列',
     compatLabel: '适用: ',
     compatAny: '任意版本',
     heatError: '⚠️ 热度数据暂时无法获取，已按目录顺序显示',
@@ -164,13 +171,15 @@ const TEXTS = {
     searchPlaceholder: 'Search plugins / descriptions / authors…',
     sortLabel: 'Sort by',
     sortDefault: 'Default order',
-    sortHeat: '❤ Heat first',
-    sortInstalls: '⬇ Total first',
+    sortHeat: 'Heat first',
+    sortInstalls: 'Total first',
     sortName: 'Name',
     filterLabel: 'Filter by category',
     all: 'All',
-    verLabel: 'Compatible EchoMusic version',
+    verLabel: 'App version series',
+    verBoundLabel: 'Version requirement in this series',
     verAll: 'All versions',
+    seriesSuffix: ' series',
     compatLabel: 'Requires: ',
     compatAny: 'any version',
     heatError: '⚠️ Heat data is unavailable right now — showing catalog order',

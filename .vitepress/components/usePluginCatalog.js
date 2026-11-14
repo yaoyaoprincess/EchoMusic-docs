@@ -1,4 +1,4 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import catalog from '../data/plugins.json'
 
@@ -75,7 +75,8 @@ export function usePluginCatalog() {
   const query = ref('')
   const category = ref('all')
   const sortKey = ref('heat') // 热度榜：默认按热度排序（数据到达前等价于目录序）
-  const appVer = ref('all') // 适用版本筛选：all 或某个应用版本号（含该版本的插件）
+  const verBase = ref('all') // 第一级：大版本系列（如 2.3.2）；all = 不筛选
+  const appVer = ref('all') // 第二级：具体版本下界；随系列联动，all = 不筛选
   const heatState = ref('loading')
   const heatMap = ref({})
 
@@ -113,15 +114,34 @@ export function usePluginCatalog() {
     return n.toLocaleString('en-US')
   }
 
-  // 筛选下拉的选项：目录中出现的所有版本下界，从新到旧
-  const versionOptions = computed(() => {
-    const mins = []
+  // 大版本分组：目录中出现的所有版本下界按 x.y.z 分组，从新到旧；
+  // 组内下界也从高到低（正式版 > beta，beta 按序号降序）。选项全部来自
+  // 插件声明，不合成假选项，上游更新后自动变化
+  const versionGroups = computed(() => {
+    const byBase = new Map()
     for (const p of officialPlugins) {
       if (!p.echoMusicVersion) continue
       const { min } = parseRange(p.echoMusicVersion)
-      if (min && !mins.some((v) => cmpVer(v, min) === 0)) mins.push(min)
+      if (!min) continue
+      const base = parseSemver(min).core.join('.')
+      if (!byBase.has(base)) byBase.set(base, [])
+      const bounds = byBase.get(base)
+      if (!bounds.some((v) => cmpVer(v, min) === 0)) bounds.push(min)
     }
-    return mins.sort((a, b) => cmpVer(b, a))
+    return [...byBase.entries()]
+      .map(([base, bounds]) => ({ base, bounds: bounds.sort((a, b) => cmpVer(b, a)) }))
+      .sort((a, b) => cmpVer(b.base, a.base))
+  })
+
+  // 当前选中的系列（未选/全部时为 null，第二级下拉隐藏）
+  const activeGroup = computed(
+    () => versionGroups.value.find((g) => g.base === verBase.value) || null
+  )
+
+  // 切换系列时默认按该系列最高一档（正式版）过滤，第二级可再切换到具体 beta
+  watch(verBase, (v) => {
+    const g = versionGroups.value.find((x) => x.base === v)
+    appVer.value = g ? g.bounds[0] : 'all'
   })
 
   // 选中应用版本 c 时插件是否适用：min ≤ c 且（无上界或 c < 上界）
@@ -241,8 +261,10 @@ export function usePluginCatalog() {
     query,
     category,
     sortKey,
+    verBase,
     appVer,
-    versionOptions,
+    versionGroups,
+    activeGroup,
     compatibleWithApp,
     displayVer,
     heatState,
