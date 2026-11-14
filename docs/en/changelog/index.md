@@ -11,6 +11,33 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
+## [2.3.3-beta.2] - 2026-11-12
+
+### Added
+
+- Added search to the audio effect marketplace
+- Added a "Close Window" item to the app menu "Window" with shortcut ⌘W (Ctrl+W on Windows / Linux)
+- Experimental settings now support importing user info to reuse a logged-in session
+- Network settings add a custom User-Agent option, with per-module control over request headers
+
+### Improved
+
+- Reduced the performance cost of lyric line switching
+- Improved the Windows taskbar quick-control icon display
+- Improved the error message when online plugins fail to load: network errors (DNS resolution failure, connection timeout, connection reset, proxy unavailable, etc.) now show categorized friendly messages, with "Show details" to view and copy the original error and a one-click shortcut to network settings
+- Signing out now offers the option to keep account data, so the login can be restored directly
+- Developer mode now exposes a CDP debug port, supporting chrome-devtools-mcp to debug the app
+
+### Fixed
+
+- Fixed macOS Control Center showing fast-forward/rewind on both sides — now Previous/Next, keeping progress dragging
+- Fixed the audio exclusive mode being impossible to turn off
+- Fixed the "audio load failed" error after switching output devices in Windows shared mode: startup timeouts now retry on the same endpoint automatically, with startup blockers and HRESULT logged for troubleshooting
+- Fixed the macOS "Show/Hide Window" shortcut behavior: only the global shortcut remains, hiding follows the Dock/menu-bar hide settings, and a covered or off-desktop window is brought to the front instead of hidden
+- Fixed the Explore page falsely marking playlists as "collected" and unfollowing removing other followed playlists: collection checks now use the globally unique gid, falling back to a "creator account + list number" composite key when the gid cannot be matched directly (including legacy entries with only the collector-side gid), instead of the per-account raw listid
+- Fixed the Apple Music skin lyrics not using the lyric font correctly
+- Fixed RPM packages failing to install on Fedora / RHEL-based distributions: the libpulse dependency is now a cross-distribution boolean dependency (pulseaudio-libs / libpulse0 / libpulse)
+
 ## [2.3.3-beta.1] - 2026-11-08
 
 ### Added
