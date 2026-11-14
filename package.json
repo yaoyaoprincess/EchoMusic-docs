@@ -16,6 +16,7 @@
     "vitepress-plugin-tabs": "^0.8.0"
   },
   "dependencies": {
+    "lucide-vue-next": "^1.0.0",
     "vitepress-plugin-group-icons": "^1.7.1"
   },
   "pnpm": {

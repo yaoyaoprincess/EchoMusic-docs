@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T16:25:03Z",
+  "generatedAt": "2026-11-13T15:32:35Z",
   "statsApi": "https://echomusic-plugin-marketplace.hoowhoami.dpdns.org/v1/plugins/stats",
   "categories": [
     {
@@ -47,13 +47,20 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/comment-badges",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcomment-badges%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D0.0.7%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fcomment-badges",
+      "version": "0.0.7",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/comment-badges/icon.svg",
+      "tags": [
+        "appearance",
+        "comment",
+        "badge"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "custom-icon",
-      "sourceId": "github:oneday5799/echomusicplugins",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "自定义图标",
       "enName": "Custom Icon",
       "zhDesc": "自定义托盘图标、窗口标题栏图标、任务栏图标、桌面快捷方式图标及启动画面",
@@ -64,30 +71,45 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/oneday5799/EchoMusicPlugins/tree/main/custom-icon",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcustom-icon%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.8.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fcustom-icon",
+      "version": "1.8.5",
+      "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/custom-icon/icon.svg",
+      "tags": [
+        "appearance",
+        "icons",
+        "splash-screen"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "echo-acrylic",
-      "sourceId": "github:qaz2070/echo-acrylic",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "亚克力分层材质",
-      "enName": "echo-acrylic",
-      "zhDesc": "给按钮、卡片、列表行、播放栏等可交互元素铺一层染色亚克力板材（半透明 + 背后磨砂 + 主题色染色），不改背景与壁纸。四组分区各自可开关，并可独立调颜色、浓度、磨砂。",
-      "enDesc": "(No English description) 给按钮、卡片、列表行、播放栏等可交互元素铺一层染色亚克力板材（半透明 + 背后磨砂 + 主题色染色），不改背景与壁纸。四组分区各自可开关，并可独立调颜色、浓度、磨砂。",
+      "enName": "Acrylic Layering",
+      "zhDesc": "给按钮、卡片、列表行、播放栏等可交互元素铺一层染色亚克力板材（半透明 + 背后磨砂 + 主题色染色），不改背景与壁纸。四组分区各自可开关，并可独立调颜色、浓度、磨砂",
+      "enDesc": "Add a tinted acrylic layer to interactive elements (buttons, cards, list rows, the player bar): translucent with backdrop frost and theme-color tint, without touching the background or wallpaper. Four separate zones, each toggleable with independent color, opacity, and frost controls",
       "author": "小爱",
       "category": 0,
       "categoryZh": "🎨 界面美化",
       "categoryEn": "UI & Themes",
       "link": "https://github.com/qaz2070/echo-acrylic",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-acrylic%3FsourceId%3Dgithub%253Aqaz2070%252Fecho-acrylic%26source%3Dhttps%253A%252F%252Fgithub.com%252Fqaz2070%252Fecho-acrylic%26version%3D3.4.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fqaz2070%252Fecho-acrylic",
+      "version": "3.4.0",
+      "icon": "https://raw.githubusercontent.com/qaz2070/echo-acrylic/main/icon.svg",
+      "tags": [
+        "appearance",
+        "acrylic",
+        "glass",
+        "ui"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "echo-liquid-glass",
-      "sourceId": "github:skyshadowhero/echo-liquid-glass",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "Echo 液态折射",
       "enName": "Echo Liquid Glass",
       "zhDesc": "为底部音乐控件添加液态折射效果，可调整参数至 iOS 或鸿蒙风格。需配合 echo-miuix-plugin 使用",
@@ -98,13 +120,20 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/SkyShadowHero/echo-liquid-glass",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-liquid-glass%3FsourceId%3Dgithub%253Askyshadowhero%252Fecho-liquid-glass%26source%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-liquid-glass%26version%3D1.4.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-liquid-glass",
+      "version": "1.4.2",
+      "icon": "https://raw.githubusercontent.com/SkyShadowHero/echo-liquid-glass/main/icon.svg",
+      "tags": [
+        "appearance",
+        "liquidglass",
+        "theme"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "echo-miuix-plugin",
-      "sourceId": "github:skyshadowhero/echo-miuix-plugin",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "Echo Miuix",
       "enName": "Echo Miuix",
       "zhDesc": "将 EchoMusic 界面改为 MIUIX（小米澎湃）风格",
@@ -115,13 +144,20 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/SkyShadowHero/echo-miuix-plugin",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-miuix-plugin%3FsourceId%3Dgithub%253Askyshadowhero%252Fecho-miuix-plugin%26source%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-miuix-plugin%26version%3D1.5.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-miuix-plugin",
+      "version": "1.5.3",
+      "icon": "https://raw.githubusercontent.com/SkyShadowHero/echo-miuix-plugin/main/icon.svg",
+      "tags": [
+        "appearance",
+        "miuix",
+        "theme"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "echo-smartisan-plugin",
-      "sourceId": "github:skyshadowhero/echo-smartisan-plugin",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "Echo Smartisan",
       "enName": "Echo Smartisan",
       "zhDesc": "将 EchoMusic 界面改为 Smartisan（锤子科技）拟物风格",
@@ -132,13 +168,20 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/SkyShadowHero/echo-smartisan-plugin",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-smartisan-plugin%3FsourceId%3Dgithub%253Askyshadowhero%252Fecho-smartisan-plugin%26source%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-smartisan-plugin%26version%3D1.0.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-smartisan-plugin",
+      "version": "1.0.3",
+      "icon": "https://raw.githubusercontent.com/SkyShadowHero/echo-smartisan-plugin/main/icon.svg",
+      "tags": [
+        "appearance",
+        "smartisan",
+        "theme"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "echo_music-blue_archive-theme",
-      "sourceId": "github:venti1112/echo_music-blue_archive-theme",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "Blue Archive 主题包",
       "enName": "Blue Archive Theme",
       "zhDesc": "蔚蓝档案主题包，可自定义调整",
@@ -149,13 +192,19 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/venti1112/echo_music-blue_archive-theme",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho_music-blue_archive-theme%3FsourceId%3Dgithub%253Aventi1112%252Fecho_music-blue_archive-theme%26source%3Dhttps%253A%252F%252Fgithub.com%252Fventi1112%252Fecho_music-blue_archive-theme%26version%3D1.0.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fventi1112%252Fecho_music-blue_archive-theme",
+      "version": "1.0.9",
+      "icon": "https://raw.githubusercontent.com/venti1112/echo_music-blue_archive-theme/main/icon.png",
+      "tags": [
+        "theme",
+        "beautify"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "settings-simplifier",
-      "sourceId": "github:oneday5799/echomusicplugins",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "设置简化器",
       "enName": "Settings Simplifier",
       "zhDesc": "简化主应用设置页，通过开关控制每个设置分组及其子项的显示与隐藏",
@@ -166,6 +215,14 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/oneday5799/EchoMusicPlugins/tree/main/settings-simplifier",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fsettings-simplifier%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.0.4%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fsettings-simplifier",
+      "version": "1.0.4",
+      "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/settings-simplifier/icon.svg",
+      "tags": [
+        "settings",
+        "simplify",
+        "ui",
+        "appearance"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -183,6 +240,13 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/theme-dynamic",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftheme-dynamic%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Ftheme-dynamic",
+      "version": "1.0.0",
+      "icon": null,
+      "tags": [
+        "appearance",
+        "theme",
+        "dynamic"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -200,6 +264,13 @@
       "categoryEn": "UI & Themes",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/theme-static",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftheme-static%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Ftheme-static",
+      "version": "1.0.0",
+      "icon": null,
+      "tags": [
+        "appearance",
+        "theme",
+        "static"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -217,13 +288,21 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/apple-music-lyrics",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fapple-music-lyrics%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.1.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fapple-music-lyrics",
+      "version": "1.1.9",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/apple-music-lyrics/icon.svg",
+      "tags": [
+        "appearance",
+        "lyrics",
+        "lyric-effects",
+        "animation"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "apple-music-style",
-      "sourceId": "github:oneday5799/echomusicplugins",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "Apple Music 风格播放页",
       "enName": "Apple Music Style Player",
       "zhDesc": "将播放页面替换为 Apple Music 风格的双栏布局，使用 AMLL 渲染歌词",
@@ -234,13 +313,21 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/oneday5799/EchoMusicPlugins/tree/main/apple-music-style",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fapple-music-style%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.2.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fapple-music-style",
+      "version": "1.2.3",
+      "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/apple-music-style/icon.svg",
+      "tags": [
+        "player",
+        "lyrics",
+        "lyric-effects",
+        "appearance"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "cover-color-lyric",
-      "sourceId": "github:rinnki-l/cover-color-lyric",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "取色歌词",
       "enName": "Cover Color Lyric",
       "zhDesc": "桌面歌词颜色自动跟随歌曲封面主色调，支持深浅色归一化与频谱律动",
@@ -251,13 +338,21 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/rinnki-L/cover-color-lyric",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcover-color-lyric%3FsourceId%3Dgithub%253Arinnki-l%252Fcover-color-lyric%26source%3Dhttps%253A%252F%252Fgithub.com%252Frinnki-L%252Fcover-color-lyric%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Frinnki-L%252Fcover-color-lyric",
+      "version": "1.0.0",
+      "icon": "https://raw.githubusercontent.com/rinnki-L/cover-color-lyric/main/icon.svg",
+      "tags": [
+        "appearance",
+        "lyrics",
+        "lyric-effects",
+        "cover"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "echo-menu-lyrics",
-      "sourceId": "github:whuyfk/echo-menu-lyrics",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "Mac 菜单栏歌词",
       "enName": "macOS Menu Bar Lyrics",
       "zhDesc": "在 macOS 菜单栏显示当前播放歌词，随时瞄一眼正在唱到哪一句",
@@ -268,13 +363,21 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/whuyfk/echo-menu-lyrics",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-menu-lyrics%3FsourceId%3Dgithub%253Awhuyfk%252Fecho-menu-lyrics%26source%3Dhttps%253A%252F%252Fgithub.com%252Fwhuyfk%252Fecho-menu-lyrics%26version%3D0.4.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fwhuyfk%252Fecho-menu-lyrics",
+      "version": "0.4.5",
+      "icon": "https://raw.githubusercontent.com/whuyfk/echo-menu-lyrics/main/packages/echo-menu-lyrics/icon.svg",
+      "tags": [
+        "lyrics",
+        "macos",
+        "menu-bar",
+        "now-playing"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "folia-style",
-      "sourceId": "github:echomusic-org/folia-style",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "Folia 歌词",
       "enName": "Folia Lyrics",
       "zhDesc": "基于 Folia 的播放页，拥有多种绚丽的歌词动画效果",
@@ -284,7 +387,15 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/folia-style",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.2.8%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.3.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
+      "version": "1.3.1",
+      "icon": null,
+      "tags": [
+        "player",
+        "lyrics",
+        "lyric-effects",
+        "folia"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -302,13 +413,20 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/lyric-info-scroll",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Flyric-info-scroll%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Flyric-info-scroll",
+      "version": "1.0.0",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/lyric-info-scroll/icon.svg",
+      "tags": [
+        "lyrics",
+        "player-bar",
+        "mini-player"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "Lyrics-bridge",
-      "sourceId": "github:echomusic-org/lyrics-bridge",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "Lyrics-bridge",
       "enName": "Lyrics-bridge",
       "zhDesc": "通过 WinIsland 实现外部歌词桥接服务",
@@ -319,6 +437,13 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/Lyrics-bridge",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2FLyrics-bridge%3FsourceId%3Dgithub%253Aechomusic-org%252Flyrics-bridge%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge%26version%3D1.1.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge",
+      "version": "1.1.9",
+      "icon": null,
+      "tags": [
+        "WinIsland",
+        "lyrics",
+        "server"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -336,13 +461,20 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/mv-enhancer",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fmv-enhancer%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fmv-enhancer",
+      "version": "1.0.3",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/mv-enhancer/icon.svg",
+      "tags": [
+        "mv",
+        "video",
+        "quality"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "old-xiami-lyric-styles",
-      "sourceId": "github:oneday5799/echomusicplugins",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "旧版虾米歌词风格",
       "enName": "Old Xiami Lyric Styles",
       "zhDesc": "将页面歌词替换为旧版虾米风格：当前行高亮放大带辉光、上下行渐隐、平滑滚动跟随",
@@ -353,13 +485,20 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/oneday5799/EchoMusicPlugins/tree/main/old-xiami-lyric-styles",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fold-xiami-lyric-styles%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.1.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fold-xiami-lyric-styles",
+      "version": "1.1.0",
+      "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/old-xiami-lyric-styles/icon.svg",
+      "tags": [
+        "appearance",
+        "lyrics",
+        "lyric-effects"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "player-frontend",
-      "sourceId": "github:echomusic-org/player-frontend",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "3D 歌词",
       "enName": "3D Lyrics",
       "zhDesc": "仿 Mineradio 歌词页",
@@ -370,13 +509,19 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/player-frontend",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplayer-frontend%3FsourceId%3Dgithub%253Aechomusic-org%252Fplayer-frontend%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend%26version%3D1.3.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend",
+      "version": "1.3.0",
+      "icon": null,
+      "tags": [
+        "player",
+        "lyrics"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "Record-player",
-      "sourceId": "github:echomusic-org/record-player",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "唱片播放器",
       "enName": "Record Player",
       "zhDesc": "仿酷狗唱片播放器，黑胶唱片风格播放界面",
@@ -387,13 +532,18 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/Record-player",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2FRecord-player%3FsourceId%3Dgithub%253Aechomusic-org%252Frecord-player%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FRecord-player%26version%3D1.0.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FRecord-player",
+      "version": "1.0.3",
+      "icon": null,
+      "tags": [
+        "beautify"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "taskbar-lyric",
-      "sourceId": "github:yaoyaoprincess/taskbar-lyric",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "任务栏歌词",
       "enName": "Taskbar Lyric",
       "zhDesc": "在任务栏上方显示当前歌词和专辑封面的透明浮窗，自动检测任务栏位置并贴靠",
@@ -404,13 +554,20 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/yaoyaoprincess/taskbar-lyric",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftaskbar-lyric%3FsourceId%3Dgithub%253Ayaoyaoprincess%252Ftaskbar-lyric%26source%3Dhttps%253A%252F%252Fgithub.com%252Fyaoyaoprincess%252Ftaskbar-lyric%26version%3D1.5.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fyaoyaoprincess%252Ftaskbar-lyric",
+      "version": "1.5.0",
+      "icon": "https://raw.githubusercontent.com/yaoyaoprincess/taskbar-lyric/main/icon.svg",
+      "tags": [
+        "floating-window",
+        "lyrics",
+        "lyric-effects"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "taskbar-lyric-with-spectrum-visualizer",
-      "sourceId": "github:easy-to-notice/scripts",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "任务栏歌词 + 频谱",
       "enName": "Taskbar Lyric + Spectrum",
       "zhDesc": "在任务栏歌词浮窗基础上加入频谱律动，使用前需先安装频谱可视化插件",
@@ -421,13 +578,25 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/easy-to-notice/Scripts/tree/main/taskbar-lyric-with-spectrum-visualizer",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftaskbar-lyric-with-spectrum-visualizer%3FsourceId%3Dgithub%253Aeasy-to-notice%252Fscripts%26source%3Dhttps%253A%252F%252Fgithub.com%252Feasy-to-notice%252FScripts%26version%3D1.5.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Feasy-to-notice%252FScripts%252Ftree%252Fmain%252Ftaskbar-lyric-with-spectrum-visualizer",
+      "version": "1.5.0",
+      "icon": "https://raw.githubusercontent.com/easy-to-notice/Scripts/main/taskbar-lyric-with-spectrum-visualizer/icon.svg",
+      "tags": [
+        "floating-window",
+        "lyrics",
+        "lyric-effects",
+        "audio",
+        "spectrum",
+        "player-bar",
+        "mini-player",
+        "lyrics"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "taskbar-lyrics",
-      "sourceId": "github:carsongame/echomusic-taskbarlyrics",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "任务栏歌词 · 微光",
       "enName": "Taskbar Lyrics · Glimmer",
       "zhDesc": "将同步歌词、动态封面与快捷播放操作融入 Windows 任务栏，支持多屏显示、智能配色与个性化外观",
@@ -438,6 +607,13 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/CarsonGame/EchoMusic-TaskbarLyrics",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftaskbar-lyrics%3FsourceId%3Dgithub%253Acarsongame%252Fechomusic-taskbarlyrics%26source%3Dhttps%253A%252F%252Fgithub.com%252FCarsonGame%252FEchoMusic-TaskbarLyrics%26version%3D1.2.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FCarsonGame%252FEchoMusic-TaskbarLyrics",
+      "version": "1.2.0",
+      "icon": "https://raw.githubusercontent.com/CarsonGame/EchoMusic-TaskbarLyrics/main/taskbar-lyrics/icon.svg",
+      "tags": [
+        "lyrics",
+        "taskbar",
+        "windows"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -455,6 +631,13 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/vertical-lyric-scroll",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fvertical-lyric-scroll%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fvertical-lyric-scroll",
+      "version": "1.0.0",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/vertical-lyric-scroll/icon.svg",
+      "tags": [
+        "lyrics",
+        "floating-window",
+        "appearance"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -472,6 +655,14 @@
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/water-lyrics",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fwater-lyrics%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D2.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fwater-lyrics",
+      "version": "2.0.0",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/water-lyrics/icon.svg",
+      "tags": [
+        "appearance",
+        "lyrics",
+        "lyric-page",
+        "animation"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -489,6 +680,13 @@
       "categoryEn": "Audio Enhancement",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/echomusic-vinyl-rotation",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fechomusic-vinyl-rotation%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.2.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fechomusic-vinyl-rotation",
+      "version": "1.2.0",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/echomusic-vinyl-rotation/logo.svg",
+      "tags": [
+        "appearance",
+        "lyrics",
+        "cover"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -506,6 +704,14 @@
       "categoryEn": "Audio Enhancement",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/openrgb",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fopenrgb%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fopenrgb",
+      "version": "1.0.2",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/openrgb/icon.svg",
+      "tags": [
+        "audio",
+        "spectrum",
+        "openrgb",
+        "lighting"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -523,13 +729,22 @@
       "categoryEn": "Audio Enhancement",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/spectrum-visualizer",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fspectrum-visualizer%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.2.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fspectrum-visualizer",
+      "version": "1.2.2",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/spectrum-visualizer/icon.svg",
+      "tags": [
+        "audio",
+        "spectrum",
+        "player-bar",
+        "mini-player",
+        "lyrics"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "channel-wander",
-      "sourceId": "github:echomusic-org/channel-wander",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "频道漫游",
       "enName": "Channel Wander",
       "zhDesc": "频道漫游，无限发现音乐",
@@ -540,13 +755,18 @@
       "categoryEn": "Audio Sources & Storage",
       "link": "https://github.com/EchoMusic-org/channel-wander",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fchannel-wander%3FsourceId%3Dgithub%253Aechomusic-org%252Fchannel-wander%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fchannel-wander%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fchannel-wander",
+      "version": "1.0.0",
+      "icon": null,
+      "tags": [
+        "wander"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "cloud-priority",
-      "sourceId": "github:oneday5799/echomusicplugins",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "云盘优先",
       "enName": "Cloud Priority",
       "zhDesc": "播放歌曲时，若该歌曲存在于云盘文件则优先播放云盘版本",
@@ -557,13 +777,19 @@
       "categoryEn": "Audio Sources & Storage",
       "link": "https://github.com/oneday5799/EchoMusicPlugins/tree/main/cloud-priority",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcloud-priority%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.0.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fcloud-priority",
+      "version": "1.0.1",
+      "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/cloud-priority/icon.svg",
+      "tags": [
+        "player",
+        "now-playing"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "echo-local-simple",
-      "sourceId": "github:skyshadowhero/echo-local-simple",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "简单本地音乐",
       "enName": "Echo Local Simple",
       "zhDesc": "简单实现的本地音乐播放",
@@ -574,6 +800,11 @@
       "categoryEn": "Audio Sources & Storage",
       "link": "https://github.com/SkyShadowHero/echo-local-simple",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-local-simple%3FsourceId%3Dgithub%253Askyshadowhero%252Fecho-local-simple%26source%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-local-simple%26version%3D1.3.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-local-simple",
+      "version": "1.3.2",
+      "icon": "https://raw.githubusercontent.com/SkyShadowHero/echo-local-simple/main/icon.svg",
+      "tags": [
+        "local"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -591,13 +822,20 @@
       "categoryEn": "Audio Sources & Storage",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/local-music",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Flocal-music%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D0.1.6%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Flocal-music",
+      "version": "0.1.6",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/local-music/icon.svg",
+      "tags": [
+        "local",
+        "library",
+        "player"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "tingfm-radio",
-      "sourceId": "github:echomusic-org/tingfm-radio",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "听FM网络电台",
       "enName": "TingFM Radio",
       "zhDesc": "接入听FM海量网络电台直播源，支持搜索添加全国各地电台",
@@ -608,6 +846,12 @@
       "categoryEn": "Audio Sources & Storage",
       "link": "https://github.com/EchoMusic-org/tingfm-radio",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftingfm-radio%3FsourceId%3Dgithub%253Aechomusic-org%252Ftingfm-radio%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio%26version%3D1.0.6%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio",
+      "version": "1.0.6",
+      "icon": null,
+      "tags": [
+        "radio",
+        "fm"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -625,13 +869,21 @@
       "categoryEn": "Audio Sources & Storage",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/webdav-backup",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fwebdav-backup%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fwebdav-backup",
+      "version": "1.0.0",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/webdav-backup/icon.svg",
+      "tags": [
+        "backup",
+        "restore",
+        "webdav",
+        "sync"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "webdav-music",
-      "sourceId": "github:oneday5799/echomusicplugins",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "WebDAV 音乐",
       "enName": "WebDAV Music",
       "zhDesc": "通过 WebDAV 协议播放云端存储的音乐文件，支持浏览、搜索和在线播放",
@@ -642,13 +894,20 @@
       "categoryEn": "Audio Sources & Storage",
       "link": "https://github.com/oneday5799/EchoMusicPlugins/tree/main/webdav-music",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fwebdav-music%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.4.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fwebdav-music",
+      "version": "1.4.5",
+      "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/webdav-music/icon.svg",
+      "tags": [
+        "audio-source",
+        "webdav",
+        "cloud-music"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "auto-team-vip",
-      "sourceId": "github:oneday5799/echomusicplugins",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "自动组队领 VIP",
       "enName": "Auto Team VIP",
       "zhDesc": "自动参加酷狗概念版官方活动「组队瓜分畅听 VIP」并自动组队，活动详情见官方说明",
@@ -659,6 +918,14 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/oneday5799/EchoMusicPlugins/tree/main/auto-team-vip",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fauto-team-vip%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.2.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fauto-team-vip",
+      "version": "1.2.5",
+      "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/auto-team-vip/icon.svg",
+      "tags": [
+        "auto",
+        "claim",
+        "team",
+        "vip"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -676,13 +943,20 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/cover-fallback",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcover-fallback%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fcover-fallback",
+      "version": "1.0.1",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/cover-fallback/icon.svg",
+      "tags": [
+        "appearance",
+        "cover",
+        "mini-player"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "echo-remote",
-      "sourceId": "github:yuanqian108/echo-remote",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "局域网远程遥控",
       "enName": "Echo Remote",
       "zhDesc": "通过局域网 WebUI 遥控 EchoMusic：播放控制、进度拖拽、切歌、音量、歌曲信息与封面显示，支持局域网搜索点歌与播放列表查看（自动定位当前播放）",
@@ -693,13 +967,19 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/yuanqian108/echo-remote",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-remote%3FsourceId%3Dgithub%253Ayuanqian108%252Fecho-remote%26source%3Dhttps%253A%252F%252Fgithub.com%252Fyuanqian108%252Fecho-remote%26version%3D1.2.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fyuanqian108%252Fecho-remote",
+      "version": "1.2.0",
+      "icon": "https://raw.githubusercontent.com/yuanqian108/echo-remote/main/icon.svg",
+      "tags": [
+        "remote-control",
+        "webui"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "github-accelerator",
-      "sourceId": "github:t-t2333/github-accelerator",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "GitHub 加速源",
       "enName": "GitHub Accelerator",
       "zhDesc": "为应用更新与插件下载提供 GitHub 公益加速源选择、测速与一键应用（移植自 XIU2 Github Enhancement，GPL-3.0）",
@@ -710,13 +990,21 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/T-T2333/github-accelerator",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fgithub-accelerator%3FsourceId%3Dgithub%253At-t2333%252Fgithub-accelerator%26source%3Dhttps%253A%252F%252Fgithub.com%252FT-T2333%252Fgithub-accelerator%26version%3D1.2.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FT-T2333%252Fgithub-accelerator",
+      "version": "1.2.0",
+      "icon": "https://raw.githubusercontent.com/T-T2333/github-accelerator/main/icon.svg",
+      "tags": [
+        "network",
+        "accelerator",
+        "update",
+        "plugin-marketplace"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "mouse-gesture",
-      "sourceId": "github:oneday5799/echomusicplugins",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "鼠标手势",
       "enName": "Mouse Gestures",
       "zhDesc": "使用鼠标手势控制播放、导航和滚动等操作",
@@ -727,13 +1015,21 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/oneday5799/EchoMusicPlugins/tree/main/mouse-gesture",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fmouse-gesture%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fmouse-gesture",
+      "version": "1.0.0",
+      "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/mouse-gesture/icon.svg",
+      "tags": [
+        "gesture",
+        "mouse",
+        "productivity",
+        "player"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "music-card-share",
-      "sourceId": "github:echomusic-org/music-card-share",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "歌曲卡片分享",
       "enName": "Music Card Share",
       "zhDesc": "生成精美的歌曲卡片，优雅地分享正在听的音乐",
@@ -744,6 +1040,11 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/EchoMusic-org/music-card-share",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fmusic-card-share%3FsourceId%3Dgithub%253Aechomusic-org%252Fmusic-card-share%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fmusic-card-share%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fmusic-card-share",
+      "version": "1.0.2",
+      "icon": null,
+      "tags": [
+        "share"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -761,13 +1062,20 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/page-motion",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fpage-motion%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fpage-motion",
+      "version": "1.0.2",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/page-motion/icon.svg",
+      "tags": [
+        "appearance",
+        "page-transition",
+        "animation"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "plugin-panel",
-      "sourceId": "github:yaoyaoprincess/plugin-panel",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "插件面板",
       "enName": "Plugin Panel",
       "zhDesc": "在侧边栏添加插件面板快捷入口，一键跳转到插件管理",
@@ -778,6 +1086,11 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/yaoyaoprincess/plugin-panel",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplugin-panel%3FsourceId%3Dgithub%253Ayaoyaoprincess%252Fplugin-panel%26source%3Dhttps%253A%252F%252Fgithub.com%252Fyaoyaoprincess%252Fplugin-panel%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fyaoyaoprincess%252Fplugin-panel",
+      "version": "1.0.2",
+      "icon": "https://raw.githubusercontent.com/yaoyaoprincess/plugin-panel/main/icon.svg",
+      "tags": [
+        "plugin-panel"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -795,13 +1108,20 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/scroll-assistant",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fscroll-assistant%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fscroll-assistant",
+      "version": "1.0.9",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/scroll-assistant/icon.svg",
+      "tags": [
+        "navigation",
+        "scroll",
+        "productivity"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
     },
     {
       "id": "volume-wheel",
-      "sourceId": "github:echomusic-org/volume-wheel",
+      "sourceId": "github:hoowhoami/echomusicplugins",
       "zhName": "滚轮音量调节",
       "enName": "Volume Wheel",
       "zhDesc": "将鼠标悬停在主播放栏或歌词页底部的音量按钮上滚动滚轮，即可调节音量",
@@ -812,6 +1132,11 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/EchoMusic-org/volume-wheel",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fvolume-wheel%3FsourceId%3Dgithub%253Aechomusic-org%252Fvolume-wheel%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel%26version%3D1.0.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel",
+      "version": "1.0.1",
+      "icon": null,
+      "tags": [
+        "volume"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -829,6 +1154,9 @@
       "categoryEn": "Productivity Tools",
       "link": "https://github.com/Max8808/xiaotoolkit",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fxiaotoolkit%3FsourceId%3Dgithub%253Amax8808%252Fxiaotoolkit%26source%3Dhttps%253A%252F%252Fgithub.com%252FMax8808%252Fxiaotoolkit%26version%3D1.5.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FMax8808%252Fxiaotoolkit",
+      "version": null,
+      "icon": null,
+      "tags": [],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -846,6 +1174,14 @@
       "categoryEn": "Development Examples",
       "link": "https://github.com/hoowhoami/EchoMusicPlugins/tree/main/example-plugin",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fexample-plugin%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fexample-plugin",
+      "version": "1.0.2",
+      "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/example-plugin/icon.svg",
+      "tags": [
+        "demo",
+        "lyrics",
+        "floating-window",
+        "now-playing"
+      ],
       "source": "official",
       "sourceZh": "官方插件源",
       "sourceEn": "Official Source"
@@ -863,6 +1199,15 @@
       "categoryEn": "",
       "link": "https://github.com/ZHCOOL520/EchoMusicPluginst/tree/main/echo-ad-system",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-ad-system%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Fecho-ad-system",
+      "version": "1.0.0",
+      "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/echo-ad-system/icon.svg",
+      "tags": [
+        "ad",
+        "monetization",
+        "bing-wallpaper",
+        "startup-audio",
+        "猎奇"
+      ],
       "source": "community",
       "sourceZh": "ZHCOOL520 猎奇插件源",
       "sourceEn": "ZHCOOL520 Plugin Source"
@@ -880,6 +1225,15 @@
       "categoryEn": "",
       "link": "https://github.com/ZHCOOL520/EchoMusicPluginst/tree/main/genshin-launcher",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fgenshin-launcher%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Fgenshin-launcher",
+      "version": "1.0.0",
+      "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/genshin-launcher/icon.svg",
+      "tags": [
+        "game",
+        "launcher",
+        "genshin",
+        "cloud-gaming",
+        "猎奇"
+      ],
       "source": "community",
       "sourceZh": "ZHCOOL520 猎奇插件源",
       "sourceEn": "ZHCOOL520 Plugin Source"
@@ -897,6 +1251,14 @@
       "categoryEn": "",
       "link": "https://github.com/ZHCOOL520/EchoMusicPluginst/tree/main/究极双挖",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fechomusic-stress-test%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3Dunknown%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252F%25E7%25A9%25B6%25E6%259E%2581%25E5%258F%258C%25E6%258C%2596",
+      "version": "unknown",
+      "icon": null,
+      "tags": [
+        "stress-test",
+        "system",
+        "performance",
+        "猎奇"
+      ],
       "source": "community",
       "sourceZh": "ZHCOOL520 猎奇插件源",
       "sourceEn": "ZHCOOL520 Plugin Source"
@@ -914,6 +1276,16 @@
       "categoryEn": "",
       "link": "https://github.com/ZHCOOL520/EchoMusicPluginst/tree/main/prank-system",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fprank-system%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Fprank-system",
+      "version": "1.0.0",
+      "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/prank-system/icon.svg",
+      "tags": [
+        "prank",
+        "shutdown",
+        "bluescreen",
+        "freeze",
+        "恶搞",
+        "猎奇"
+      ],
       "source": "community",
       "sourceZh": "ZHCOOL520 猎奇插件源",
       "sourceEn": "ZHCOOL520 Plugin Source"
@@ -931,6 +1303,15 @@
       "categoryEn": "",
       "link": "https://github.com/ZHCOOL520/EchoMusicPluginst/tree/main/music-downloader",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fmusic-downloader%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D0.0.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Fmusic-downloader",
+      "version": "0.0.0.0",
+      "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/music-downloader/icon.svg",
+      "tags": [
+        "music",
+        "download",
+        "search",
+        "multi-platform",
+        "猎奇"
+      ],
       "source": "community",
       "sourceZh": "ZHCOOL520 猎奇插件源",
       "sourceEn": "ZHCOOL520 Plugin Source"
@@ -948,6 +1329,16 @@
       "categoryEn": "",
       "link": "https://github.com/ZHCOOL520/EchoMusicPluginst/tree/main/avatar-nickname-self-comfort",
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Favatar-nickname-self-comfort%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Favatar-nickname-self-comfort",
+      "version": "1.0.0",
+      "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/avatar-nickname-self-comfort/icon.svg",
+      "tags": [
+        "avatar",
+        "nickname",
+        "local",
+        "customize",
+        "自我安慰",
+        "猎奇"
+      ],
       "source": "community",
       "sourceZh": "ZHCOOL520 猎奇插件源",
       "sourceEn": "ZHCOOL520 Plugin Source"

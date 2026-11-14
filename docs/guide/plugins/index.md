@@ -41,7 +41,7 @@ EchoMusic 内置一套完全自研、深度耦合主程序的定制化插件运�
 ## 快速导航
 
 - [📥 安装插件 →](./install)
-- [📋 插件列表 →](./list)
+- [🛒 插件市场 →](/plugins/)
 - [⚙️ 管理与安全 →](./manage)
 - [🔌 插件开发文档 →](/develop/plugin-dev/)
 - [🐙 EchoMusic 插件仓库 →](https://github.com/hoowhoami/EchoMusicPlugins)

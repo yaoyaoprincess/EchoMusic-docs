@@ -28,8 +28,9 @@
 | `theme/style.css` | 自定义样式 |
 | `components/DownloadButton.vue` | 下载按钮组件：从 GitHub Releases 获取正式版/预发布版 |
 | `components/DownloadCore.vue` | 下载按钮核心实现（含镜像测速、按系统/架构匹配安装包） |
-| `components/PluginExplorer.vue` | 插件列表交互组件：热度排名 + 搜索/分类筛选/排序（热度实时读取插件市场统计 API，构建时读取 `data/plugins.json`） |
-| `data/plugins.json` | 🤖 自动生成的插件目录数据（官方 + 社区，含 sourceId），勿手改 |
+| `components/PluginMarketplace.vue` | 插件市场卡片页组件：软件内市场风格的卡片网格（图标/版本/标签/三数据/分享·仓库·安装），仅官方源插件，与 `usePluginCatalog.js` 共用 |
+| `components/usePluginCatalog.js` | 插件目录共享逻辑：目录数据、搜索/分类/排序状态、热度加载（缓存+超时+重试），供 PluginMarketplace 使用 |
+| `data/plugins.json` | 🤖 自动生成的插件目录数据（官方源插件，含 sourceId/version/icon/tags），勿手改 |
 
 > `.vitepress/cache/` 与 `docs/.vitepress/dist/` 为构建产物（已 gitignore），不要提交或手改。
 
@@ -56,9 +57,10 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 |------|------|
 | `index.md` | 插件系统概览 |
 | `install.md` | 安装插件 |
-| `list.md` | 插件列表（🤖 自动生成，勿手改；顶部含 PluginExplorer 交互组件：热度榜/筛选/排序） |
 | `community.md` | 社区插件源（🤖 自动生成，勿手改） |
 | `manage.md` | 插件管理与安全 |
+
+> 插件列表页（`list.md`，表格版）已移除——插件浏览统一由顶部导航"插件市场"页（`docs/plugins/`，PluginMarketplace 卡片组件）承担；`docs/public/guide/plugins/list/` 保留旧链接重定向。
 
 ### `docs/faq/` — 常见问题（简体中文）
 | 文件 | 说明 |
@@ -113,11 +115,16 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 | `backups.md` | 备份与恢复：命令式 API 与存储提供方 |
 | `lyrics-page.md` | 歌词页换肤：自定义歌词页注册与皮肤配置 |
 
+### `docs/plugins/` — 插件市场（卡片视图，从顶部导航"插件市场"进入）
+| 文件 | 说明 |
+|------|------|
+| `index.md` | 插件市场卡片页：`aside: false` 整页无侧栏，内容为 PluginMarketplace 卡片组件（对齐软件内市场布局） |
+
 ### `docs/changelog/index.md` — 更新日志（🤖 自动同步，勿手改）
 由脚本从上游 `CHANGELOG.md` 增量同步。
 
 ### `docs/en/` — 英文版文档
-与中文版完全镜像：`guide/`（含 `plugins/`）、`faq/`、`develop/`（含 `internal-api/`、`plugin-dev/`）、`changelog/`。
+与中文版完全镜像：`guide/`（含 `plugins/`）、`faq/`、`develop/`（含 `internal-api/`、`plugin-dev/`）、`plugins/`、`changelog/`。
 
 > ⚠️ **注意**：en/ 英文文档是通过翻译中文内容得来，应最大程度与中文内容保持同步。修改中文页面后需同步更新对应的英文页面。
 
@@ -136,7 +143,7 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 
 ### `scripts/sync-upstream.py` — 上游自动同步脚本
 从上游仓库拉取数据并更新文档（支持 `--dry-run`）：
-- 拉取 `echo-plugins.json`，生成插件列表页和社区插件源页（中英文，即 `docs/guide/plugins/list.md` 与 `community.md` 及其英文对应文件）；
+- 拉取 `echo-plugins.json`，生成社区插件源页（中英文，即 `docs/guide/plugins/community.md` 及其英文对应文件）与插件目录数据 `.vitepress/data/plugins.json`（供插件市场卡片页使用；插件列表页已由插件市场页替代）；
 - 拉取 `CHANGELOG.md`，增量追加到更新日志页（中英文）；
 - 英文内容用 `deep_translator` 自动翻译；
 - 内含 `CURATED` 人工翻译元数据表，用于覆盖自动翻译的插件名称/描述。
@@ -150,7 +157,6 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 ## 自动生成文件一览（勿手改）
 | 文件 | 生成方式 |
 |------|----------|
-| `docs/guide/plugins/list.md` 及 `docs/en/guide/plugins/list.md` | `scripts/sync-upstream.py` 从上游 `echo-plugins.json` 生成（含 PluginExplorer 组件段落） |
-| `.vitepress/data/plugins.json` | 同上（插件目录数据，含 sourceId，供 PluginExplorer 构建时读取与热度查询） |
+| `.vitepress/data/plugins.json` | 同上（官方源插件目录数据，含 sourceId/version/icon/tags，供插件市场卡片页构建时读取与热度查询） |
 | `docs/guide/plugins/community.md` 及 `docs/en/guide/plugins/community.md` | 同上（社区插件源页） |
 | `docs/changelog/index.md` 及 `docs/en/changelog/index.md` | 同上（从上游 `CHANGELOG.md` 增量同步） |

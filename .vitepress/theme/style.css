@@ -92,3 +92,15 @@
 .nowrap {
   white-space: nowrap;
 }
+
+/* 插件市场页：放宽内容容器以容纳卡片网格（宽桌面 4 列、中等 3 列、窄屏 2/1 列自适应）
+   pageClass 落在 .vp-doc 元素上，需用 :has() 放宽其父级容器 */
+.plugin-market-page .VPDoc .container {
+  max-width: 1600px !important;
+}
+.plugin-market-page .VPDoc .container > .content {
+  max-width: 1560px !important;
+}
+.plugin-market-page .VPDoc .content-container {
+  max-width: 1080px !important;
+}

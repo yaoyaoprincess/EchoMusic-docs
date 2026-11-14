@@ -115,7 +115,7 @@ console.log(plugins[0].stats.score);
 统计按 `(sourceId, pluginId)` 聚合，新插件尚无安装事件时查询结果中不含该条目。请确认分享链接中的 `sourceId` 与插件源仓库一致，详见[发布与分发](./publishing)。
 
 **文档站的热度榜用的是同一套数据吗？**
-是。[插件列表](/guide/plugins/list)页面的热度列实时读取同一接口，与应用内排序口径一致。
+是。[插件市场](/plugins/)页面的热度数据实时读取同一接口，与应用内排序口径一致。
 
 **统计服务会下线吗？**
 该服务由 EchoMusic 官方维护，部署在 Cloudflare Workers 上；接口如有变更会在本页同步更新。

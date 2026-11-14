@@ -41,7 +41,7 @@ The plugin model is similar to VS Code / Obsidian's high-freedom local extension
 ## Quick Navigation
 
 - [📥 Installing Plugins →](./install)
-- [📋 Plugin List →](./list)
+- [🛒 Marketplace →](/en/plugins/)
 - [⚙️ Management & Safety →](./manage)
 - [🔌 Plugin Development Guide →](/en/develop/plugin-dev/)
 - [🐙 EchoMusic Plugin Repository →](https://github.com/hoowhoami/EchoMusicPlugins)

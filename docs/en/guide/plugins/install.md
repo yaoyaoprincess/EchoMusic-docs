@@ -53,4 +53,4 @@ You can also open it via Plugin Manager → "Open Directory".
 ---
 
 - [← Plugin System Overview](./)
-- [📋 Plugin List →](./list)
+- [🛒 Marketplace →](/en/plugins/)

@@ -115,7 +115,7 @@ console.log(plugins[0].stats.score);
 Stats aggregate by `(sourceId, pluginId)`; a brand-new plugin with no install events is simply absent from the response. Make sure the `sourceId` in your share link matches the plugin source repository — see [Publishing](./publishing).
 
 **Does the docs-site heat ranking use the same data?**
-Yes. The heat column on the [Plugin List](/en/guide/plugins/list) page reads the same API in real time, using the same scoring as the in-app ranking.
+Yes. The heat column on the [Marketplace](/en/plugins/) page reads the same API in real time, using the same scoring as the in-app ranking.
 
 **Will the stats service go away?**
 It is maintained by the EchoMusic team and deployed on Cloudflare Workers; any API changes will be reflected on this page.

@@ -500,6 +500,13 @@ CURATED = {
         'json_author': 'whuyfk',
         'category': 1,
     },
+    'echo-acrylic': {
+        'zh_name': '亚克力分层材质',
+        'en_name': 'Acrylic Layering',
+        'zh_desc': '给按钮、卡片、列表行、播放栏等可交互元素铺一层染色亚克力板材（半透明 + 背后磨砂 + 主题色染色），不改背景与壁纸。四组分区各自可开关，并可独立调颜色、浓度、磨砂',
+        'en_desc': 'Add a tinted acrylic layer to interactive elements (buttons, cards, list rows, the player bar): translucent with backdrop frost and theme-color tint, without touching the background or wallpaper. Four separate zones, each toggleable with independent color, opacity, and frost controls',
+        'category': 0,
+    },
 }
 
 # 社区源插件统一归入一个分类
@@ -605,8 +612,8 @@ def get_plugin_link(plugin_entry, plugin_id):
     return 'https://github.com/hoowhoami/EchoMusicPlugins'
 
 
-def fetch_plugin_version(plugin_entry, raw_base=None):
-    """Fetch plugin version from manifest.json. Returns version string or 'unknown'.
+def fetch_plugin_info(plugin_entry, raw_base=None):
+    """Fetch manifest.json info. Returns (version, icon_url) — 'unknown'/None when unavailable.
     Accepts optional raw_base for community sources."""
     path = plugin_entry.get('path', '')
     repo = plugin_entry.get('repo', '')
@@ -627,13 +634,18 @@ def fetch_plugin_version(plugin_entry, raw_base=None):
     elif path:
         manifest_url = '{}/{}/manifest.json'.format(PLUGINS_REPO_RAW, path)
     else:
-        return 'unknown'
+        return 'unknown', None
 
     try:
         manifest = fetch_json(manifest_url)
-        return manifest.get('version', 'unknown')
+        version = manifest.get('version', 'unknown')
+        icon = manifest.get('icon') or None
+        icon_url = None
+        if icon:
+            icon_url = '{}/{}'.format(manifest_url.rsplit('/', 1)[0], icon)
+        return version, icon_url
     except Exception:
-        return 'unknown'
+        return 'unknown', None
 
 
 def repo_to_source_id(repo_url):
@@ -735,13 +747,15 @@ def get_plugin_meta(plugin_entry):
     path = plugin_entry.get('path', '')
     repo = plugin_entry.get('repo', '')
     source_url = repo if repo else PLUGINS_REPO
-    version = fetch_plugin_version(plugin_entry)
+    version, icon_url = fetch_plugin_info(plugin_entry)
     homepage = plugin_entry.get('homepage', '')
     share_link = build_share_link(plugin_id, source_url, path, version, homepage or None)
 
+    # 统计查询的 sourceId：官方列表插件的安装统计统一记录在官方源名下
+    # （实测：带自有 repo 的插件其 repo 名下统计为 0），不能按 repo 字段推导
     return {
         'id': plugin_id,
-        'sourceId': repo_to_source_id(source_url),
+        'sourceId': repo_to_source_id(PLUGINS_REPO),
         'zh_name': zh_name,
         'en_name': en_name,
         'zh_desc': zh_desc,
@@ -750,96 +764,16 @@ def get_plugin_meta(plugin_entry):
         'category': category,
         'link': link,
         'share': share_link,
+        'version': version,
+        'icon': icon_url,
+        'tags': plugin_entry.get('tags', []),
     }
-
-
-def build_plugin_list_md(plugins, lang='zh'):
-    """Build the plugin list markdown page for given language."""
-    total = len(plugins)
-
-    if lang == 'zh':
-        header = (
-            '---\n'
-            'title: 插件列表\n'
-            '---\n\n'
-            '# 📋 插件列表\n\n'
-            '以下是官方插件源中已收录的插件（共 {} 款）：\n'
-        ).format(total)
-    else:
-        header = (
-            '---\n'
-            'title: Plugin List\n'
-            '---\n\n'
-            '# 📋 Plugin List\n\n'
-            'Below are plugins available in the official plugin source ({} total):\n'
-        ).format(total)
-
-    # Group by category
-    grouped = {}
-    for p in plugins:
-        cat_idx = p['category']
-        grouped.setdefault(cat_idx, []).append(p)
-
-    sections = [header]
-
-    # Interactive explorer (heat ranking + client-side filtering), tables below act as static catalog
-    if lang == 'zh':
-        sections.append('\n## 🔎 筛选与热度榜\n')
-        sections.append('<PluginExplorer />\n')
-        sections.append('> 💡 上方组件支持按热度 / 安装数排序和分类筛选，热度数据实时读取自 '
-                        'EchoMusic 插件市场统计；下方为完整静态目录。\n')
-    else:
-        sections.append('\n## 🔎 Filter & Heat Ranking\n')
-        sections.append('<PluginExplorer />\n')
-        sections.append('> 💡 The explorer above supports sorting by heat / installs and category'
-                        ' filtering, with heat data read live from the EchoMusic marketplace stats;'
-                        ' the full static catalog is kept below.\n')
-
-    for cat_idx in range(len(CATEGORIES)):
-        if cat_idx not in grouped:
-            continue
-        cat_plugins = grouped[cat_idx]
-        zh_emoji, zh_name = CATEGORIES[cat_idx][0].split(' ', 1)
-        en_name = CATEGORIES[cat_idx][1]
-
-        if lang == 'zh':
-            cat_title = '## {} {}\n'.format(CATEGORIES[cat_idx][0].split()[0], zh_name)
-        else:
-            cat_title = '## {} {}\n'.format(zh_emoji, en_name)
-
-        sections.append(cat_title)
-
-        if lang == 'zh':
-            sections.append('| 插件 | 说明 | 作者 | 分享 |')
-        else:
-            sections.append('| Plugin | Description | Author | Share |')
-        sections.append('|------|------|------|------|')
-
-        for p in cat_plugins:
-            name = p['zh_name'] if lang == 'zh' else p['en_name']
-            desc = p['zh_desc'] if lang == 'zh' else p['en_desc']
-            share_label = '安装' if lang == 'zh' else 'Install'
-            sections.append('| [{}]({}) | {} | {} | <span class="nowrap">[{}]({})</span> |'.format(
-                name, p['link'], desc, p['author'], share_label, p.get('share', '#')
-            ))
-
-    # Footer navigation
-    sections.append('\n---\n')
-    if lang == 'zh':
-        sections.append('- [← 安装插件](./install)')
-        sections.append('- [⚙️ 管理与安全 →](./manage)')
-    else:
-        sections.append('- [← Installing Plugins](./install)')
-        sections.append('- [⚙️ Management & Safety →](./manage)')
-
-    return '\n'.join(sections) + '\n'
 
 
 # ── 插件同步 ──────────────────────────────────────────
 
 def sync_plugins():
-    """Sync plugin list from upstream echo-plugins.json.
-    Returns (changed, upstream_plugins)."""
+    """Sync plugin metadata from upstream echo-plugins.json (for plugins.json)."""
     print('[1/4] 获取插件源索引...')
     try:
         data = fetch_json(PLUGINS_JSON_URL)
@@ -893,6 +827,9 @@ def sync_plugins():
             # 仅文档收录的插件无上游 path/repo 可自动构建分享链接，
             # 使用 CURATED 中人工预置的 share（若有），避免渲染成 "#"
             'share': curated.get('share', '#'),
+            'version': None,
+            'icon': None,
+            'tags': [],
         }
         upstream_plugins.append(extra)
         print('  + {} (仅文档收录)'.format(pid))
@@ -900,35 +837,9 @@ def sync_plugins():
     # Sort: by category, then by ID
     upstream_plugins.sort(key=lambda p: (p['category'], p['id'].lower()))
 
-    # Generate markdown
-    print('[3/4] 生成插件列表...')
-    zh_list = build_plugin_list_md(upstream_plugins, 'zh')
-    en_list = build_plugin_list_md(upstream_plugins, 'en')
-
-    # Compare with existing
-    print('[4/4] 对比现有文件...')
-    zh_path = os.path.join(DOCS_DIR, 'docs', 'guide', 'plugins', 'list.md')
-    en_path = os.path.join(DOCS_DIR, 'docs', 'en', 'guide', 'plugins', 'list.md')
-
-    changed = False
-    for path, content, label in [(zh_path, zh_list, '中文'), (en_path, en_list, '英文')]:
-        old = ''
-        if os.path.exists(path):
-            with open(path, 'r', encoding='utf-8') as f:
-                old = f.read()
-        if old.strip() == content.strip():
-            print('  ✓ {} 插件列表无变化'.format(label))
-        else:
-            changed = True
-            if DRY_RUN:
-                print('  ○ {} 插件列表有变更 (dry-run, 跳过写入)'.format(label))
-            else:
-                os.makedirs(os.path.dirname(path), exist_ok=True)
-                with open(path, 'w', encoding='utf-8') as f:
-                    f.write(content)
-                print('  ✓ {} 插件列表已更新'.format(label))
-
-    return changed, upstream_plugins
+    # 插件列表页已由插件市场页（/plugins/，PluginMarketplace 组件）替代，
+    # 这里只同步插件元数据供 plugins.json 使用
+    return upstream_plugins
 
 
 # ── 更新日志同步 ──────────────────────────────────────
@@ -1233,7 +1144,7 @@ def sync_community_sources():
             # Build share link for community plugin
             src_repo = src.get('repo_url', src['homepage'])
             path = entry.get('path', '')
-            version = fetch_plugin_version(entry, raw_base=src['raw_base'])
+            version, icon_url = fetch_plugin_info(entry, raw_base=src['raw_base'])
             # Let build_share_link construct homepage from source_url + path
             share = build_share_link(pid, src_repo, path, version, None)
 
@@ -1248,6 +1159,9 @@ def sync_community_sources():
                 'author': author if author else src['name'],
                 'link': link,
                 'share': share,
+                'version': version,
+                'icon': icon_url,
+                'tags': entry.get('tags', []),
             })
             print('  -> {}... {}'.format(pid, author or src['name']))
 
@@ -1314,6 +1228,9 @@ def write_plugins_json(upstream_plugins, community_plugins):
             'categoryEn': CATEGORIES[cat][1] if in_range else '',
             'link': p.get('link') or '',
             'share': p.get('share', '#'),
+            'version': p.get('version'),
+            'icon': p.get('icon'),
+            'tags': p.get('tags', []),
             'source': 'official',
             'sourceZh': '官方插件源',
             'sourceEn': 'Official Source',
@@ -1333,6 +1250,9 @@ def write_plugins_json(upstream_plugins, community_plugins):
             'categoryEn': '',
             'link': p.get('link') or '',
             'share': p.get('share', '#'),
+            'version': p.get('version'),
+            'icon': p.get('icon'),
+            'tags': p.get('tags', []),
             'source': 'community',
             'sourceZh': src['name'],
             'sourceEn': src['en_name'],

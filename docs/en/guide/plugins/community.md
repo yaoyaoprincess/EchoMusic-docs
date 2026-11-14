@@ -24,4 +24,4 @@ Community plugin sources are third-party plugin repositories maintained by commu
 
 ---
 
-- [← Back to Plugin List](./list)
+- [← Back to Marketplace](/en/plugins/)
