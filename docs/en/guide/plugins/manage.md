@@ -70,6 +70,6 @@ Plugins run in the renderer process with elevated privileges. Only install plugi
 
 ---
 
-- [← Plugin List](./list)
+- [← Marketplace](/en/plugins/)
 - [Plugin System Overview →](./)
 - [🔌 Plugin Development Guide →](/en/develop/plugin-dev/)
