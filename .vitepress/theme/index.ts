@@ -27,13 +27,5 @@ export default {
     app.use(NolebaseInlineLinkPreviewPlugin)
     app.component('DownloadButton', DownloadButton)
     app.component('PluginMarketplace', PluginMarketplace)
-    if (typeof window !== 'undefined') {
-      // 临时调试：捕获插件组件的渲染错误（定位后移除）
-      app.config.errorHandler = (err, _inst, info) => {
-        const w = window as unknown as { __vueErrs?: string[] }
-        w.__vueErrs = w.__vueErrs || []
-        w.__vueErrs.push(String((err as Error)?.stack || err) + ' || ' + info)
-      }
-    }
   }
 } satisfies Theme
