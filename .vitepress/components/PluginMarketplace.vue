@@ -13,6 +13,15 @@
         <option value="name">{{ t.sortName }}</option>
         <option value="default">{{ t.sortDefault }}</option>
       </select>
+      <select
+        v-if="versionOptions.length"
+        v-model="appVer"
+        class="pm-sort"
+        :aria-label="t.verLabel"
+      >
+        <option value="all">{{ t.verAll }}</option>
+        <option v-for="v in versionOptions" :key="v" :value="v">≥ {{ v }}</option>
+      </select>
     </div>
 
     <div class="pm-chips" role="group" :aria-label="t.filterLabel">
@@ -63,6 +72,9 @@
         <div class="pm-meta">
           <span class="pm-meta-id">ID: {{ p.id }}</span>
           <span>来源: {{ isZh ? p.sourceZh : p.sourceEn }}</span>
+          <span class="pm-meta-ver" :title="p.echoMusicVersion || undefined">
+            {{ t.compatLabel }}{{ p.echoMusicVersion ? displayVer(p.echoMusicVersion) : t.compatAny }}
+          </span>
         </div>
 
         <div class="pm-stats">
@@ -120,7 +132,7 @@ import { computed, ref } from 'vue'
 import { ArrowDownToLine, Download, FolderGit2, Heart, RefreshCw, Share2 } from 'lucide-vue-next'
 import { usePluginCatalog } from './usePluginCatalog'
 
-const { catalog, isZh, query, category, sortKey, heatState, filtered, countText, statsOf, fmtCount, totalOf, displayName, displayDesc } =
+const { catalog, isZh, query, category, sortKey, appVer, versionOptions, displayVer, heatState, filtered, countText, statsOf, fmtCount, totalOf, displayName, displayDesc } =
   usePluginCatalog()
 
 const TEXTS = {
@@ -133,6 +145,10 @@ const TEXTS = {
     sortName: '名称排序',
     filterLabel: '分类筛选',
     all: '全部',
+    verLabel: '适用的 EchoMusic 版本',
+    verAll: '适用全部版本',
+    compatLabel: '适用: ',
+    compatAny: '任意版本',
     heatError: '⚠️ 热度数据暂时无法获取，已按目录顺序显示',
     heatLoading: '⏳ 热度数据加载中…',
     share: '分享',
@@ -153,6 +169,10 @@ const TEXTS = {
     sortName: 'Name',
     filterLabel: 'Filter by category',
     all: 'All',
+    verLabel: 'Compatible EchoMusic version',
+    verAll: 'All versions',
+    compatLabel: 'Requires: ',
+    compatAny: 'any version',
     heatError: '⚠️ Heat data is unavailable right now — showing catalog order',
     heatLoading: '⏳ Loading heat data…',
     share: 'Share',
@@ -406,12 +426,16 @@ html.dark .pm-icon {
   gap: 4px 14px;
   font-size: 12px;
   color: var(--vp-c-text-3);
+  /* 吸底：简介/标签行数不一致时，把元信息+三数据+按钮钉在卡片底部，同排卡片横向对齐 */
+  margin-top: auto;
+}
+.pm-meta-ver {
+  /* 适用版本固定独占一行 */
+  flex-basis: 100%;
 }
 .pm-stats {
   display: flex;
   gap: 8px;
-  /* 吸底：简介/标签行数不一致时，把三数据+按钮钉在卡片底部，同排卡片横向对齐 */
-  margin-top: auto;
 }
 .pm-stat-box {
   flex: 1;

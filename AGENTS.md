@@ -30,7 +30,7 @@
 | `components/DownloadCore.vue` | 下载按钮核心实现（含镜像测速、按系统/架构匹配安装包） |
 | `components/PluginMarketplace.vue` | 插件市场卡片页组件：软件内市场风格的卡片网格（图标/版本/标签/三数据/分享·仓库·安装），仅官方源插件，与 `usePluginCatalog.js` 共用 |
 | `components/usePluginCatalog.js` | 插件目录共享逻辑：目录数据、搜索/分类/排序状态、热度加载（缓存+超时+重试），供 PluginMarketplace 使用 |
-| `data/plugins.json` | 🤖 自动生成的插件目录数据（官方源插件，含 sourceId/version/icon/iconExt/tags），勿手改 |
+| `data/plugins.json` | 🤖 自动生成的插件目录数据（官方源插件，含 sourceId/version/icon/iconExt/echoMusicVersion/tags），勿手改 |
 
 > `.vitepress/cache/` 与 `docs/.vitepress/dist/` 为构建产物（已 gitignore），不要提交或手改。
 
@@ -159,6 +159,6 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 ## 自动生成文件一览（勿手改）
 | 文件 | 生成方式 |
 |------|----------|
-| `.vitepress/data/plugins.json` | 同上（官方源插件目录数据，含 sourceId/version/icon/iconExt/tags，供插件市场卡片页构建时读取与热度查询） |
+| `.vitepress/data/plugins.json` | 同上（官方源插件目录数据，含 sourceId/version/icon/iconExt/echoMusicVersion/tags，供插件市场卡片页构建时读取与热度查询） |
 | `docs/guide/plugins/community.md` 及 `docs/en/guide/plugins/community.md` | 同上（社区插件源页） |
 | `docs/changelog/index.md` 及 `docs/en/changelog/index.md` | 同上（从上游 `CHANGELOG.md` 增量同步） |

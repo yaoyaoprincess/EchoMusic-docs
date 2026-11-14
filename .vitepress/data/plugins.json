@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-13T15:32:35Z",
+  "generatedAt": "2026-11-14T19:05:10Z",
   "statsApi": "https://echomusic-plugin-marketplace.hoowhoami.dpdns.org/v1/plugins/stats",
   "categories": [
     {
@@ -49,6 +49,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcomment-badges%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D0.0.7%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fcomment-badges",
       "version": "0.0.7",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/comment-badges/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.13",
       "tags": [
         "appearance",
         "comment",
@@ -56,8 +58,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "custom-icon",
@@ -74,6 +75,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcustom-icon%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.8.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fcustom-icon",
       "version": "1.8.5",
       "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/custom-icon/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.2",
       "tags": [
         "appearance",
         "icons",
@@ -81,8 +84,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echo-acrylic",
@@ -99,6 +101,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-acrylic%3FsourceId%3Dgithub%253Aqaz2070%252Fecho-acrylic%26source%3Dhttps%253A%252F%252Fgithub.com%252Fqaz2070%252Fecho-acrylic%26version%3D3.4.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fqaz2070%252Fecho-acrylic",
       "version": "3.4.0",
       "icon": "https://raw.githubusercontent.com/qaz2070/echo-acrylic/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.9",
       "tags": [
         "appearance",
         "acrylic",
@@ -107,8 +111,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echo-liquid-glass",
@@ -125,6 +128,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-liquid-glass%3FsourceId%3Dgithub%253Askyshadowhero%252Fecho-liquid-glass%26source%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-liquid-glass%26version%3D1.4.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-liquid-glass",
       "version": "1.4.2",
       "icon": "https://raw.githubusercontent.com/SkyShadowHero/echo-liquid-glass/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.9",
       "tags": [
         "appearance",
         "liquidglass",
@@ -132,8 +137,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echo-miuix-plugin",
@@ -150,6 +154,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-miuix-plugin%3FsourceId%3Dgithub%253Askyshadowhero%252Fecho-miuix-plugin%26source%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-miuix-plugin%26version%3D1.5.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-miuix-plugin",
       "version": "1.5.3",
       "icon": "https://raw.githubusercontent.com/SkyShadowHero/echo-miuix-plugin/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.9",
       "tags": [
         "appearance",
         "miuix",
@@ -157,8 +163,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echo-smartisan-plugin",
@@ -175,6 +180,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-smartisan-plugin%3FsourceId%3Dgithub%253Askyshadowhero%252Fecho-smartisan-plugin%26source%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-smartisan-plugin%26version%3D1.0.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-smartisan-plugin",
       "version": "1.0.3",
       "icon": "https://raw.githubusercontent.com/SkyShadowHero/echo-smartisan-plugin/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.7",
       "tags": [
         "appearance",
         "smartisan",
@@ -182,8 +189,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echo_music-blue_archive-theme",
@@ -200,14 +206,15 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho_music-blue_archive-theme%3FsourceId%3Dgithub%253Aventi1112%252Fecho_music-blue_archive-theme%26source%3Dhttps%253A%252F%252Fgithub.com%252Fventi1112%252Fecho_music-blue_archive-theme%26version%3D1.0.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fventi1112%252Fecho_music-blue_archive-theme",
       "version": "1.0.9",
       "icon": "https://raw.githubusercontent.com/venti1112/echo_music-blue_archive-theme/main/icon.png",
+      "iconExt": ".png",
+      "echoMusicVersion": ">=2.3.0",
       "tags": [
         "theme",
         "beautify"
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".png"
+      "sourceEn": "Official Source"
     },
     {
       "id": "settings-simplifier",
@@ -224,6 +231,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fsettings-simplifier%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.0.4%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fsettings-simplifier",
       "version": "1.0.4",
       "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/settings-simplifier/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.5",
       "tags": [
         "settings",
         "simplify",
@@ -232,8 +241,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "theme-dynamic",
@@ -250,6 +258,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftheme-dynamic%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Ftheme-dynamic",
       "version": "1.0.0",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.3.2-beta.7",
       "tags": [
         "appearance",
         "theme",
@@ -274,6 +284,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftheme-static%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Ftheme-static",
       "version": "1.0.0",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.3.2-beta.7",
       "tags": [
         "appearance",
         "theme",
@@ -298,6 +310,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fapple-music-lyrics%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.1.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fapple-music-lyrics",
       "version": "1.1.9",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/apple-music-lyrics/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.9-beta.6",
       "tags": [
         "appearance",
         "lyrics",
@@ -306,8 +320,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "apple-music-style",
@@ -324,6 +337,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fapple-music-style%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.2.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fapple-music-style",
       "version": "1.2.3",
       "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/apple-music-style/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.9",
       "tags": [
         "player",
         "lyrics",
@@ -332,8 +347,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "cover-color-lyric",
@@ -350,6 +364,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcover-color-lyric%3FsourceId%3Dgithub%253Arinnki-l%252Fcover-color-lyric%26source%3Dhttps%253A%252F%252Fgithub.com%252Frinnki-L%252Fcover-color-lyric%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Frinnki-L%252Fcover-color-lyric",
       "version": "1.0.0",
       "icon": "https://raw.githubusercontent.com/rinnki-L/cover-color-lyric/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.20",
       "tags": [
         "appearance",
         "lyrics",
@@ -358,8 +374,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echo-menu-lyrics",
@@ -376,6 +391,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-menu-lyrics%3FsourceId%3Dgithub%253Awhuyfk%252Fecho-menu-lyrics%26source%3Dhttps%253A%252F%252Fgithub.com%252Fwhuyfk%252Fecho-menu-lyrics%26version%3D0.4.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fwhuyfk%252Fecho-menu-lyrics",
       "version": "0.4.5",
       "icon": "https://raw.githubusercontent.com/whuyfk/echo-menu-lyrics/main/packages/echo-menu-lyrics/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2",
       "tags": [
         "lyrics",
         "macos",
@@ -384,8 +401,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "folia-style",
@@ -399,9 +415,11 @@
       "categoryZh": "🎵 歌词与播放",
       "categoryEn": "Lyrics & Playback",
       "link": "https://github.com/EchoMusic-org/folia-style",
-      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.3.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
-      "version": "1.3.1",
+      "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ffolia-style%3FsourceId%3Dgithub%253Aechomusic-org%252Ffolia-style%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style%26version%3D1.3.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ffolia-style",
+      "version": "1.3.2",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.3.2-beta.2",
       "tags": [
         "player",
         "lyrics",
@@ -427,6 +445,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Flyric-info-scroll%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Flyric-info-scroll",
       "version": "1.0.0",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/lyric-info-scroll/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.9",
       "tags": [
         "lyrics",
         "player-bar",
@@ -434,8 +454,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "Lyrics-bridge",
@@ -452,6 +471,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2FLyrics-bridge%3FsourceId%3Dgithub%253Aechomusic-org%252Flyrics-bridge%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge%26version%3D1.1.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FLyrics-bridge",
       "version": "1.1.9",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.3.1-beta.17",
       "tags": [
         "WinIsland",
         "lyrics",
@@ -476,6 +497,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fmv-enhancer%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fmv-enhancer",
       "version": "1.0.3",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/mv-enhancer/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": null,
       "tags": [
         "mv",
         "video",
@@ -483,8 +506,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "old-xiami-lyric-styles",
@@ -501,6 +523,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fold-xiami-lyric-styles%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.1.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fold-xiami-lyric-styles",
       "version": "1.1.0",
       "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/old-xiami-lyric-styles/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.9",
       "tags": [
         "appearance",
         "lyrics",
@@ -508,8 +532,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "player-frontend",
@@ -526,6 +549,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplayer-frontend%3FsourceId%3Dgithub%253Aechomusic-org%252Fplayer-frontend%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend%26version%3D1.3.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fplayer-frontend",
       "version": "1.3.0",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.3.2-beta.2",
       "tags": [
         "player",
         "lyrics"
@@ -549,6 +574,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2FRecord-player%3FsourceId%3Dgithub%253Aechomusic-org%252Frecord-player%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FRecord-player%26version%3D1.0.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252FRecord-player",
       "version": "1.0.3",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.3.2-beta.1",
       "tags": [
         "beautify"
       ],
@@ -571,6 +598,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftaskbar-lyric%3FsourceId%3Dgithub%253Ayaoyaoprincess%252Ftaskbar-lyric%26source%3Dhttps%253A%252F%252Fgithub.com%252Fyaoyaoprincess%252Ftaskbar-lyric%26version%3D1.5.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fyaoyaoprincess%252Ftaskbar-lyric",
       "version": "1.5.0",
       "icon": "https://raw.githubusercontent.com/yaoyaoprincess/taskbar-lyric/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.9",
       "tags": [
         "floating-window",
         "lyrics",
@@ -578,8 +607,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "taskbar-lyric-with-spectrum-visualizer",
@@ -596,6 +624,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftaskbar-lyric-with-spectrum-visualizer%3FsourceId%3Dgithub%253Aeasy-to-notice%252Fscripts%26source%3Dhttps%253A%252F%252Fgithub.com%252Feasy-to-notice%252FScripts%26version%3D1.5.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Feasy-to-notice%252FScripts%252Ftree%252Fmain%252Ftaskbar-lyric-with-spectrum-visualizer",
       "version": "1.5.0",
       "icon": "https://raw.githubusercontent.com/easy-to-notice/Scripts/main/taskbar-lyric-with-spectrum-visualizer/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.9-beta.1",
       "tags": [
         "floating-window",
         "lyrics",
@@ -608,8 +638,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "taskbar-lyrics",
@@ -626,6 +655,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftaskbar-lyrics%3FsourceId%3Dgithub%253Acarsongame%252Fechomusic-taskbarlyrics%26source%3Dhttps%253A%252F%252Fgithub.com%252FCarsonGame%252FEchoMusic-TaskbarLyrics%26version%3D1.2.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FCarsonGame%252FEchoMusic-TaskbarLyrics",
       "version": "1.2.0",
       "icon": "https://raw.githubusercontent.com/CarsonGame/EchoMusic-TaskbarLyrics/main/taskbar-lyrics/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": null,
       "tags": [
         "lyrics",
         "taskbar",
@@ -633,8 +664,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "vertical-lyric-scroll",
@@ -651,6 +681,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fvertical-lyric-scroll%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fvertical-lyric-scroll",
       "version": "1.0.0",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/vertical-lyric-scroll/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.7-beta.9",
       "tags": [
         "lyrics",
         "floating-window",
@@ -658,8 +690,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "water-lyrics",
@@ -676,6 +707,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fwater-lyrics%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D2.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fwater-lyrics",
       "version": "2.0.0",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/water-lyrics/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.9-beta.6",
       "tags": [
         "appearance",
         "lyrics",
@@ -684,8 +717,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echomusic-vinyl-rotation",
@@ -702,6 +734,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fechomusic-vinyl-rotation%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.2.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fechomusic-vinyl-rotation",
       "version": "1.2.0",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/echomusic-vinyl-rotation/logo.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.9",
       "tags": [
         "appearance",
         "lyrics",
@@ -709,8 +743,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "openrgb",
@@ -727,6 +760,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fopenrgb%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fopenrgb",
       "version": "1.0.2",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/openrgb/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.4",
       "tags": [
         "audio",
         "spectrum",
@@ -735,8 +770,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "spectrum-visualizer",
@@ -753,6 +787,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fspectrum-visualizer%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.2.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fspectrum-visualizer",
       "version": "1.2.2",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/spectrum-visualizer/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.7",
       "tags": [
         "audio",
         "spectrum",
@@ -762,8 +798,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "channel-wander",
@@ -780,6 +815,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fchannel-wander%3FsourceId%3Dgithub%253Aechomusic-org%252Fchannel-wander%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fchannel-wander%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fchannel-wander",
       "version": "1.0.0",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.2.7-beta.28",
       "tags": [
         "wander"
       ],
@@ -802,14 +839,15 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcloud-priority%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.0.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fcloud-priority",
       "version": "1.0.1",
       "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/cloud-priority/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.7-beta.9",
       "tags": [
         "player",
         "now-playing"
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echo-local-simple",
@@ -826,13 +864,14 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-local-simple%3FsourceId%3Dgithub%253Askyshadowhero%252Fecho-local-simple%26source%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-local-simple%26version%3D1.3.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FSkyShadowHero%252Fecho-local-simple",
       "version": "1.3.2",
       "icon": "https://raw.githubusercontent.com/SkyShadowHero/echo-local-simple/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.9",
       "tags": [
         "local"
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "local-music",
@@ -849,6 +888,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Flocal-music%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D0.1.6%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Flocal-music",
       "version": "0.1.6",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/local-music/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.13",
       "tags": [
         "local",
         "library",
@@ -856,8 +897,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "tingfm-radio",
@@ -874,6 +914,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Ftingfm-radio%3FsourceId%3Dgithub%253Aechomusic-org%252Ftingfm-radio%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio%26version%3D1.0.6%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Ftingfm-radio",
       "version": "1.0.6",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.3.1",
       "tags": [
         "radio",
         "fm"
@@ -897,6 +939,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fwebdav-backup%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fwebdav-backup",
       "version": "1.0.0",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/webdav-backup/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.1-beta.20",
       "tags": [
         "backup",
         "restore",
@@ -905,8 +949,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "webdav-music",
@@ -923,6 +966,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fwebdav-music%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.4.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fwebdav-music",
       "version": "1.4.5",
       "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/webdav-music/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.1-beta.16",
       "tags": [
         "audio-source",
         "webdav",
@@ -930,8 +975,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "auto-team-vip",
@@ -948,6 +992,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fauto-team-vip%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.2.5%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fauto-team-vip",
       "version": "1.2.5",
       "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/auto-team-vip/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.2",
       "tags": [
         "auto",
         "claim",
@@ -956,8 +1002,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "cover-fallback",
@@ -974,6 +1019,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fcover-fallback%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fcover-fallback",
       "version": "1.0.1",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/cover-fallback/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.7-beta.9",
       "tags": [
         "appearance",
         "cover",
@@ -981,8 +1028,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echo-remote",
@@ -999,14 +1045,15 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-remote%3FsourceId%3Dgithub%253Ayuanqian108%252Fecho-remote%26source%3Dhttps%253A%252F%252Fgithub.com%252Fyuanqian108%252Fecho-remote%26version%3D1.2.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fyuanqian108%252Fecho-remote",
       "version": "1.2.0",
       "icon": "https://raw.githubusercontent.com/yuanqian108/echo-remote/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.7",
       "tags": [
         "remote-control",
         "webui"
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "github-accelerator",
@@ -1023,6 +1070,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fgithub-accelerator%3FsourceId%3Dgithub%253At-t2333%252Fgithub-accelerator%26source%3Dhttps%253A%252F%252Fgithub.com%252FT-T2333%252Fgithub-accelerator%26version%3D1.2.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FT-T2333%252Fgithub-accelerator",
       "version": "1.2.0",
       "icon": "https://raw.githubusercontent.com/T-T2333/github-accelerator/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6",
       "tags": [
         "network",
         "accelerator",
@@ -1031,8 +1080,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "mouse-gesture",
@@ -1049,6 +1097,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fmouse-gesture%3FsourceId%3Dgithub%253Aoneday5799%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Foneday5799%252FEchoMusicPlugins%252Ftree%252Fmain%252Fmouse-gesture",
       "version": "1.0.0",
       "icon": "https://raw.githubusercontent.com/oneday5799/EchoMusicPlugins/main/mouse-gesture/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.1",
       "tags": [
         "gesture",
         "mouse",
@@ -1057,8 +1107,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "music-card-share",
@@ -1075,6 +1124,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fmusic-card-share%3FsourceId%3Dgithub%253Aechomusic-org%252Fmusic-card-share%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fmusic-card-share%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fmusic-card-share",
       "version": "1.0.2",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.3.1",
       "tags": [
         "share"
       ],
@@ -1097,6 +1148,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fpage-motion%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fpage-motion",
       "version": "1.0.2",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/page-motion/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.19",
       "tags": [
         "appearance",
         "page-transition",
@@ -1104,8 +1157,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "plugin-panel",
@@ -1122,13 +1174,14 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fplugin-panel%3FsourceId%3Dgithub%253Ayaoyaoprincess%252Fplugin-panel%26source%3Dhttps%253A%252F%252Fgithub.com%252Fyaoyaoprincess%252Fplugin-panel%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fyaoyaoprincess%252Fplugin-panel",
       "version": "1.0.2",
       "icon": "https://raw.githubusercontent.com/yaoyaoprincess/plugin-panel/main/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.3.2-beta.2",
       "tags": [
         "plugin-panel"
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "scroll-assistant",
@@ -1145,6 +1198,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fscroll-assistant%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.9%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fscroll-assistant",
       "version": "1.0.9",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/scroll-assistant/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.6-beta.20",
       "tags": [
         "navigation",
         "scroll",
@@ -1152,8 +1207,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "volume-wheel",
@@ -1170,6 +1224,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fvolume-wheel%3FsourceId%3Dgithub%253Aechomusic-org%252Fvolume-wheel%26source%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel%26version%3D1.0.1%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FEchoMusic-org%252Fvolume-wheel",
       "version": "1.0.1",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": ">=2.3.2-beta.1",
       "tags": [
         "volume"
       ],
@@ -1192,6 +1248,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fxiaotoolkit%3FsourceId%3Dgithub%253Amax8808%252Fxiaotoolkit%26source%3Dhttps%253A%252F%252Fgithub.com%252FMax8808%252Fxiaotoolkit%26version%3D1.5.3%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FMax8808%252Fxiaotoolkit",
       "version": null,
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": null,
       "tags": [],
       "source": "official",
       "sourceZh": "官方插件源",
@@ -1212,6 +1270,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fexample-plugin%3FsourceId%3Dgithub%253Ahoowhoami%252Fechomusicplugins%26source%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%26version%3D1.0.2%26homepage%3Dhttps%253A%252F%252Fgithub.com%252Fhoowhoami%252FEchoMusicPlugins%252Ftree%252Fmain%252Fexample-plugin",
       "version": "1.0.2",
       "icon": "https://raw.githubusercontent.com/hoowhoami/EchoMusicPlugins/main/example-plugin/icon.svg",
+      "iconExt": ".svg",
+      "echoMusicVersion": ">=2.2.7-beta.9",
       "tags": [
         "demo",
         "lyrics",
@@ -1220,8 +1280,7 @@
       ],
       "source": "official",
       "sourceZh": "官方插件源",
-      "sourceEn": "Official Source",
-      "iconExt": ".svg"
+      "sourceEn": "Official Source"
     },
     {
       "id": "echo-ad-system",
@@ -1238,6 +1297,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fecho-ad-system%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Fecho-ad-system",
       "version": "1.0.0",
       "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/echo-ad-system/icon.svg",
+      "iconExt": null,
+      "echoMusicVersion": ">=2.2.5",
       "tags": [
         "ad",
         "monetization",
@@ -1264,6 +1325,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fgenshin-launcher%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Fgenshin-launcher",
       "version": "1.0.0",
       "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/genshin-launcher/icon.svg",
+      "iconExt": null,
+      "echoMusicVersion": ">=2.2.5",
       "tags": [
         "game",
         "launcher",
@@ -1290,6 +1353,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fechomusic-stress-test%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3Dunknown%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252F%25E7%25A9%25B6%25E6%259E%2581%25E5%258F%258C%25E6%258C%2596",
       "version": "unknown",
       "icon": null,
+      "iconExt": null,
+      "echoMusicVersion": null,
       "tags": [
         "stress-test",
         "system",
@@ -1315,6 +1380,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fprank-system%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Fprank-system",
       "version": "1.0.0",
       "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/prank-system/icon.svg",
+      "iconExt": null,
+      "echoMusicVersion": ">=2.2.5",
       "tags": [
         "prank",
         "shutdown",
@@ -1342,6 +1409,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Fmusic-downloader%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D0.0.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Fmusic-downloader",
       "version": "0.0.0.0",
       "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/music-downloader/icon.svg",
+      "iconExt": null,
+      "echoMusicVersion": ">=999.0.0",
       "tags": [
         "music",
         "download",
@@ -1368,6 +1437,8 @@
       "share": "https://hoowhoami.github.io/EchoMusic/share/?target=echomusic%3A%2F%2Fplugin%2Favatar-nickname-self-comfort%3FsourceId%3Dgithub%253Azhcool520%252Fechomusicpluginst%26source%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%26version%3D1.0.0%26homepage%3Dhttps%253A%252F%252Fgithub.com%252FZHCOOL520%252FEchoMusicPluginst%252Ftree%252Fmain%252Favatar-nickname-self-comfort",
       "version": "1.0.0",
       "icon": "https://raw.githubusercontent.com/ZHCOOL520/EchoMusicPluginst/master/avatar-nickname-self-comfort/icon.svg",
+      "iconExt": null,
+      "echoMusicVersion": ">=2.2.6",
       "tags": [
         "avatar",
         "nickname",

@@ -741,7 +741,8 @@ def get_plugin_link(plugin_entry, plugin_id):
 
 
 def fetch_plugin_info(plugin_entry, raw_base=None):
-    """Fetch manifest.json info. Returns (version, icon_url) — 'unknown'/None when unavailable.
+    """Fetch manifest.json info.
+    Returns (version, icon_url, echo_music_version) — 'unknown'/None when unavailable.
     Accepts optional raw_base for community sources."""
     path = plugin_entry.get('path', '')
     repo = plugin_entry.get('repo', '')
@@ -771,9 +772,10 @@ def fetch_plugin_info(plugin_entry, raw_base=None):
         icon_url = None
         if icon:
             icon_url = '{}/{}'.format(manifest_url.rsplit('/', 1)[0], icon)
-        return version, icon_url
+        echo_ver = (manifest.get('requires') or {}).get('echoMusicVersion') or None
+        return version, icon_url, echo_ver
     except Exception:
-        return 'unknown', None
+        return 'unknown', None, None
 
 
 def repo_to_source_id(repo_url):
@@ -875,7 +877,7 @@ def get_plugin_meta(plugin_entry):
     path = plugin_entry.get('path', '')
     repo = plugin_entry.get('repo', '')
     source_url = repo if repo else PLUGINS_REPO
-    version, icon_url = fetch_plugin_info(plugin_entry)
+    version, icon_url, echo_ver = fetch_plugin_info(plugin_entry)
     homepage = plugin_entry.get('homepage', '')
     share_link = build_share_link(plugin_id, source_url, path, version, homepage or None)
 
@@ -894,6 +896,7 @@ def get_plugin_meta(plugin_entry):
         'share': share_link,
         'version': version,
         'icon': icon_url,
+        'echoMusicVersion': echo_ver,
         'tags': plugin_entry.get('tags', []),
     }
 
@@ -957,6 +960,7 @@ def sync_plugins():
             'share': curated.get('share', '#'),
             'version': None,
             'icon': None,
+            'echoMusicVersion': None,
             'tags': [],
         }
         upstream_plugins.append(extra)
@@ -1272,7 +1276,7 @@ def sync_community_sources():
             # Build share link for community plugin
             src_repo = src.get('repo_url', src['homepage'])
             path = entry.get('path', '')
-            version, icon_url = fetch_plugin_info(entry, raw_base=src['raw_base'])
+            version, icon_url, echo_ver = fetch_plugin_info(entry, raw_base=src['raw_base'])
             # Let build_share_link construct homepage from source_url + path
             share = build_share_link(pid, src_repo, path, version, None)
 
@@ -1289,6 +1293,7 @@ def sync_community_sources():
                 'share': share,
                 'version': version,
                 'icon': icon_url,
+                'echoMusicVersion': echo_ver,
                 'tags': entry.get('tags', []),
             })
             print('  -> {}... {}'.format(pid, author or src['name']))
@@ -1359,6 +1364,7 @@ def write_plugins_json(upstream_plugins, community_plugins):
             'version': p.get('version'),
             'icon': p.get('icon'),
             'iconExt': p.get('iconExt'),
+            'echoMusicVersion': p.get('echoMusicVersion'),
             'tags': p.get('tags', []),
             'source': 'official',
             'sourceZh': '官方插件源',
@@ -1382,6 +1388,7 @@ def write_plugins_json(upstream_plugins, community_plugins):
             'version': p.get('version'),
             'icon': p.get('icon'),
             'iconExt': p.get('iconExt'),
+            'echoMusicVersion': p.get('echoMusicVersion'),
             'tags': p.get('tags', []),
             'source': 'community',
             'sourceZh': src['name'],
@@ -1498,10 +1505,10 @@ def build_community_page(plugins, lang='zh', featured_idx=None):
     # Footer navigation
     if lang == 'zh':
         sections.append('---\n')
-        sections.append('- [← 返回插件列表](./list)')
+        sections.append('- [← 返回插件市场](/plugins/)')
     else:
         sections.append('---\n')
-        sections.append('- [← Back to Plugin List](./list)')
+        sections.append('- [← Back to Marketplace](/en/plugins/)')
 
     return '\n'.join(sections) + '\n'
 

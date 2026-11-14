@@ -9,6 +9,60 @@ const HEAT_TIMEOUT_MS = 8000
 // 插件市场仅展示官方源插件（社区源插件见"社区插件源"页面）
 const officialPlugins = catalog.plugins.filter((p) => p.source === 'official')
 
+// ── 适用版本（manifest requires.echoMusicVersion，semver 范围）──────────
+function parseSemver(s) {
+  const m = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?/.exec(String(s).trim())
+  if (!m) return { core: [0, 0, 0], pre: null }
+  return { core: [+m[1], +m[2], +m[3]], pre: m[4] ? m[4].split('.') : null }
+}
+function cmpVer(a, b) {
+  // semver 比较（含预发布段：数值段升序、数字段 < 字母段、有预发布 < 无预发布）
+  const pa = parseSemver(a)
+  const pb = parseSemver(b)
+  for (let i = 0; i < 3; i++) {
+    if (pa.core[i] !== pb.core[i]) return pa.core[i] < pb.core[i] ? -1 : 1
+  }
+  if (!pa.pre && !pb.pre) return 0
+  if (!pa.pre) return 1
+  if (!pb.pre) return -1
+  const len = Math.max(pa.pre.length, pb.pre.length)
+  for (let i = 0; i < len; i++) {
+    const x = pa.pre[i]
+    const y = pb.pre[i]
+    if (x === undefined) return -1
+    if (y === undefined) return 1
+    const nx = /^\d+$/.test(x)
+    const ny = /^\d+$/.test(y)
+    if (nx && ny) {
+      if (+x !== +y) return +x < +y ? -1 : 1
+    } else if (nx !== ny) {
+      return nx ? -1 : 1
+    } else if (x !== y) {
+      return x < y ? -1 : 1
+    }
+  }
+  return 0
+}
+function parseRange(range) {
+  // 解析 ">=2.2.6-beta.9 <3" 这类空格分隔的范围，取下界（含）与上界（不含）
+  const tokens = String(range).split(/\s+/).filter(Boolean)
+  let min = null
+  let max = null
+  for (const t of tokens) {
+    if (t.startsWith('<')) {
+      if (!max) max = t.replace(/^[<>=]+/, '').trim()
+    } else if (!min) {
+      min = t.replace(/^[<>=]+/, '').trim()
+    }
+  }
+  return { min, max }
+}
+function displayVer(range) {
+  const { min, max } = parseRange(range)
+  if (!min) return ''
+  return max ? min + ' ~ ' + max : '≥ ' + min
+}
+
 /**
  * 插件目录共享逻辑：目录数据、搜索/分类/排序状态、热度数据加载
  * （sessionStorage 缓存 10 分钟 + 8s 超时 + 失败重试一次）。
@@ -21,6 +75,7 @@ export function usePluginCatalog() {
   const query = ref('')
   const category = ref('all')
   const sortKey = ref('heat') // 热度榜：默认按热度排序（数据到达前等价于目录序）
+  const appVer = ref('all') // 适用版本筛选：all 或某个应用版本号（含该版本的插件）
   const heatState = ref('loading')
   const heatMap = ref({})
 
@@ -58,10 +113,35 @@ export function usePluginCatalog() {
     return n.toLocaleString('en-US')
   }
 
+  // 筛选下拉的选项：目录中出现的所有版本下界，从新到旧
+  const versionOptions = computed(() => {
+    const mins = []
+    for (const p of officialPlugins) {
+      if (!p.echoMusicVersion) continue
+      const { min } = parseRange(p.echoMusicVersion)
+      if (min && !mins.some((v) => cmpVer(v, min) === 0)) mins.push(min)
+    }
+    return mins.sort((a, b) => cmpVer(b, a))
+  })
+
+  // 选中应用版本 c 时插件是否适用：min ≤ c 且（无上界或 c < 上界）
+  function compatibleWithApp(p) {
+    if (appVer.value === 'all') return true
+    if (!p.echoMusicVersion) return true // 未声明要求的插件视为任意版本可用
+    const { min, max } = parseRange(p.echoMusicVersion)
+    const c = appVer.value
+    if (min && cmpVer(min, c) > 0) return false
+    if (max && cmpVer(c, max) >= 0) return false
+    return true
+  }
+
   const filtered = computed(() => {
     const q = query.value.trim().toLowerCase()
     const list = officialPlugins.filter((p) => {
       if (category.value !== 'all' && p.category !== category.value) {
+        return false
+      }
+      if (!compatibleWithApp(p)) {
         return false
       }
       if (!q) return true
@@ -161,6 +241,10 @@ export function usePluginCatalog() {
     query,
     category,
     sortKey,
+    appVer,
+    versionOptions,
+    compatibleWithApp,
+    displayVer,
     heatState,
     heatMap,
     filtered,
