@@ -156,17 +156,10 @@
 
     <p class="pm-count">{{ countText }}</p>
 
-    <!-- 无 JS 环境骨架屏会永远停留：直接揭示静态直出的卡片网格兜底 -->
-    <noscript>
-      <style>
-        .pm-grid {
-          display: grid !important;
-        }
-        .pm-skel {
-          display: none !important;
-        }
-      </style>
-    </noscript>
+    <!-- 无 JS 环境骨架屏会永远停留：直接揭示静态直出的卡片网格兜底。
+         经 v-html 注入——组件模板里不允许 <style>（side-effect tag，
+         client 编译器会在 dev 下报错），v-html 字符串则原样进 SSR 输出 -->
+    <div v-html="noscriptFallback"></div>
   </div>
 </template>
 
@@ -233,6 +226,10 @@ const TEXTS = {
   }
 }
 const t = computed(() => (isZh.value ? TEXTS.zh : TEXTS.en))
+
+// 无 JS 环境兜底样式（见模板尾部说明）
+const noscriptFallback =
+  '<noscript><style>.pm-grid{display:grid!important}.pm-skel{display:none!important}</style></noscript>'
 
 const copied = ref({})
 const iconStage = ref({}) // p.id → 图标候选源序号；超出候选数则显示首字母占位
