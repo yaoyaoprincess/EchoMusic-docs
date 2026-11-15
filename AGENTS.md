@@ -120,8 +120,13 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 |------|------|
 | `index.md` | 插件市场卡片页：`aside: false` 整页无侧栏，内容为 PluginMarketplace 卡片组件（对齐软件内市场布局） |
 
-### `docs/changelog/index.md` — 更新日志（🤖 自动同步，勿手改）
-由脚本从上游 `CHANGELOG.md` 增量同步。
+### `docs/changelog/` — 更新日志（🤖 自动生成，勿手改）
+| 文件 | 说明 |
+|------|------|
+| `index.md` | 更新日志首页：仅保留最新 4 个版本系列（`INDEX_SERIES_LIMIT`），按版本系列合并去重（每系列一条，正式版吸收同系列 beta 内容，重复条目按首次出现去重） |
+| `archive.md` | 更新日志归档：更早版本系列，从首页底部"更早版本"进入 |
+
+> 条目数据来自 `.vitepress/data/changelog-raw.json`，页面由脚本整体重建，不要手改。
 
 ### `docs/en/` — 英文版文档
 与中文版完全镜像：`guide/`（含 `plugins/`）、`faq/`、`develop/`（含 `internal-api/`、`plugin-dev/`）、`plugins/`、`changelog/`。
@@ -143,11 +148,12 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 ## 自动化
 
 ### `scripts/sync-upstream.py` — 上游自动同步脚本
-从上游仓库拉取数据并更新文档（支持 `--dry-run`、`--icons-only` 仅刷新图标镜像）：
+从上游仓库拉取数据并更新文档（支持 `--dry-run`、`--icons-only` 仅刷新图标镜像、`--rebuild-only` 跳过上游拉取仅从本地仓库重建更新日志页面）：
 - 拉取 `echo-plugins.json`，生成社区插件源页（中英文，即 `docs/guide/plugins/community.md` 及其英文对应文件）与插件目录数据 `.vitepress/data/plugins.json`（供插件市场卡片页使用；插件列表页已由插件市场页替代）；
 - 下载官方插件图标到 `docs/public/plugin-icons/` 本地镜像（版本未变时跳过下载，自动清理孤儿文件），并在 plugins.json 记录 `iconExt` 字段；
-- 拉取 `CHANGELOG.md`，增量追加到更新日志页（中英文）；
-- 英文内容用 `deep_translator` 自动翻译；
+- 拉取 `CHANGELOG.md`，新条目按版本追加到 `.vitepress/data/changelog-raw.json`（append-only），随后按版本系列合并去重、整体重建更新日志首页与归档页（中英文，见 `docs/changelog/`）；
+- 更新日志英文内容按系列缓存在 `.vitepress/data/changelog-translations.json`，上游数据未变的系列直接复用缓存，不重复翻译；
+- 英文内容用 `deep_translator` 自动翻译（translate.google.com 不可达时自动跳过，中文兜底并在页面顶部显示待翻译提醒）；
 - 内含 `CURATED` 人工翻译元数据表，用于覆盖自动翻译的插件名称/描述。
 
 ### `.github/workflows/`
@@ -161,4 +167,6 @@ VitePress Hero 首页：产品简介、功能特性、快速入口和社区信�
 |------|----------|
 | `.vitepress/data/plugins.json` | 同上（官方源插件目录数据，含 sourceId/version/icon/iconExt/echoMusicVersion/tags，供插件市场卡片页构建时读取与热度查询） |
 | `docs/guide/plugins/community.md` 及 `docs/en/guide/plugins/community.md` | 同上（社区插件源页） |
-| `docs/changelog/index.md` 及 `docs/en/changelog/index.md` | 同上（从上游 `CHANGELOG.md` 增量同步） |
+| `docs/changelog/index.md`、`docs/changelog/archive.md` 及其 `docs/en/changelog/` 对应文件 | 同上（从 `.vitepress/data/changelog-raw.json` 按版本系列合并重建） |
+| `.vitepress/data/changelog-raw.json` | 同上（上游 `CHANGELOG.md` 条目仓库，append-only，仅追加新版本） |
+| `.vitepress/data/changelog-translations.json` | 同上（更新日志英文译文缓存，按版本系列缓存） |

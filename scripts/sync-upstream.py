@@ -4,7 +4,7 @@ EchoMusic Docs Auto-Sync Script
 同步上游插件列表 (echo-plugins.json) 和更新日志 (CHANGELOG.md)。
 检测变更后更新对应文档页面。
 
-Usage: python scripts/sync-upstream.py [--dry-run] [--icons-only]
+Usage: python scripts/sync-upstream.py [--dry-run] [--icons-only] [--rebuild-only]
 """
 
 import json
@@ -14,6 +14,7 @@ import sys
 import time
 import urllib.request
 import urllib.error
+from collections import OrderedDict
 from datetime import datetime
 
 # ── 配置 ──────────────────────────────────────────────
@@ -82,6 +83,7 @@ COMMUNITY_SOURCES = [
 
 DRY_RUN = '--dry-run' in sys.argv
 ICONS_ONLY = '--icons-only' in sys.argv
+REBUILD_ONLY = '--rebuild-only' in sys.argv
 
 # ── 分类定义 ──────────────────────────────────────────
 
@@ -1002,6 +1004,113 @@ def sync_plugins():
 
 
 # ── 更新日志同步 ──────────────────────────────────────
+# 页面不再直接镜像上游 CHANGELOG，而是由本地条目仓库重建：
+# - changelog-raw.json：上游原始条目仓库（append-only，已收录条目不再更新）
+# - 按版本系列合并去重：每系列（去掉 -beta.N 的基础版本号）一条，正式版吸收同系列
+#   beta 内容（上游 beta 条目或为累计重复、或为增量说明，正式版条目又常是占位）
+# - 首页只保留最新 N 个系列，其余进入归档页 archive.md
+# - 英文页按系列缓存译文（changelog-translations.json），上游数据未变则直接复用
+
+CHANGELOG_RAW_PATH = os.path.join(DOCS_DIR, '.vitepress', 'data', 'changelog-raw.json')
+CHANGELOG_TRANS_PATH = os.path.join(DOCS_DIR, '.vitepress', 'data', 'changelog-translations.json')
+ZH_CHANGELOG_PATH = os.path.join(DOCS_DIR, 'docs', 'changelog', 'index.md')
+ZH_ARCHIVE_PATH = os.path.join(DOCS_DIR, 'docs', 'changelog', 'archive.md')
+EN_CHANGELOG_PATH = os.path.join(DOCS_DIR, 'docs', 'en', 'changelog', 'index.md')
+EN_ARCHIVE_PATH = os.path.join(DOCS_DIR, 'docs', 'en', 'changelog', 'archive.md')
+
+# 首页保留的最新系列数（从新到旧），其余系列进入归档页
+INDEX_SERIES_LIMIT = 4
+
+# 中文小节标题 → 英文固定映射（不交给翻译引擎，保证各页面一致）
+SECTION_HEAD_EN = {
+    '新增': 'Added',
+    '优化': 'Improved',
+    '修复': 'Fixed',
+    '重构': 'Refactored',
+    '已知变更': 'Known Changes',
+}
+
+# 旧英文页小节标题是翻译产物、拼写不一，回收旧译文前先归一化到 SECTION_HEAD_EN 的值
+EN_HEADING_REVERSE = {
+    'New': 'Added', 'Added': 'Added',
+    'Improvements': 'Improved', 'Improvement': 'Improved', 'Improved': 'Improved',
+    'Optimization': 'Improved', 'Optimized': 'Improved',
+    'Fix': 'Fixed', 'Fixes': 'Fixed', 'Fixed': 'Fixed',
+    'Refactored': 'Refactored', 'Refactor': 'Refactored',
+    'Known Changes': 'Known Changes',
+}
+
+
+def normalize_en_section_headings(body):
+    """把英文正文里的各小节标题变体归一化为标准拼写。"""
+    def repl(m):
+        name = m.group(1).strip()
+        return '### ' + EN_HEADING_REVERSE.get(name, name)
+    return re.sub(r'^### (.+)$', repl, body, flags=re.MULTILINE)
+
+PAGE_HEADER_ZH = '''---
+title: 更新日志
+sidebar: false
+---
+
+# 更新日志
+
+本页记录 EchoMusic 的主要版本更新内容。完整更新日志请参阅 [GitHub Releases](https://github.com/hoowhoami/EchoMusic/releases)。
+
+> ⚠️ 本软件完全免费且开源，请勿通过任何付费渠道下载。
+>
+> 🤡 如果你是付费获取的，说明你被骗了。'''
+
+PAGE_FOOTER_INDEX_ZH = '''## 更早版本
+
+更早版本的更新内容请参阅 [更新日志归档](/changelog/archive)，或到 [GitHub Releases](https://github.com/hoowhoami/EchoMusic/releases) 查看完整历史。'''
+
+PAGE_HEADER_ARCHIVE_ZH = '''---
+title: 更新日志归档
+sidebar: false
+---
+
+# 更新日志归档
+
+{intro}最新版本更新请参阅 [更新日志](/changelog/)。'''
+
+PAGE_FOOTER_ARCHIVE_ZH = '''## 更早版本
+
+更早的测试版本（2.1.5 及以下）请参阅 [GitHub Releases](https://github.com/hoowhoami/EchoMusic/releases)。'''
+
+PAGE_HEADER_EN = '''---
+title: Changelog
+sidebar: false
+---
+
+# Changelog
+
+This page records the major version updates for EchoMusic. For the complete changelog, see [GitHub Releases](https://github.com/hoowhoami/EchoMusic/releases).
+
+> ⚠️ This software is completely free and open-source. Do not obtain it through any paid channels.
+>
+> 🤡 If you acquired it by paying, you've been scammed.'''
+
+PAGE_FOOTER_INDEX_EN = '''## Earlier Versions
+
+For earlier versions, see the [changelog archive](/en/changelog/archive), or check [GitHub Releases](https://github.com/hoowhoami/EchoMusic/releases) for the complete history.'''
+
+PAGE_HEADER_ARCHIVE_EN = '''---
+title: Changelog Archive
+sidebar: false
+---
+
+# Changelog Archive
+
+{intro}For recent versions, see the [Changelog](/en/changelog/).'''
+
+PAGE_FOOTER_ARCHIVE_EN = '''## Earlier Versions
+
+For test versions (2.1.5 and below), please see [GitHub Releases](https://github.com/hoowhoami/EchoMusic/releases).'''
+
+TRANSLATION_PENDING_EN = '''> **🔔 Translation pending: {bases}**
+> Automatic translation failed for these versions, so their notes below are shown in Chinese. Please refer to the Chinese changelog for reference.'''
+
 
 def parse_changelog_versions(text):
     """Parse version entries from CHANGELOG.md.
@@ -1031,222 +1140,429 @@ def translate_to_english(text):
         return None
 
 
+_TRANSLATION_REACHABLE = None  # None=未探测，True/False=探测结果
+
+
+def translation_service_reachable():
+    """探测 translate.google.com 是否可达（本地环境常被墙，探测一次避免反复超时）。"""
+    global _TRANSLATION_REACHABLE
+    if _TRANSLATION_REACHABLE is None:
+        try:
+            req = urllib.request.Request(
+                'https://translate.google.com', headers={'User-Agent': 'Mozilla/5.0'})
+            urllib.request.urlopen(req, timeout=8)
+            _TRANSLATION_REACHABLE = True
+        except Exception:
+            print('  ⚠ translate.google.com 不可达，本次跳过自动翻译')
+            _TRANSLATION_REACHABLE = False
+    return _TRANSLATION_REACHABLE
+
+
 def translate_changelog_body(body):
-    """Translate a changelog version body from Chinese to English using Google Translate.
-    Preserves version headers and markdown structure.
-    Returns None if deep_translator is unavailable."""
+    """Translate a merged changelog series body (Chinese) to English.
+    Section headings use the fixed SECTION_HEAD_EN map; the remaining text is
+    grouped into ~4000-char chunks and sent to Google Translate.
+    Returns None if deep_translator is unavailable or a chunk fails."""
+    if not translation_service_reachable():
+        return None
     try:
         from deep_translator import GoogleTranslator
     except ImportError:
         print('  ⚠ deep_translator 未安装，跳过翻译')
         return None
 
-    lines = body.split('\n')
-    if not lines:
+    if not any('\u4e00' <= c <= '\u9fff' for c in body):
         return body
 
-    # Extract and preserve version header line
-    header_line = ''
-    content_start = 0
-    if lines[0].startswith('## ['):
-        header_line = lines[0]
-        content_start = 1
+    # 按行分组为「小节标题（固定映射）/ 文本段（送翻译）」，标题不进翻译引擎
+    paragraphs = []  # ('head', name) | ('text', text)
+    cur_text = []
+    for line in body.split('\n'):
+        if line.startswith('### '):
+            if cur_text:
+                paragraphs.append(('text', '\n'.join(cur_text)))
+                cur_text = []
+            name = line[4:].strip()
+            paragraphs.append(('head', SECTION_HEAD_EN.get(name, name)))
+        elif line.strip():
+            cur_text.append(line)
+        elif cur_text:
+            paragraphs.append(('text', '\n'.join(cur_text)))
+            cur_text = []
+    if cur_text:
+        paragraphs.append(('text', '\n'.join(cur_text)))
 
-    # Build body content (everything after the header)
-    body_content = '\n'.join(lines[content_start:]).strip()
-    if not body_content or not any('\u4e00' <= c <= '\u9fff' for c in body_content):
-        return body
-
-    # Translate in chunks (Google Translate endpoint ~5000 char limit)
-    max_chunk = 4000
-    paragraphs = re.split(r'(\n\n+)', body_content)
     translated_parts = []
-    current_chunk = []
-    current_len = 0
+    chunk, chunk_len = [], 0
 
-    for para in paragraphs:
-        if current_len + len(para) > max_chunk and current_chunk:
-            chunk_text = ''.join(current_chunk)
+    def flush_chunk():
+        nonlocal chunk, chunk_len
+        if not chunk:
+            return
+        text = '\n\n'.join(chunk).strip()
+        if any('\u4e00' <= c <= '\u9fff' for c in text):
             try:
-                translated = GoogleTranslator(source='zh-CN', target='en').translate(chunk_text)
-                translated_parts.append(translated)
+                text = GoogleTranslator(source='zh-CN', target='en').translate(text)
             except Exception as e:
-                print('  ⚠ 翻译块失败，保留原文: {}'.format(e))
-                return None
-            current_chunk = []
-            current_len = 0
-        current_chunk.append(para)
-        current_len += len(para)
+                print('  ⚠ 翻译块失败: {}'.format(e))
+                raise
+        translated_parts.append(text)
+        chunk, chunk_len = [], 0
 
-    if current_chunk:
-        chunk_text = ''.join(current_chunk)
+    try:
+        for kind, val in paragraphs:
+            if kind == 'head':
+                flush_chunk()
+                translated_parts.append('### ' + val)
+                continue
+            if chunk and chunk_len + len(val) > 3800:
+                flush_chunk()
+            chunk.append(val)
+            chunk_len += len(val)
+        flush_chunk()
+    except Exception:
+        return None
+
+    return '\n\n'.join(translated_parts)
+
+
+def base_version(version):
+    """去掉 -beta.N 等预发布后缀的基础版本号。"""
+    return version.split('-')[0]
+
+
+def version_sort_key(version):
+    """版本排序键（数值元组），用于系列间排序。"""
+    parts = []
+    for part in base_version(version).split('.'):
         try:
-            translated = GoogleTranslator(source='zh-CN', target='en').translate(chunk_text)
-            translated_parts.append(translated)
-        except Exception as e:
-            print('  ⚠ 翻译块失败，保留原文: {}'.format(e))
-            return None
+            parts.append(int(part))
+        except ValueError:
+            parts.append(0)
+    return tuple(parts)
 
-    translated_body = ''.join(translated_parts)
 
-    if header_line:
-        return header_line + '\n' + translated_body
-    return translated_body
+def beta_number(version):
+    """beta 序号，非 beta 返回 0。"""
+    m = re.search(r'-beta\.(\d+)', version)
+    return int(m.group(1)) if m else 0
+
+
+def normalize_entry_body(body):
+    """去掉条目头部的 `## [version] - date` 行，只留正文。
+    正文里再出现 `## ` 开头的行（如页面底部「更早版本」栏被最后一个条目
+    吞进来）一律截断丢弃。"""
+    lines = body.strip().split('\n')
+    if lines and lines[0].startswith('## ['):
+        lines = lines[1:]
+    for i, line in enumerate(lines):
+        if line.startswith('## ') and i > 0:
+            lines = lines[:i]
+            break
+    return '\n'.join(lines).strip()
+
+
+def merge_series_entries(raw_entries):
+    """按版本系列合并原始条目：每系列一条，内容取并集。
+
+    - 系列内先正式版后 beta（旧→新），按首次出现顺序保留；
+    - 小节（### 新增 等）内与条目开头的叙述行均按整行精确去重；
+    - 返回按系列版本号新→旧排序的列表：
+      [{'base', 'version', 'date', 'body'}]，body 不含 `## [` 标题行。
+    """
+    series = OrderedDict()
+    for entry in raw_entries:
+        series.setdefault(base_version(entry['version']), []).append(entry)
+
+    merged = []
+    for base, entries in series.items():
+        stables = [e for e in entries if '-beta' not in e['version']]
+        betas = sorted((e for e in entries if '-beta' in e['version']),
+                       key=lambda e: beta_number(e['version']))
+        ordered = stables + betas
+
+        if stables:
+            title_version = stables[0]['version']
+            title_date = stables[0]['date']
+        else:
+            latest = max(betas, key=lambda e: beta_number(e['version']))
+            title_version = latest['version']
+            title_date = latest['date']
+
+        top_lines, sections, seen = [], OrderedDict(), set()
+        cur_section = None
+        for entry in ordered:
+            for line in normalize_entry_body(entry['body']).split('\n'):
+                line = line.rstrip()
+                if not line.strip():
+                    continue
+                if line.startswith('### '):
+                    cur_section = line[4:].strip()
+                    sections.setdefault(cur_section, [])
+                    continue
+                if line in seen:
+                    continue
+                seen.add(line)
+                if cur_section is None:
+                    top_lines.append(line)
+                else:
+                    sections[cur_section].append(line)
+
+        body_lines = []
+        if top_lines:
+            body_lines.extend(top_lines)
+            body_lines.append('')
+        for name, items in sections.items():
+            body_lines.append('### ' + name)
+            body_lines.append('')
+            body_lines.extend(items)
+            body_lines.append('')
+        body = '\n'.join(body_lines).strip()
+
+        merged.append({'base': base, 'version': title_version,
+                       'date': title_date, 'body': body})
+
+    merged.sort(key=lambda m: version_sort_key(m['base']), reverse=True)
+    return merged
+
+
+def audit_changelog_integrity(raw_entries, merged):
+    """自检：条目仓库的每一行正文（非小节标题）都应出现在合并结果中。"""
+    expected = set()
+    for entry in raw_entries:
+        for line in normalize_entry_body(entry['body']).split('\n'):
+            line = line.rstrip()
+            if line.strip() and not line.startswith('### '):
+                expected.add(line)
+    rendered = set()
+    for m in merged:
+        for line in m['body'].split('\n'):
+            if line.strip() and not line.startswith('### '):
+                rendered.add(line)
+    missing = expected - rendered
+    if missing:
+        print('  ⚠ 自检：{} 行正文在合并时丢失，例如: {}'.format(
+            len(missing), ' / '.join(sorted(missing)[:3])))
+        return False
+    return True
+
+
+def save_changelog_raw(entries):
+    os.makedirs(os.path.dirname(CHANGELOG_RAW_PATH), exist_ok=True)
+    with open(CHANGELOG_RAW_PATH, 'w', encoding='utf-8') as f:
+        json.dump(entries, f, ensure_ascii=False, indent=2)
+        f.write('\n')
+
+
+def load_changelog_raw():
+    """加载本地条目仓库；缺失时从现有中文更新日志页播种（该页存的是上游原文）。"""
+    if os.path.exists(CHANGELOG_RAW_PATH):
+        with open(CHANGELOG_RAW_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    if not os.path.exists(ZH_CHANGELOG_PATH):
+        return []
+    with open(ZH_CHANGELOG_PATH, 'r', encoding='utf-8') as f:
+        text = f.read()
+    entries = [{'version': v, 'date': d, 'body': normalize_entry_body(b)}
+               for v, d, b in parse_changelog_versions(text)]
+    print('  ✓ changelog-raw.json 缺失，从现有中文页播种 {} 个条目'.format(len(entries)))
+    if not DRY_RUN and entries:
+        save_changelog_raw(entries)
+    return entries
+
+
+def load_translation_cache():
+    if os.path.exists(CHANGELOG_TRANS_PATH):
+        with open(CHANGELOG_TRANS_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+def save_translation_cache(cache):
+    os.makedirs(os.path.dirname(CHANGELOG_TRANS_PATH), exist_ok=True)
+    with open(CHANGELOG_TRANS_PATH, 'w', encoding='utf-8') as f:
+        json.dump(cache, f, ensure_ascii=False, indent=2)
+        f.write('\n')
+
+
+def load_existing_en_series():
+    """从磁盘上现有英文页提取合并后的系列正文（缓存缺失时的回收来源）。
+    旧英文页小节标题是翻译产物、拼写不一（New/Added、Fix/Fixes/Fixed 等），
+    先归一化再合并，避免同名小节被拆分。"""
+    parsed = {}
+    for path in (EN_CHANGELOG_PATH, EN_ARCHIVE_PATH):
+        if not os.path.exists(path):
+            continue
+        with open(path, 'r', encoding='utf-8') as f:
+            text = f.read()
+        for v, d, b in parse_changelog_versions(text):
+            parsed.setdefault(base_version(v), []).append(
+                {'version': v, 'date': d,
+                 'body': normalize_en_section_headings(normalize_entry_body(b))})
+    return {base: merge_series_entries(entries)[0]
+            for base, entries in parsed.items()}
+
+
+def translate_series_body(m, cache, en_existing):
+    """单个系列的英文正文：缓存命中直接复用；未命中则尝试翻译；
+    翻译不可用时，仅当缓存完全缺失该系列且现有英文页有同版本条目时回收旧译文。
+    返回 (正文, 是否完整翻译, 缓存是否有改动)。"""
+    cached = cache.get(m['base'])
+    if cached and cached.get('zh') == m['body'] and cached.get('en'):
+        return cached['en'], cached.get('complete', True), False
+
+    translated = translate_changelog_body(m['body'])
+    if translated is not None:
+        cache[m['base']] = {'zh': m['body'], 'en': translated, 'complete': True}
+        return translated, True, True
+
+    if cached is None and m['base'] in en_existing:
+        old = en_existing[m['base']]
+        if old['version'] == m['version'] and old['date'] == m['date']:
+            print('  ⚠ 翻译不可用，{} 沿用现有英文内容'.format(m['base']))
+            cache[m['base']] = {'zh': m['body'], 'en': old['body'], 'complete': True}
+            return old['body'], True, True
+
+    if cached is None:
+        cache[m['base']] = {'zh': m['body'], 'en': m['body'], 'complete': False}
+    print('  ⚠ {} 翻译失败，暂以中文展示'.format(m['base']))
+    return m['body'], False, False
+
+
+def render_series_entry(m, body):
+    if body:
+        return '## [{}] - {}\n\n{}'.format(m['version'], m['date'], body)
+    return '## [{}] - {}'.format(m['version'], m['date'])
+
+
+def assemble_page(header, entry_bodies, footer, reminder=None):
+    parts = [header]
+    if reminder:
+        parts.append(reminder)
+    parts.extend(entry_bodies)
+    parts.append(footer)
+    return '\n\n'.join(parts) + '\n'
+
+
+def write_if_changed(path, content, label):
+    old = ''
+    if os.path.exists(path):
+        with open(path, 'r', encoding='utf-8') as f:
+            old = f.read()
+    if old == content:
+        print('  ✓ {}已是最新'.format(label))
+        return False
+    if DRY_RUN:
+        print('  ○ {}有变更 (dry-run)'.format(label))
+        return True
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+    print('  ✓ {}已更新'.format(label))
+    return True
+
+
+def rebuild_changelog_pages(raw_entries):
+    """按系列合并重建中英更新日志首页与归档页。"""
+    merged = merge_series_entries(raw_entries)
+    audit_changelog_integrity(raw_entries, merged)
+
+    index_series = merged[:INDEX_SERIES_LIMIT]
+    archive_series = merged[INDEX_SERIES_LIMIT:]
+    if not archive_series:
+        print('  ⚠ 归档页无内容，请检查 INDEX_SERIES_LIMIT 设置')
+
+    # ── 中文 ──
+    zh_index = assemble_page(
+        PAGE_HEADER_ZH,
+        [render_series_entry(m, m['body']) for m in index_series],
+        PAGE_FOOTER_INDEX_ZH)
+    changed = write_if_changed(ZH_CHANGELOG_PATH, zh_index, '中文更新日志')
+
+    archive_intro_zh = ''
+    if archive_series:
+        archive_intro_zh = '{} 及更早版本的历史更新内容。'.format(archive_series[0]['version'])
+    zh_archive = assemble_page(
+        PAGE_HEADER_ARCHIVE_ZH.format(intro=archive_intro_zh),
+        [render_series_entry(m, m['body']) for m in archive_series],
+        PAGE_FOOTER_ARCHIVE_ZH)
+    changed |= write_if_changed(ZH_ARCHIVE_PATH, zh_archive, '中文更新日志归档')
+
+    # ── 英文 ──
+    cache = load_translation_cache()
+    en_existing = load_existing_en_series()
+    cache_dirty = False
+    incomplete_index, incomplete_archive = [], []
+
+    en_index_bodies = []
+    for m in index_series:
+        body, complete, dirty = translate_series_body(m, cache, en_existing)
+        cache_dirty |= dirty
+        if not complete:
+            incomplete_index.append(m['base'])
+        en_index_bodies.append(render_series_entry(m, body))
+
+    en_archive_bodies = []
+    for m in archive_series:
+        body, complete, dirty = translate_series_body(m, cache, en_existing)
+        cache_dirty |= dirty
+        if not complete:
+            incomplete_archive.append(m['base'])
+        en_archive_bodies.append(render_series_entry(m, body))
+
+    en_index = assemble_page(
+        PAGE_HEADER_EN, en_index_bodies, PAGE_FOOTER_INDEX_EN,
+        TRANSLATION_PENDING_EN.format(bases=', '.join(incomplete_index)) if incomplete_index else None)
+    changed |= write_if_changed(EN_CHANGELOG_PATH, en_index, '英文更新日志')
+
+    archive_intro_en = ''
+    if archive_series:
+        archive_intro_en = 'Historical release notes for {} and earlier. '.format(archive_series[0]['version'])
+    en_archive = assemble_page(
+        PAGE_HEADER_ARCHIVE_EN.format(intro=archive_intro_en), en_archive_bodies, PAGE_FOOTER_ARCHIVE_EN,
+        TRANSLATION_PENDING_EN.format(bases=', '.join(incomplete_archive)) if incomplete_archive else None)
+    changed |= write_if_changed(EN_ARCHIVE_PATH, en_archive, '英文更新日志归档')
+
+    if cache_dirty and not DRY_RUN:
+        save_translation_cache(cache)
+
+    return changed
 
 
 def sync_changelog():
-    """Sync changelog from upstream CHANGELOG.md."""
-    print('[1/2] 获取上游更新日志...')
-    try:
-        upstream = fetch_text(CHANGELOG_URL)
-    except Exception as e:
-        print('  ✗ 获取失败: {}'.format(e))
-        return False
+    """同步更新日志：追加上游新条目到本地仓库，再按系列合并重建页面。"""
+    raw_entries = load_changelog_raw()
 
-    upstream_versions = parse_changelog_versions(upstream)
-    if not upstream_versions:
-        print('  ✗ 未能解析版本信息')
-        return False
-
-    latest_ver, latest_date, _ = upstream_versions[0]
-    print('  ✓ 最新版本: {} ({})'.format(latest_ver, latest_date))
-
-    print('[2/2] 处理更新日志...')
-    changed = False
-
-    # ── 中文 changelog ──
-    zh_path = os.path.join(DOCS_DIR, 'docs', 'changelog', 'index.md')
-    if os.path.exists(zh_path):
-        with open(zh_path, 'r', encoding='utf-8') as f:
-            zh_old = f.read()
-
-        # Use regex to extract existing version numbers
-        existing_versions = set(re.findall(r'^## \[([^\]]+)\]', zh_old, re.MULTILINE))
-        zh_new_entries = []
-        for ver, date, body in upstream_versions:
-            if ver not in existing_versions:
-                zh_new_entries.append((ver, date, body))
-            else:
-                break
-
-        if zh_new_entries:
-            print('  发现 {} 个新版本: {}'.format(
-                len(zh_new_entries), ', '.join(v[0] for v in zh_new_entries)
-            ))
-            zh_section = '\n\n'.join(body for _, _, body in zh_new_entries)
-            header_end = zh_old.find('## [')
-            if header_end == -1:
-                found = zh_old.rfind('\n\n')
-                header_end = found + 2 if found != -1 else len(zh_old)
-            zh_new_content = zh_old[:header_end] + zh_section + '\n\n' + zh_old[header_end:]
-
-            if not DRY_RUN:
-                with open(zh_path, 'w', encoding='utf-8') as f:
-                    f.write(zh_new_content)
-                print('  ✓ 中文更新日志已更新 ({})'.format(
-                    ', '.join(v[0] for v in zh_new_entries)))
-            else:
-                print('  ○ 中文更新日志有变更 (dry-run)')
-            changed = True
-        else:
-            print('  ✓ 中文更新日志已是最新')
+    if REBUILD_ONLY:
+        print('[1/2] --rebuild-only: 跳过上游拉取，仅使用本地 changelog-raw.json')
     else:
-        print('  ✗ 中文更新日志文件不存在: {}'.format(zh_path))
+        print('[1/2] 获取上游更新日志...')
+        try:
+            upstream = fetch_text(CHANGELOG_URL)
+        except Exception as e:
+            print('  ✗ 获取失败: {}'.format(e))
+            return False
+        upstream_versions = parse_changelog_versions(upstream)
+        if not upstream_versions:
+            print('  ✗ 未能解析版本信息')
+            return False
 
-    # ── 英文 changelog ──
-    # 使用 Google Translate 自动翻译上游中文 CHANGELOG
-    # 如果 deep_translator 不可用则回退到翻译提醒标记
-    en_changelog_path = os.path.join(DOCS_DIR, 'docs', 'en', 'changelog', 'index.md')
-    try:
-        if os.path.exists(en_changelog_path):
-            with open(en_changelog_path, 'r', encoding='utf-8') as f:
-                en_old = f.read()
+        latest_ver, latest_date, _ = upstream_versions[0]
+        print('  ✓ 最新版本: {} ({})'.format(latest_ver, latest_date))
 
-            existing_en_versions = set(re.findall(r'^## \[([^\]]+)\]', en_old, re.MULTILINE))
-            en_new_entries = []
-            for ver, date, body in upstream_versions:
-                if ver not in existing_en_versions:
-                    en_new_entries.append((ver, date, body))
-                else:
-                    break
-
-            if en_new_entries:
-                print('  发现 {} 个新版本需要翻译: {}'.format(
-                    len(en_new_entries), ', '.join(v[0] for v in en_new_entries)
-                ))
-
-                # Attempt auto-translation
-                en_sections = []
-                translation_ok = True
-                for ver, date, body in en_new_entries:
-                    print('  -> 翻译 {}... '.format(ver), end='')
-                    translated = translate_changelog_body(body)
-                    if translated is None:
-                        print('✗')
-                        translation_ok = False
-                        break
-                    en_sections.append(translated)
-                    print('✓')
-
-                if translation_ok and en_sections:
-                    # Insert translated entries
-                    en_section_text = '\n\n'.join(en_sections)
-                    first_version_pos = en_old.find('## [')
-                    if first_version_pos == -1:
-                        title_pos = en_old.find('# Changelog')
-                        if title_pos != -1:
-                            nl = en_old.find('\n', title_pos)
-                            first_version_pos = nl + 1 if nl != -1 else len(en_old)
-                        else:
-                            first_version_pos = len(en_old)
-
-                    # Remove stale reminder blocks
-                    en_old_clean = re.sub(
-                        r'\n*> \*\*🔔 New versions detected[^\n]*\n(?:> [^\n]*\n)*',
-                        '\n', en_old
-                    )
-
-                    en_new = en_old_clean[:first_version_pos] + en_section_text + '\n\n' + en_old_clean[first_version_pos:]
-
-                    if not DRY_RUN:
-                        with open(en_changelog_path, 'w', encoding='utf-8') as f:
-                            f.write(en_new)
-                        print('  ✓ 英文更新日志已翻译并更新')
-                    else:
-                        print('  ○ 英文更新日志将翻译更新 (dry-run)')
-                    changed = True
-                else:
-                    # Fallback: insert reminder block
-                    print('  ⚠ 自动翻译不可用，回退到翻译提醒')
-                    en_missing = [v[0] for v in en_new_entries]
-                    todo_block = '\n\n> **🔔 New versions detected: {}**\n> This section is auto-generated from the upstream CHANGELOG (Chinese). Please translate manually or use the Chinese changelog as reference.\n>'.format(', '.join(en_missing))
-
-                    first_version_pos = en_old.find('## [')
-                    if first_version_pos == -1:
-                        title_pos = en_old.find('# Changelog')
-                        if title_pos == -1:
-                            first_version_pos = 0
-                        else:
-                            nl = en_old.find('\n', title_pos)
-                            first_version_pos = nl + 1 if nl != -1 else len(en_old)
-
-                    if first_version_pos > 0 and todo_block not in en_old:
-                        en_new = en_old[:first_version_pos] + todo_block + '\n\n' + en_old[first_version_pos:]
-                        if not DRY_RUN:
-                            with open(en_changelog_path, 'w', encoding='utf-8') as f:
-                                f.write(en_new)
-                            print('  ⚠ 英文更新日志已标记待翻译 ({})'.format(', '.join(en_missing)))
-                            changed = True
-                        else:
-                            print('  ○ 英文更新日志将标记待翻译 ({})'.format(', '.join(en_missing)))
-            else:
-                print('  ✓ 英文更新日志已是最新')
+        existing = {e['version'] for e in raw_entries}
+        new_entries = [{'version': v, 'date': d, 'body': normalize_entry_body(b)}
+                       for v, d, b in upstream_versions if v not in existing]
+        if new_entries:
+            print('  发现 {} 个新版本: {}'.format(
+                len(new_entries), ', '.join(e['version'] for e in new_entries)))
+            raw_entries.extend(new_entries)
+            if not DRY_RUN:
+                save_changelog_raw(raw_entries)
         else:
-            print('  ✗ 英文更新日志文件不存在: {}'.format(en_changelog_path))
-    except Exception as e:
-        print('  ✗ 英文更新日志处理失败: {}'.format(e))
+            print('  ✓ 上游无新版本')
 
-    return changed
+    print('[2/2] 重建更新日志页面...')
+    return rebuild_changelog_pages(raw_entries)
 
 
 # ── 社区插件源同步 ──────────────────────────────────
@@ -1563,6 +1879,14 @@ def main():
         sync_icons_only()
         sys.exit(0)
 
+    if REBUILD_ONLY:
+        print('模式: REBUILD-ONLY (跳过上游拉取，仅从本地仓库重建更新日志页面)')
+        changed = sync_changelog()
+        print()
+        print('=' * 60)
+        print('✓ 更新日志页面重建完成' if changed else '✓ 更新日志页面无需变更')
+        sys.exit(0)
+
     # sync_plugins 只返回插件元数据列表；元数据变化体现在 plugins.json 的
     # 文件 diff（json_changed）里，不再单独报 changed
     upstream_plugins = sync_plugins()
@@ -1584,7 +1908,7 @@ def main():
         print('  ✓ 已按热度快照排序（{} 个有分数，无分数的排尾部）'.format(
             sum(1 for p in upstream_plugins if p.get('heatScore') is not None)))
     print()
-
+    community_changed, community_plugins = sync_community_sources()
     print()
     changelog_changed = sync_changelog()
     print()
