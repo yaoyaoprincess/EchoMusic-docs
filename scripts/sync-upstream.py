@@ -677,6 +677,33 @@ def sync_icons_only():
         print('✓ plugins.json 无变化')
 
 
+def fetch_heat_scores(pairs):
+    """Fetch current heat scores for (sourceId, pluginId) pairs from the stats API.
+    Returns {(sourceId, pluginId): score} — empty dict on failure."""
+    body = json.dumps({
+        'plugins': [{'sourceId': s, 'pluginId': p} for s, p in pairs]
+    }).encode('utf-8')
+    req = urllib.request.Request(
+        STATS_API_URL, data=body,
+        headers={'User-Agent': 'EchoMusic-docs-sync/1.0', 'Content-Type': 'application/json'}
+    )
+    last_err = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+            return {
+                (item.get('sourceId'), item.get('pluginId')): (item.get('stats') or {}).get('score')
+                for item in data.get('plugins', [])
+            }
+        except (urllib.error.URLError, urllib.error.HTTPError, ValueError) as e:
+            last_err = e
+            if attempt < 2:
+                time.sleep(2 ** attempt)
+    print('  ⚠ 热度快照获取失败，插件目录保持分类/ID 序: {}'.format(last_err))
+    return {}
+
+
 def fetch_manifest(plugin_entry):
     """Fetch manifest.json for a plugin that lacks metadata.
     Returns (name, description, author) tuple, or (None, None, None) on failure.
@@ -1540,7 +1567,24 @@ def main():
     # 文件 diff（json_changed）里，不再单独报 changed
     upstream_plugins = sync_plugins()
     print()
-    community_changed, community_plugins = sync_community_sources()
+    # 热度快照：按同步时的热度降序排列官方插件目录，使构建期/首屏直出的
+    # 目录序即热度序（消除市场页打开时"先默认序、数据到达后跳变到热度序"）。
+    # 快照只用于排序、不写入 plugins.json，避免分数微小变化造成无谓的文件 diff
+    print('[heat] 获取热度快照...')
+    heat_scores = fetch_heat_scores([(p['sourceId'], p['id']) for p in upstream_plugins])
+    if heat_scores:
+        for p in upstream_plugins:
+            p['heatScore'] = heat_scores.get((p['sourceId'], p['id']))
+        upstream_plugins.sort(key=lambda p: (
+            p.get('heatScore') is None,
+            -(p['heatScore'] or 0),
+            p['category'],
+            p['id'].lower(),
+        ))
+        print('  ✓ 已按热度快照排序（{} 个有分数，无分数的排尾部）'.format(
+            sum(1 for p in upstream_plugins if p.get('heatScore') is not None)))
+    print()
+
     print()
     changelog_changed = sync_changelog()
     print()

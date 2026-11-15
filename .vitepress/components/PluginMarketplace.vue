@@ -49,7 +49,33 @@
     <p v-if="heatState === 'error'" class="pm-note">{{ t.heatError }}</p>
     <p v-else-if="heatState === 'loading'" class="pm-note">{{ t.heatLoading }}</p>
 
-    <div class="pm-grid">
+    <!-- 骨架屏：热度数据就绪前占位；数据一到与卡片网格整体切换（统一展示） -->
+    <div v-if="!gridReady" class="pm-grid pm-skel" aria-hidden="true">
+      <div v-for="i in 9" :key="i" class="pm-skel-card">
+        <div class="pm-skel-head">
+          <div class="pm-skel-icon pm-skel-shimmer"></div>
+          <div class="pm-skel-lines">
+            <div class="pm-skel-line pm-skel-shimmer" style="width: 68%"></div>
+            <div class="pm-skel-line pm-skel-shimmer" style="width: 42%"></div>
+          </div>
+        </div>
+        <div class="pm-skel-line pm-skel-shimmer" style="width: 94%"></div>
+        <div class="pm-skel-line pm-skel-shimmer" style="width: 86%"></div>
+        <div class="pm-skel-stats">
+          <div class="pm-skel-box pm-skel-shimmer"></div>
+          <div class="pm-skel-box pm-skel-shimmer"></div>
+          <div class="pm-skel-box pm-skel-shimmer"></div>
+        </div>
+        <div class="pm-skel-stats">
+          <div class="pm-skel-box pm-skel-btn pm-skel-shimmer"></div>
+          <div class="pm-skel-box pm-skel-btn pm-skel-shimmer"></div>
+          <div class="pm-skel-box pm-skel-btn pm-skel-shimmer"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 真实卡片：SSG 直出保留在 DOM（SEO/无 JS 由 noscript 揭示），数据就绪前隐藏 -->
+    <div class="pm-grid" :class="{ 'pm-ready': gridReady }">
       <article v-for="p in filtered" :key="p.source + ':' + p.id" class="pm-card">
         <div class="pm-head">
           <div class="pm-icon">
@@ -129,6 +155,18 @@
     </div>
 
     <p class="pm-count">{{ countText }}</p>
+
+    <!-- 无 JS 环境骨架屏会永远停留：直接揭示静态直出的卡片网格兜底 -->
+    <noscript>
+      <style>
+        .pm-grid {
+          display: grid !important;
+        }
+        .pm-skel {
+          display: none !important;
+        }
+      </style>
+    </noscript>
   </div>
 </template>
 
@@ -137,7 +175,7 @@ import { computed, ref } from 'vue'
 import { ArrowDownToLine, Download, FolderGit2, Heart, RefreshCw, Share2 } from 'lucide-vue-next'
 import { usePluginCatalog } from './usePluginCatalog'
 
-const { catalog, isZh, query, category, sortKey, verBase, appVer, versionGroups, activeGroup, displayVer, heatState, filtered, countText, statsOf, fmtCount, totalOf, displayName, displayDesc } =
+const { catalog, isZh, query, category, sortKey, verBase, appVer, versionGroups, activeGroup, displayVer, heatState, gridReady, filtered, countText, statsOf, fmtCount, totalOf, displayName, displayDesc } =
   usePluginCatalog()
 
 const TEXTS = {
@@ -324,9 +362,98 @@ async function copyShare(p) {
   margin: 0 0 12px;
 }
 .pm-grid {
+  /* 未就绪时隐藏（DOM 保留供 SSG/SEO；无 JS 用户由下方 noscript 揭示） */
+  display: none;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+.pm-grid.pm-ready {
+  display: grid;
+  animation: pm-reveal 0.45s ease both;
+}
+@keyframes pm-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.pm-skel {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
+}
+.pm-skel-card {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 330px;
+}
+.pm-skel-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.pm-skel-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  flex: none;
+}
+.pm-skel-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pm-skel-line {
+  height: 12px;
+  border-radius: 6px;
+}
+.pm-skel-stats {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+.pm-skel-box {
+  flex: 1;
+  height: 30px;
+  border-radius: 9px;
+}
+.pm-skel-btn {
+  height: 28px;
+}
+.pm-skel-shimmer {
+  background: var(--vp-c-bg-soft);
+  position: relative;
+  overflow: hidden;
+}
+.pm-skel-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--vp-c-bg), transparent);
+  animation: pm-shimmer 1.4s infinite;
+}
+@keyframes pm-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pm-skel-shimmer::after {
+    animation: none;
+  }
+  .pm-grid.pm-ready {
+    animation: none;
+  }
 }
 .pm-card {
   display: flex;

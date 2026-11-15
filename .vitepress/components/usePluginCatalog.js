@@ -255,6 +255,10 @@ export function usePluginCatalog() {
 
   onMounted(loadHeat)
 
+  // 统一展示门控：热度数据就绪（或确认失败）前，卡片网格保持骨架屏，
+  // 数据一到整体揭示（排序 + 数字一次性呈现，避免先默认序后跳变的闪变）
+  const gridReady = computed(() => heatState.value !== 'loading')
+
   return {
     catalog,
     isZh,
@@ -268,6 +272,7 @@ export function usePluginCatalog() {
     compatibleWithApp,
     displayVer,
     heatState,
+    gridReady,
     heatMap,
     filtered,
     countText,
