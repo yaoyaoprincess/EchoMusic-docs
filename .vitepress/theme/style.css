@@ -104,3 +104,29 @@
 .plugin-market-page .VPDoc .content-container {
   max-width: 1080px !important;
 }
+
+/**
+ * Page transition: content fades in with a slight rise on SPA route changes.
+ * Triggered by the theme Layout (page-enter class on .VPContent); the navbar
+ * and sidebar stay static. Skipped on first load to avoid a post-SSR blink.
+ */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: page-enter 0.35s cubic-bezier(0.25, 0.8, 0.35, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    animation: none;
+  }
+}
