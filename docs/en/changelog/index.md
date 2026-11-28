@@ -11,33 +11,48 @@ This page records the major version updates for EchoMusic. For the complete chan
 >
 > 🤡 If you acquired it by paying, you've been scammed.
 
-## [2.3.3-beta.3] - 2026-11-14
+> **🔔 Translation pending: 2.3.3**
+> Automatic translation failed for these versions, so their notes below are shown in Chinese. Please refer to the Chinese changelog for reference.
 
-### Added
+## [2.3.3-beta.6] - 2026-11-28
 
-- Added search to the audio effect marketplace
-- Added a "Close Window" item to the app menu "Window" with shortcut ⌘W (Ctrl+W on Windows / Linux)
-- Experimental settings now support importing user info to reuse a logged-in session
-- Network settings add a custom User-Agent option, with per-module control over request headers
+### 新增
 
-### Improved
+- 新增音效市场搜索功能
+- 应用菜单「窗口」新增「关闭窗口」项，快捷键 ⌘W（Windows / Linux 为 Ctrl+W）
+- 实验性设置支持导入用户信息并复用登录状态
+- 网络设置中新增自定义 User-Agent 设置，可分别控制不同模块的请求头
+- 空格键暂停/播放当前歌曲
+- 插件支持通过 manifest `requires.platforms` 声明支持平台（windows/macos/linux）：不支持当前平台的插件在市场与本地安装/更新时会被拒绝，卡片展示平台标签与「平台不支持」原因
+- 歌词页新增外观模式设置，提供深色 / 浅色 / 跟随主程序三档（默认深色）：浅色档基于封面主色提亮生成背景并降低饱和度，歌词背景、默认歌词色、皮肤配色与 AMLL 文字色等全链路按档位分色
 
-- Reduced the performance cost of lyric line switching
-- Improved the Windows taskbar quick-control icon display
-- Improved the error message when online plugins fail to load: network errors (DNS resolution failure, connection timeout, connection reset, proxy unavailable, etc.) now show categorized friendly messages, with "Show details" to view and copy the original error and a one-click shortcut to network settings
-- Signing out now offers the option to keep account data, so the login can be restored directly
-- Developer mode now exposes a CDP debug port, supporting chrome-devtools-mcp to debug the app
+### 优化
 
-### Fixed
+- 优化歌词行切换的性能消耗
+- 优化windows任务栏快捷控制图标显示
+- 优化在线插件加载失败时的提示：网络错误（DNS 解析失败、连接超时、连接被重置、代理不可用等）将展示为分类后的友好文案，并支持通过「显示详情」查看与复制原始错误、一键打开网络设置
+- 退出登录时可选择是否保留账号数据，如选择保留可以直接恢复登录
+- 开发者模式开放 CDP 调试端口，支持使用 chrome-devtools-mcp 调试应用
+- 输入框新增右键菜单，支持复制，粘贴等操作
+- 重构「播放历史」的听歌统计页，对齐 EchoMusicNext 新版视觉：新增单曲循环、最常听专辑黑胶插画、35 天听歌足迹热力日历、24 小时音乐时钟、偏爱的歌手榜与私人重播册歌曲网格，统计数字支持滚动动画，并支持一键复制统计分享图
+- 本地播放历史上限由 500 条提升至 1000 条
+- 听歌统计的「已记录时长」接入本地实听累计：暂停、seek、卡顿不计时，播放中周期结算；总时长由独立聚合存储承载，不随历史裁剪、单条删除或清空历史而减少
 
-- Fixed macOS Control Center showing fast-forward/rewind on both sides — now Previous/Next, keeping progress dragging
-- Fixed the audio exclusive mode being impossible to turn off
-- Fixed the "audio load failed" error after switching output devices in Windows shared mode: startup timeouts now retry on the same endpoint automatically, with startup blockers and HRESULT logged for troubleshooting
-- Fixed the macOS "Show/Hide Window" shortcut behavior: only the global shortcut remains, hiding follows the Dock/menu-bar hide settings, and a covered or off-desktop window is brought to the front instead of hidden
-- Fixed the Explore page falsely marking playlists as "collected" and unfollowing removing other followed playlists: collection checks now use the globally unique gid, falling back to a "creator account + list number" composite key when the gid cannot be matched directly (including legacy entries with only the collector-side gid), instead of the per-account raw listid
-- Fixed the Apple Music skin lyrics not using the lyric font correctly
-- Fixed RPM packages failing to install on Fedora / RHEL-based distributions: the libpulse dependency is now a cross-distribution boolean dependency (pulseaudio-libs / libpulse0 / libpulse)
-- Fixed some songs failing to play with a "song not supported" message
+### 修复
+
+- 修复 macOS 控制中心两侧显示快进/快退的问题，改为上一首/下一首，保留进度拖动
+- 修复音频独占无法关闭的问题
+- 修复 Windows 共享模式下切换输出设备后播放报「音频加载失败」的问题：启动超时会在同端点自动重试，日志中记录启动卡点与 HRESULT 便于排查
+- 修复 macOS「显示/隐藏窗口」快捷键行为：仅保留全局快捷键，隐藏时跟随 Dock / 菜单栏隐藏设置，窗口被遮挡或在其他桌面时置前而非隐藏
+- 修复探索页歌单误报「已收藏」、点击取消收藏会误删其他已收藏歌单的问题：收藏判定改用全局唯一 gid 匹配，gid 无法直接对照时回退「创建者账号 + 列表号」组合键（含历史收藏条目只有收藏者侧 gid 的情况），不再使用按账号分配的裸 listid
+- 修复 Apple Music 皮肤歌词没有正确使用歌词字体
+- 修复 Fedora / RHEL 系发行版无法安装 RPM 包的问题：依赖 libpulse 改为跨发行版布尔依赖（pulseaudio-libs / libpulse0 / libpulse）
+- 修复部分歌曲无法播放，提示歌曲不支持问题
+- 修复首次打开 mini 窗口报错问题
+- 修复插件浮窗内的 https 外链（`target=_blank` / `window.open`）被静默拦截、点击无响应的问题：现改为交给系统浏览器打开，窗口内页面导航仍保持禁止
+- 修复插件市场和本地 ZIP 安装丢失可执行权限，导致插件原生程序无法启动且不弹出授权提示的问题
+- 修复 Apple Music 皮肤暂停播放时调整窗口大小后歌词布局不重算，字号与间距停留在旧值的问题
+- 修复听歌统计的本地实听时长恒为 0 的问题：响应式 Proxy 对象传入 IPC 时无法被结构化克隆，实听时长在静默失败中丢失
 
 ## [2.3.2] - 2026-10-26
 
